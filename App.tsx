@@ -1,16 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import Navigation from "./app/navigations";
+// In App.js in a new project
 
-export default function App() {
-  return <Navigation />;
+import RootStack from "./app/navigations";
+
+function App() {
+  return <RootStack />;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+export default App;
