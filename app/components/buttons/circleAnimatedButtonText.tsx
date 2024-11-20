@@ -48,7 +48,7 @@ const CircleAnimatedButtonText = ({
                     ]}
                 >
                     <View style={styles.buttonContent}>{child}</View>
-            <CustomText style={styles.text}> {buttonName} </CustomText>
+                    <CustomText style={styles.text}> {buttonName} </CustomText>
 
                 </Animated.View>
             </TouchableWithoutFeedback>

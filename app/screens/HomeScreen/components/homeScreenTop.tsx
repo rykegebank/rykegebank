@@ -68,10 +68,22 @@ const styles = StyleSheet.create({
     infoContainer: {
         marginLeft: Dimensions.space15,
     },
+<<<<<<< HEAD
     text: {
         paddingBottom: Dimensions.space5
     },
 
+=======
+    username: {
+        color: 'white',
+        fontSize: Dimensions.fontLarge,
+        fontWeight: '500',
+    },
+    accountNumber: {
+        color: Colors.colorWhite,
+        fontSize: Dimensions.fontSmall,
+    },
+>>>>>>> 0332cc44170ec4dd38cbe0be54eb5b349a9c56bf
     balanceContainer: {
         width: 130,
     },
