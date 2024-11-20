@@ -10,8 +10,18 @@ const Dimensions = {
     fontLarge: 15,
 
     //white space
+    space5: 5,
+    space10: 10,
+    space12: 12,
     space15: 15,
     space20: 20,
+
+    //sizes
+    size20: 20,
+    size35: 35,
+    size40: 40,
+    size60: 60,
+    size80: 80,
 };
 
 export default Dimensions;

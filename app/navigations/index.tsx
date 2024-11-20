@@ -8,7 +8,6 @@ import Routes from "../constants/routes";
 export type RootStackParamList = {
   LoginScreen: undefined;
   ProfileScreen: undefined;
-  // Add other routes as needed
 };
 
 const Stack = createNativeStackNavigator();

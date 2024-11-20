@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableWithoutFeedback, Animated, StyleSheet } from 'react-native';
+import { View, TouchableWithoutFeedback, Animated, StyleSheet } from 'react-native';
+import CustomText from '../../components/text/customText';
+import { Dimensions } from '../../constants';
 
 interface CircleAnimatedButtonWithTextProps {
     buttonName: string;
@@ -46,9 +48,10 @@ const CircleAnimatedButtonText = ({
                     ]}
                 >
                     <View style={styles.buttonContent}>{child}</View>
+            <CustomText style={styles.text}> {buttonName} </CustomText>
+
                 </Animated.View>
             </TouchableWithoutFeedback>
-            <Text style={styles.text}>{buttonName}</Text>
         </View>
     );
 };
@@ -70,8 +73,6 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 10,
         textAlign: 'center',
-        color: '#000',
-        fontWeight: '500',
     },
 });
 

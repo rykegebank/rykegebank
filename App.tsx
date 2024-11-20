@@ -1,9 +1,13 @@
-// In App.js in a new project
-
 import RootStack from "./app/navigations";
+import { store } from './app/store';
+import { Provider } from 'react-redux';
 
 function App() {
-  return <RootStack />;
+  return (
+    <Provider store={store}>
+      <RootStack />
+    </Provider>
+  );
 }
 
 export default App;

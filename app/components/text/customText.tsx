@@ -34,7 +34,6 @@ const CustomText = ({
 
 const styles = StyleSheet.create({
     text: {
-        // default styles can be placed here
     },
 });
 

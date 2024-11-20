@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import BalanceAnimationContainer from './../components/balanceAnimationContainer';
-import ProfileImage from '../../../components/profileImage';
 import { Colors, Routes, Dimensions } from '../../../constants';
+import BalanceAnimationContainer from './../components/balanceAnimationContainer';
+import CircleImageButton from '../../../components/image/circleImageButton';
+import CustomText from '../../../components/text/customText';
+import { hexToRgba } from '../../../utils/helperFunctions';
 
 const HomeScreenTop = () => {
     const navigation = useNavigation();
@@ -16,10 +18,17 @@ const HomeScreenTop = () => {
                     style={{ flex: 8 }}
                     onPress={() => navigation.navigate(Routes.login)}>
                     <View style={styles.profileContainer}>
-                        <ProfileImage uri={''} />
+                        <CircleImageButton
+                            height={Dimensions.size40}
+                            width={Dimensions.size40}
+                            imagePath="https://example.com/your_image.jpg" // Replace with the image URL
+                            isAsset={false} // Indicating it's an image from a URL
+                            press={() => navigation.navigate(Routes.login)} // Optional press action
+                            isProfile={true} // Optional, set to true if it's a profile image
+                        />
                         <View style={styles.infoContainer}>
-                            <Text style={styles.username}>{'user_demo'}</Text>
-                            <Text style={styles.accountNumber}>{'VB241214213810'}</Text>
+                            <CustomText fontSize={Dimensions.fontLarge} color={Colors.colorWhite} style={styles.text}> {'user_demo'} </CustomText>
+                            <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(Colors.colorWhite, 0.8)} style={styles.text}> {'VB241214213810'} </CustomText>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -59,15 +68,10 @@ const styles = StyleSheet.create({
     infoContainer: {
         marginLeft: Dimensions.space15,
     },
-    username: {
-        color: 'white',
-        fontSize: Dimensions.fontLarge,
-        fontWeight: '500',
+    text: {
+        paddingBottom: Dimensions.space5
     },
-    accountNumber: {
-        color: Colors.colorWhite,
-        fontSize: Dimensions.fontSmall,
-    },
+
     balanceContainer: {
         width: 130,
     },

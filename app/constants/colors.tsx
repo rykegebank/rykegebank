@@ -1,4 +1,4 @@
-import { ColorValue } from 'react-native'; 
+import { ColorValue } from 'react-native';
 
 const Colors = {
     primaryColor: '#14233c',
@@ -59,6 +59,10 @@ export const getTextColor = (darkTheme: boolean = false): string => {
 
 export const getCardBg = (darkTheme: boolean = false): string => {
     return darkTheme ? Colors.cardBgColor : Colors.colorWhite;
+};
+
+export const getBorderColor = (darkTheme: boolean = false): string => {
+    return darkTheme ? Colors.lineColor : Colors.lineColor;
 };
 
 

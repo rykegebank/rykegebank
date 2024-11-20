@@ -1,8 +1,10 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import TopButtons from './topButtons'; // Import your TopButtons component
-import { Colors, Dimensions } from '../../../constants';
+import { Colors, Dimensions,Strings } from '../../../constants';
 import { getCardBg } from '../../../constants/colors';
+import TopButtons from './topButtons';
+import CustomDivider from '../../../components/divider/customDivider';
+import CustomText from '../../../components/text/customText';
 
 const HomeScreenItemsSection = () => {
   return (
@@ -11,6 +13,8 @@ const HomeScreenItemsSection = () => {
         contentContainerStyle={styles.scrollViewContainer}
         showsVerticalScrollIndicator={false}>
         <TopButtons />
+        <CustomDivider />
+        <CustomText fontSize={Dimensions.fontLarge} color={Colors.labelTextColor} fontWeight={'500'}> {Strings.latestTransaction} </CustomText>
       </ScrollView>
     </View>
   );
