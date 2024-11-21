@@ -9,5 +9,3 @@ export const formatNumber = (value: string, precision: number = 2): string => {
         return value;
     }
 };
-
-

@@ -10,13 +10,13 @@ interface UseBalanceAnimationResult {
 }
 
 export const useBalanceAnimation = (): UseBalanceAnimationResult => {
-  const [isBalanceShown, setIsBalanceShown] = useState(false);
-  const [isBalance, setIsBalance] = useState(true);
-  const [isAnimation, setIsAnimation] = useState(false);
-  const [taskStart, setTaskStart] = useState(false);
+  const [isBalanceShown, setIsBalanceShown] = useState<boolean>(false);
+  const [isBalance, setIsBalance] = useState<boolean>(true);
+  const [isAnimation, setIsAnimation] = useState<boolean>(false);
+  const [taskStart, setTaskStart] = useState<boolean>(false);
 
-  const circlePosition = useState(new Animated.Value(3))[0]; 
-  const circleOpacity = useState(new Animated.Value(1))[0]; 
+  const circlePosition = useState<Animated.Value>(new Animated.Value(3))[0];
+  const circleOpacity = useState<Animated.Value>(new Animated.Value(1))[0];
 
   useEffect(() => {
     if (isAnimation) {

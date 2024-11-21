@@ -1,41 +1,41 @@
 import React from 'react';
-import { Image, StyleSheet, ImageStyle, StyleProp } from 'react-native';
+import { Image, StyleSheet, ImageStyle, StyleProp, ImageSourcePropType } from 'react-native';
 
 interface CustomImageProps {
-  source: any; // or ImageSourcePropType if you know the type
-  color?: string; // Not directly supported, but can be handled with overlays if necessary
+  source: ImageSourcePropType;
+  color?: string;
   height?: number;
   width?: number;
-  fit?: 'cover' | 'contain' | 'stretch' | 'repeat' | 'center'; // BoxFit equivalent
-  style?: StyleProp<ImageStyle>; // Allow additional styles if needed
+  fit?: 'cover' | 'contain' | 'stretch' | 'repeat' | 'center';
+  style?: StyleProp<ImageStyle>;
 }
 
-function CustomImage({
+const CustomImage: React.FC<CustomImageProps> = ({
   source,
-  color, // This requires additional handling if needed
+  color,
   height = 22,
   width = 22,
   fit = 'cover',
   style,
-}: CustomImageProps) {
+}: CustomImageProps) => {
   return (
     <Image
       source={source}
       style={[
         styles.image,
         { height, width, resizeMode: fit },
-        color ? { tintColor: color } : null, // Handle color tint if specified
+        color ? { tintColor: color } : null,
         style,
       ]}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   image: {
     height: 22,
     width: 22,
-    resizeMode: 'cover', // Default to cover if not specified
+    resizeMode: 'cover',
   },
 });
 

@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux'; 
-import { loadData, selectHome } from './hooks/homeSlice'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { loadData, selectHome } from './hooks/homeSlice';
 
 import HomeScreenTop from './components/homeScreenTop';
-import NoDataFoundScreen from '../NoDataFoundScreen';
+import NoDataFoundScreen from '../../components/noData';
 import HomeScreenItemsSection from './components/homeScreenItemSection';
 import { Colors } from '../../constants';
 import { RootState, AppDispatch } from '../../store';
 
-const HomeScreen = () => {
+const HomeScreen: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const { isLoading, noInternet, username, balance } = useSelector(
-        (state: RootState) => state.home 
+    const { isLoading, noInternet } = useSelector(
+        (state: RootState) => state.home
     );
+
     useEffect(() => {
-        console.log('called')
+        console.log('called');
         dispatch(loadData());
     }, [dispatch]);
 
@@ -40,9 +41,6 @@ const HomeScreen = () => {
         <View style={styles.container}>
             <HomeScreenTop />
             <HomeScreenItemsSection />
-            {/* Test */}
-            <Text>{username}</Text>
-            <Text>{balance}</Text>
         </View>
     );
 };

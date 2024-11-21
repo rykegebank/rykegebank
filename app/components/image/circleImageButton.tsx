@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { View, Image, StyleSheet, TouchableWithoutFeedback, } from 'react-native';
 import { SvgXml } from 'react-native-svg'; // Use SvgXml for inline SVGs
 import { Colors, Assets } from '../../constants'; // Adjust paths accordingly
 
+// Type for image path, it can be a URL string or an asset path
+type Uri = string;
+
 interface CircleImageButtonProps {
-  height?: number;
-  width?: number;
-  imagePath: string;
-  isAsset?: boolean;
-  press?: () => void;
-  border?: number;
-  isProfile?: boolean;
+  height?: number; // Optional height, defaults to 30
+  width?: number; // Optional width, defaults to 30
+  imagePath: Uri; // URI for the image, can be an asset or URL
+  isAsset?: boolean; // Flag to determine if the image is an asset
+  press?: () => void; // Optional press function for the button
+  border?: number; // Optional border width, defaults to 0
+  isProfile?: boolean; // Flag to determine if the image is a profile picture
 }
 
-export default function CircleImageButton({
+const CircleImageButton: React.FC<CircleImageButtonProps> = ({
   height = 30,
   width = 30,
   imagePath,
@@ -21,16 +24,14 @@ export default function CircleImageButton({
   press,
   border = 0,
   isProfile = false,
-}: CircleImageButtonProps) {
+}: CircleImageButtonProps) => {
   const [imageError, setImageError] = useState(false);
 
   const placeholderImage = isProfile
     ? Assets.defaultAvatar
     : Assets.placeHolderImage;
 
-  // Check if the imagePath is SVG content or a file path
   const renderImage = () => {
-    // If image fails to load, use placeholderImage
     if (imageError) {
       return (
         <Image
@@ -41,19 +42,16 @@ export default function CircleImageButton({
       );
     }
 
-    // Check if imagePath is SVG content (starts with <svg) or ends with .svg
     if (imagePath.includes('<svg') || imagePath.endsWith('.svg')) {
-      // If it's inline SVG (string content) or a file path ending with .svg
       return <SvgXml xml={imagePath} width={width} height={height} />;
     }
 
-    // Fallback to normal image handling for other image formats (PNG/JPEG)
     return (
       <Image
         source={isAsset ? { uri: imagePath } : { uri: imagePath }}
         style={[styles.image, { width, height }]}
         resizeMode="cover"
-        onError={() => setImageError(true)} // Handle image load error
+        onError={() => setImageError(true)}
       />
     );
   };
@@ -75,7 +73,7 @@ export default function CircleImageButton({
       </View>
     </TouchableWithoutFeedback>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -89,3 +87,5 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
+export default CircleImageButton;

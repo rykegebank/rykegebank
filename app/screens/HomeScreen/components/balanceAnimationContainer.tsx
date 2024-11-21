@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { View, Text, TouchableOpacity, Animated, StyleSheet } from 'react-native';
 import { Colors, Dimensions, Strings } from '../../../constants';
 import { useBalanceAnimation } from '../hooks/useBalanceAnimationHook';
@@ -8,7 +8,7 @@ interface BalanceAnimationContainerProps {
   curSymbol: string;
 }
 
-const BalanceAnimationContainer = ({ amount, curSymbol }: BalanceAnimationContainerProps) => {
+const BalanceAnimationContainer: FC<BalanceAnimationContainerProps> = ({ amount, curSymbol }) => {
   const { isBalanceShown, isBalance, changeState, circlePosition, circleOpacity } = useBalanceAnimation();
 
   return (

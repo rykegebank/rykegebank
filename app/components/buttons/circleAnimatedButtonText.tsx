@@ -12,16 +12,15 @@ interface CircleAnimatedButtonWithTextProps {
     backgroundColor: string;
 }
 
-const CircleAnimatedButtonText = ({
+const CircleAnimatedButtonText: React.FC<CircleAnimatedButtonWithTextProps> = ({
     buttonName,
     child,
     onTap,
     height,
     width,
     backgroundColor,
-}: CircleAnimatedButtonWithTextProps) => {
-    const [scale] = useState(new Animated.Value(1));
-
+}) => {
+    const [scale] = useState<Animated.Value>(new Animated.Value(1));
 
     const onPressIn = () => {
         Animated.spring(scale, {
@@ -29,7 +28,6 @@ const CircleAnimatedButtonText = ({
             useNativeDriver: true,
         }).start();
     };
-
 
     const onPressOut = () => {
         Animated.spring(scale, {
@@ -42,14 +40,10 @@ const CircleAnimatedButtonText = ({
         <View style={styles.center}>
             <TouchableWithoutFeedback onPress={onTap} onPressIn={onPressIn} onPressOut={onPressOut}>
                 <Animated.View
-                    style={[
-                        styles.buttonContainer,
-                        { height, width, backgroundColor, transform: [{ scale }] },
-                    ]}
+                    style={[styles.buttonContainer, { height, width, backgroundColor, transform: [{ scale }] }]}
                 >
                     <View style={styles.buttonContent}>{child}</View>
-                    <CustomText style={styles.text}> {buttonName} </CustomText>
-
+                    <CustomText style={styles.text}>{buttonName}</CustomText>
                 </Animated.View>
             </TouchableWithoutFeedback>
         </View>

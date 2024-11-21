@@ -1,9 +1,10 @@
 const domain = "http://54.91.151.16/";
-const baseUrl =  `${domain}api/`;
+const baseUrl = `${domain}api/`;
 
 const Endpoints = {
-    dashboard: `${baseUrl}dashboard`,
- 
+  domain,
+  dashboard: `${baseUrl}dashboard`,
+  generalSettings: `${baseUrl}general-setting`,
 };
 
 export default Endpoints;

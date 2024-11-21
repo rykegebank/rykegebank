@@ -1,8 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
-import { Dimensions, Colors, Assets, Strings } from '../../../constants';
 import CircleAnimatedButtonWithText from '../../../components/buttons/circleAnimatedButtonText';
-import CustomImage from '../../../components/image/customImage';
 import Deposit from '../../../../assets/images/deposit_1.svg';
 import Fdr from '../../../../assets/images/fdr.svg';
 import Dps from '../../../../assets/images/dps.svg';
@@ -10,30 +7,29 @@ import Withdraw from '../../../../assets/images/withdraw.svg';
 import Transfer from '../../../../assets/images/transfer_solid.svg';
 import Transaction from '../../../../assets/images/transaction_solid.svg';
 import Referral from '../../../../assets/images/referral.svg';
+import CustomImage from '../../../components/image/customImage';
+import { Colors, Strings, Dimensions, Assets } from '../../../constants';
 
-interface GeneralSettings {
-    deposit: boolean;
-    withdraw: boolean;
-    fdr: boolean;
-    dps: boolean;
-    loan: boolean;
-    referralSystem: boolean;
+interface ModuleProviderProps {
+    isDepositEnable: boolean;
+    isWithdrawEnable: boolean;
+    isFDREnable: boolean;
+    isDPSEnable: boolean;
+    isLoanEnable: boolean;
+    isReferralEnable: boolean;
 }
 
-const ModuleProvider = () => {
-    const settings: GeneralSettings = {
-        deposit: true,
-        withdraw: true,
-        fdr: true,
-        dps: true,
-        loan: true,
-        referralSystem: true,
-    };
-
-    const { deposit, withdraw, fdr, dps, loan, referralSystem } = settings;
+const ModuleProvider = ({
+    isDepositEnable,
+    isWithdrawEnable,
+    isFDREnable,
+    isDPSEnable,
+    isLoanEnable,
+    isReferralEnable,
+}: ModuleProviderProps): JSX.Element[] => {
     const generatedModuleList: JSX.Element[] = [];
 
-    if (deposit) {
+    if (isDepositEnable) {
         generatedModuleList.push(
             <CircleAnimatedButtonWithText
                 key="deposit"
@@ -47,7 +43,7 @@ const ModuleProvider = () => {
         );
     }
 
-    if (fdr) {
+    if (isFDREnable) {
         generatedModuleList.push(
             <CircleAnimatedButtonWithText
                 key="fdr"
@@ -61,7 +57,7 @@ const ModuleProvider = () => {
         );
     }
 
-    if (dps) {
+    if (isDPSEnable) {
         generatedModuleList.push(
             <CircleAnimatedButtonWithText
                 key="dps"
@@ -75,7 +71,7 @@ const ModuleProvider = () => {
         );
     }
 
-    if (loan) {
+    if (isLoanEnable) {
         generatedModuleList.push(
             <CircleAnimatedButtonWithText
                 key="loan"
@@ -89,7 +85,7 @@ const ModuleProvider = () => {
         );
     }
 
-    if (withdraw) {
+    if (isWithdrawEnable) {
         generatedModuleList.push(
             <CircleAnimatedButtonWithText
                 key="withdraw"
@@ -103,7 +99,6 @@ const ModuleProvider = () => {
         );
     }
 
-
     generatedModuleList.push(
         <CircleAnimatedButtonWithText
             key="transfer"
@@ -115,7 +110,7 @@ const ModuleProvider = () => {
             backgroundColor={Colors.colorWhite}
         />
     );
-    
+
     generatedModuleList.push(
         <CircleAnimatedButtonWithText
             key="transaction"
@@ -128,7 +123,7 @@ const ModuleProvider = () => {
         />
     );
 
-    if (referralSystem) {
+    if (isReferralEnable) {
         generatedModuleList.push(
             <CircleAnimatedButtonWithText
                 key="referral"

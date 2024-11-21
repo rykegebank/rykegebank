@@ -1,15 +1,20 @@
 import React from 'react';
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
-import { Colors, Routes, Dimensions } from '../../../constants';
+import { Colors, Routes, Dimensions, Endpoints } from '../../../constants';
 import BalanceAnimationContainer from './../components/balanceAnimationContainer';
 import CircleImageButton from '../../../components/image/circleImageButton';
 import CustomText from '../../../components/text/customText';
 import { hexToRgba } from '../../../utils/helperFunctions';
+import { RootState } from '../../../store';
 
-const HomeScreenTop = () => {
+const HomeScreenTop: React.FC = () => {
     const navigation = useNavigation();
+    const { balance, currencySymbol, accountNumber, username, imagePath } = useSelector(
+        (state: RootState) => state.home
+    );
 
     return (
         <View style={styles.container}>
@@ -21,22 +26,22 @@ const HomeScreenTop = () => {
                         <CircleImageButton
                             height={Dimensions.size40}
                             width={Dimensions.size40}
-                            imagePath="https://example.com/your_image.jpg" // Replace with the image URL
-                            isAsset={false} // Indicating it's an image from a URL
-                            press={() => navigation.navigate(Routes.login)} // Optional press action
-                            isProfile={true} // Optional, set to true if it's a profile image
+                            imagePath={`${Endpoints.domain}/assets/images/user/profile/${imagePath}`}
+                            isAsset={false}
+                            press={() => navigation.navigate(Routes.login)}
+                            isProfile={true}
                         />
                         <View style={styles.infoContainer}>
-                            <CustomText fontSize={Dimensions.fontLarge} color={Colors.colorWhite} style={styles.text}> {'user_demo'} </CustomText>
-                            <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(Colors.colorWhite, 0.8)} style={styles.text}> {'VB241214213810'} </CustomText>
+                            <CustomText fontSize={Dimensions.fontLarge} color={Colors.colorWhite} style={styles.text}> {username} </CustomText>
+                            <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(Colors.colorWhite, 0.8)} style={styles.text}> {accountNumber} </CustomText>
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <View style={styles.balanceContainer}>
                     <BalanceAnimationContainer
-                        amount={'100'}
-                        curSymbol={'P'}
+                        amount={balance}
+                        curSymbol={currencySymbol}
                     />
                 </View>
             </View>
@@ -68,26 +73,12 @@ const styles = StyleSheet.create({
     infoContainer: {
         marginLeft: Dimensions.space15,
     },
-<<<<<<< HEAD
     text: {
         paddingBottom: Dimensions.space5
     },
-
-=======
-    username: {
-        color: 'white',
-        fontSize: Dimensions.fontLarge,
-        fontWeight: '500',
-    },
-    accountNumber: {
-        color: Colors.colorWhite,
-        fontSize: Dimensions.fontSmall,
-    },
->>>>>>> 0332cc44170ec4dd38cbe0be54eb5b349a9c56bf
     balanceContainer: {
         width: 130,
     },
 });
-
 
 export default HomeScreenTop;

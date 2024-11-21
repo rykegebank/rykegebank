@@ -1,10 +1,10 @@
-// homeSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../../store';
 import { DashboardResponseModel, LatestCreditsData, LatestDebitsData } from '../../../data/dashboard';
 import { request } from '../../../utils/apiClient';
 import { formatNumber } from '../../../utils/stringFormatHelper';
 import { Endpoints } from '../../../constants';
+import {  selectGeneralSettings,getCurrencyOrUsername } from '../../../hooks/generalSettings';
 
 interface HomeState {
     isLoading: boolean;
@@ -36,14 +36,37 @@ const initialState: HomeState = {
 
 export const loadData = createAsyncThunk(
     'home/loadData',
-    async (_, { rejectWithValue }) => {
+    async (_, { rejectWithValue, getState }) => {
         try {
+            const state = getState() as RootState;
+            // Fetch currency and currency symbol using the selector
+            const currency = getCurrencyOrUsername({ isCurrency: true })(state);  // Get currency using selector
+            const currencySymbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true })(state);  // Get currency symbol using selector
+    
+            console.log('Currency:', currency);
+            console.log('Currency Symbol:', currencySymbol);
+
             const url = Endpoints.dashboard;
             const response = await request(url, 'GET', true);
-            console.log('load' + response);
 
             if (response.status?.toLowerCase() === 'success') {
-                return response as DashboardResponseModel;
+                const model = response as DashboardResponseModel;
+
+                return {
+                    username: model.data?.user?.username || '',
+                    email: model.data?.user?.email || '',
+                    accountNumber: model.data?.user?.account_number || '',
+                    imagePath: model.data?.user?.image || '',
+                    balance: formatNumber(model.data?.user?.balance || ''),
+                    currency,
+                    currencySymbol,
+                    debitsLists: [
+                        ...((model.data?.latest_credits?.data?.map(
+                            (credit) => new LatestDebitsData({ ...credit, remark: credit.details })
+                        ) || [])),
+                        ...(model.data?.latest_debits?.data || []),
+                    ],
+                };
             } else {
                 return rejectWithValue('Failed to load data');
             }
@@ -69,23 +92,16 @@ const homeSlice = createSlice({
             .addCase(loadData.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(loadData.fulfilled, (state, action: PayloadAction<DashboardResponseModel>) => {
-                const model = action.payload;
-
-                state.username = model.data?.user?.username || '';
-                state.email = model.data?.user?.email || '';
-                state.accountNumber = model.data?.user?.accountNumber || '';
-                state.imagePath = model.data?.user?.image || '';
-                state.balance = formatNumber(model.data?.user?.balance || '');
-
-                // Handle credits and debits
-                const credits = model.data?.latestCredits?.data?.map(
-                    (credit) => new LatestDebitsData({ ...credit, remark: credit.details })
-                ) || [];
-                state.debitsLists = [...credits];
-
-                const debits = model.data?.latestDebits?.data || [];
-                state.debitsLists.push(...debits);
+            .addCase(loadData.fulfilled, (state, action: PayloadAction<any>) => {
+                // Set the values from the fulfilled response
+                state.username = action.payload.username;
+                state.email = action.payload.email;
+                state.accountNumber = action.payload.accountNumber;
+                state.imagePath = action.payload.imagePath;
+                state.balance = action.payload.balance;
+                state.currency = action.payload.currency;
+                state.currencySymbol = action.payload.currencySymbol;
+                state.debitsLists = action.payload.debitsLists;
 
                 state.isLoading = false;
             })

@@ -3,16 +3,15 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Dimensions as RNDimensions,
+  StyleSheet
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { Colors, Dimensions } from '../../../constants';
-import CustomDivider from '../../../components/divider/customDivider'; // Adjust import path
+import CustomDivider from '../../../components/divider/customDivider';
 import CustomText from '../../../components/text/customText';
 import { getTextColor } from '../../../constants/colors';
-import HelperFunctions from '../../../utils/helperFunctions';
+import { hexToRgba } from '../../../utils/helperFunctions';
 
 interface LatestTransactionListItemProps {
   trx: string;
@@ -25,7 +24,7 @@ interface LatestTransactionListItemProps {
   isCredit: boolean;
 }
 
-const LatestTransactionListItem = ({
+const LatestTransactionListItem: React.FC<LatestTransactionListItemProps> = ({
   trx,
   date,
   amount,
@@ -34,7 +33,7 @@ const LatestTransactionListItem = ({
   onPressed,
   isShowDivider = false,
   isCredit,
-}: LatestTransactionListItemProps) => {
+}) => {
   return (
     <TouchableOpacity onPress={onPressed} style={styles.container}>
       <View style={styles.content}>
@@ -45,8 +44,8 @@ const LatestTransactionListItem = ({
                 styles.iconContainer,
                 {
                   backgroundColor: isCredit
-                    ? HelperFunctions.hexToRgba(Colors.greenSuccessColor, 0.17)
-                    : HelperFunctions.hexToRgba(Colors.greenSuccessColor, 0.2)
+                    ? hexToRgba(Colors.greenSuccessColor, 0.17)
+                    : hexToRgba(Colors.greenSuccessColor, 0.2),
                 },
               ]}
             >
@@ -56,17 +55,17 @@ const LatestTransactionListItem = ({
                   fontSize: 20,
                 }}
               >
-                {<MaterialIcons name={isCredit ? "arrow-downward" : "arrow-upward"} size={Dimensions.size20} color={isCredit ? Colors.greenSuccessColor : Colors.colorRed} />}
+                {<MaterialIcons name={isCredit ? 'arrow-downward' : 'arrow-upward'} size={Dimensions.size20} color={isCredit ? Colors.greenSuccessColor : Colors.colorRed} />}
               </Text>
             </View>
             <View style={{ marginLeft: Dimensions.space12 }}>
               <CustomText fontSize={Dimensions.fontDefault} color={getTextColor()} fontWeight={'500'}> {trx} </CustomText>
               <View style={{ height: Dimensions.space10 }} />
-              <CustomText fontSize={Dimensions.fontDefault} color={HelperFunctions.hexToRgba(getTextColor(), 0.5)} numberOfLines={2}
+              <CustomText fontSize={Dimensions.fontDefault} color={hexToRgba(getTextColor(), 0.5)} numberOfLines={2}
                 ellipsizeMode="tail"> {trx} </CustomText>
             </View>
           </View>
-          <CustomText fontSize={Dimensions.fontSmall} color={HelperFunctions.hexToRgba(getTextColor(), 0.5)} numberOfLines={1}
+          <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(getTextColor(), 0.5)} numberOfLines={1}
             ellipsizeMode="tail"> {trx} </CustomText>
         </View>
         {isShowDivider ? (

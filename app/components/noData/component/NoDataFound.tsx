@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text } from 'react-native';
 import { Dimensions, Strings } from '../../../constants';
 import { getUnselectedIconColor, getTextColor } from '../../../constants/colors';

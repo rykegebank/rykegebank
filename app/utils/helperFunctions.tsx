@@ -3,12 +3,12 @@ export const hexToRgba = (hex: string, opacity: number): string => {
 
   // Ensure the hex color is valid
   if (!/^([A-Fa-f0-9]{6})$/.test(cleanHex)) {
-      throw new Error('Invalid hex color format');
+    throw new Error('Invalid hex color format');
   }
 
   // Validate opacity
   if (opacity < 0 || opacity > 1) {
-      throw new Error('Opacity must be between 0 and 1');
+    throw new Error('Opacity must be between 0 and 1');
   }
 
   // Convert hex to RGB
@@ -24,11 +24,11 @@ export const hexToRgba = (hex: string, opacity: number): string => {
 export const rgbToHex = (r: number, g: number, b: number): string => {
   // Validate input values
   if (
-      !Number.isInteger(r) || r < 0 || r > 255 ||
-      !Number.isInteger(g) || g < 0 || g > 255 ||
-      !Number.isInteger(b) || b < 0 || b > 255
+    !Number.isInteger(r) || r < 0 || r > 255 ||
+    !Number.isInteger(g) || g < 0 || g > 255 ||
+    !Number.isInteger(b) || b < 0 || b > 255
   ) {
-      throw new Error('RGB values must be integers between 0 and 255');
+    throw new Error('RGB values must be integers between 0 and 255');
   }
 
   // Convert RGB to Hex

@@ -1,17 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
 import ModuleProvider from './moduleProvider';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store';
 
-const TopButtons = () => {
+const TopButtons: React.FC = () => {
+    const {
+        isDepositEnable,
+        isWithdrawEnable,
+        isFDREnable,
+        isDPSEnable,
+        isLoanEnable,
+        isReferralEnable,
+    } = useSelector((state: RootState) => state.generalSettings);
+
     const [moduleList, setModuleList] = useState<JSX.Element[]>([]);
 
     const screenWidth = Dimensions.get('window').width;
     const itemWidth = (screenWidth - 32 - 24) / 4;
 
     useEffect(() => {
-        const modules = ModuleProvider();
-        setModuleList(modules);
-    }, []);
+        console.log('isDepositEnable '+isDepositEnable);
+        const modules = ModuleProvider({
+            isDepositEnable,
+            isWithdrawEnable,
+            isFDREnable,
+            isDPSEnable,
+            isLoanEnable,
+            isReferralEnable,
+        });
+
+        setModuleList(modules.filter(Boolean) as JSX.Element[]); // Filter out invalid values
+    }, [isDepositEnable, isWithdrawEnable, isFDREnable, isDPSEnable, isLoanEnable, isReferralEnable]);
 
     return (
         <View style={styles.container}>
@@ -87,7 +107,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        gap: 8,
     },
 });
 
