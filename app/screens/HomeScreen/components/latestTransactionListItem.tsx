@@ -45,7 +45,7 @@ const LatestTransactionListItem: React.FC<LatestTransactionListItemProps> = ({
                 {
                   backgroundColor: isCredit
                     ? hexToRgba(Colors.greenSuccessColor, 0.17)
-                    : hexToRgba(Colors.greenSuccessColor, 0.2),
+                    : hexToRgba(Colors.colorRed, 0.2),
                 },
               ]}
             >

@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../../store';
-import { DashboardResponseModel, LatestCreditsData, LatestDebitsData } from '../../../data/dashboard';
+import { DashboardResponseModel } from '../../../data/dashboard'; // Make sure to import the appropriate types
 import { request } from '../../../utils/apiClient';
 import { formatNumber } from '../../../utils/stringFormatHelper';
 import { Endpoints } from '../../../constants';
-import {  selectGeneralSettings,getCurrencyOrUsername } from '../../../hooks/generalSettings';
+import { selectGeneralSettings, getCurrencyOrUsername } from '../../../hooks/generalSettings';
 
+// Define state structure
 interface HomeState {
     isLoading: boolean;
     noInternet: boolean;
@@ -17,7 +18,7 @@ interface HomeState {
     currency: string;
     currencySymbol: string;
     imagePath: string;
-    debitsLists: LatestDebitsData[];
+    debitsLists: any[]; // Use 'any' or define a specific type for debits data
 }
 
 const initialState: HomeState = {
@@ -34,23 +35,31 @@ const initialState: HomeState = {
     debitsLists: [],
 };
 
+// Create the async thunk for loading data
 export const loadData = createAsyncThunk(
     'home/loadData',
     async (_, { rejectWithValue, getState }) => {
         try {
             const state = getState() as RootState;
+
             // Fetch currency and currency symbol using the selector
-            const currency = getCurrencyOrUsername({ isCurrency: true })(state);  // Get currency using selector
-            const currencySymbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true })(state);  // Get currency symbol using selector
-    
-            console.log('Currency:', currency);
-            console.log('Currency Symbol:', currencySymbol);
+            const currency = getCurrencyOrUsername({ isCurrency: true })(state);
+            const currencySymbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true })(state);
 
             const url = Endpoints.dashboard;
             const response = await request(url, 'GET', true);
 
             if (response.status?.toLowerCase() === 'success') {
                 const model = response as DashboardResponseModel;
+
+                // Map the debits data to plain objects
+                const debitsLists = [
+                    ...(model.data?.latest_credits?.data?.map((credit) => ({
+                        ...credit,
+                        remark: credit.details, // Optionally change the structure if needed
+                    })) || []),
+                    ...(model.data?.latest_debits?.data || []),
+                ];
 
                 return {
                     username: model.data?.user?.username || '',
@@ -60,12 +69,7 @@ export const loadData = createAsyncThunk(
                     balance: formatNumber(model.data?.user?.balance || ''),
                     currency,
                     currencySymbol,
-                    debitsLists: [
-                        ...((model.data?.latest_credits?.data?.map(
-                            (credit) => new LatestDebitsData({ ...credit, remark: credit.details })
-                        ) || [])),
-                        ...(model.data?.latest_debits?.data || []),
-                    ],
+                    debitsLists, // Pass the mapped debits data here
                 };
             } else {
                 return rejectWithValue('Failed to load data');
@@ -79,6 +83,7 @@ export const loadData = createAsyncThunk(
     }
 );
 
+// Define the home slice
 const homeSlice = createSlice({
     name: 'home',
     initialState,
@@ -93,7 +98,6 @@ const homeSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(loadData.fulfilled, (state, action: PayloadAction<any>) => {
-                // Set the values from the fulfilled response
                 state.username = action.payload.username;
                 state.email = action.payload.email;
                 state.accountNumber = action.payload.accountNumber;
@@ -101,7 +105,7 @@ const homeSlice = createSlice({
                 state.balance = action.payload.balance;
                 state.currency = action.payload.currency;
                 state.currencySymbol = action.payload.currencySymbol;
-                state.debitsLists = action.payload.debitsLists;
+                state.debitsLists = action.payload.debitsLists; // Plain objects will be stored here
 
                 state.isLoading = false;
             })
