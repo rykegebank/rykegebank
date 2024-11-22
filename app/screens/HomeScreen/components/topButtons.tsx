@@ -3,8 +3,10 @@ import { View, Dimensions, StyleSheet } from 'react-native';
 import ModuleProvider from './moduleProvider';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
+import { useNavigation } from '@react-navigation/native';
 
 const TopButtons: React.FC = () => {
+    const navigation = useNavigation();
     const {
         isDepositEnable,
         isWithdrawEnable,
@@ -17,96 +19,74 @@ const TopButtons: React.FC = () => {
     const [moduleList, setModuleList] = useState<JSX.Element[]>([]);
 
     const screenWidth = Dimensions.get('window').width;
-    const itemWidth = (screenWidth - 32 - 24) / 4;
+    const totalPadding = 32 + 24; // Horizontal padding and spacing
+    const maxItemsPerRow = 4;
+    const itemWidth = (screenWidth - totalPadding) / maxItemsPerRow;
 
     useEffect(() => {
-        console.log('isDepositEnable '+isDepositEnable);
         const modules = ModuleProvider({
             isDepositEnable,
             isWithdrawEnable,
             isFDREnable,
             isDPSEnable,
             isLoanEnable,
-            isReferralEnable,
+            isReferralEnable, 
+            navigation
         });
 
-        setModuleList(modules.filter(Boolean) as JSX.Element[]); // Filter out invalid values
+        setModuleList(modules.filter(Boolean) as JSX.Element[]);
     }, [isDepositEnable, isWithdrawEnable, isFDREnable, isDPSEnable, isLoanEnable, isReferralEnable]);
 
-    return (
-        <View style={styles.container}>
-            {moduleList.length === 8 ? (
-                <View style={styles.columnContainer}>
-                    <View style={styles.row}>
-                        {moduleList.slice(0, 4).map((item, index) => (
-                            <View key={index} style={styles.itemWrapper}>
-                                {item}
-                            </View>
-                        ))}
-                    </View>
+    const renderRows = () => {
+        const rows = [];
+        for (let i = 0; i < moduleList.length; i += maxItemsPerRow) {
+            const items = moduleList.slice(i, i + maxItemsPerRow);
 
-                    <View style={styles.row}>
-                        {moduleList.slice(4).map((item, index) => (
-                            <View key={index} style={styles.itemWrapper}>
-                                {item}
-                            </View>
-                        ))}
-                    </View>
-                </View>
-            ) : moduleList.length > 4 ? (
-                <View style={styles.wrapContainer}>
-                    {moduleList.map((item, index) => (
-                        <View key={index} style={[styles.itemWrapper, { width: itemWidth }]}>
+            rows.push(
+                <View
+                    key={i}
+                    style={[
+                        styles.row,
+                        {
+                            justifyContent:
+                                items.length < maxItemsPerRow ? 'center' : 'space-between',
+                        },
+                    ]}
+                >
+                    {items.map((item, index) => (
+                        <View
+                            key={index}
+                            style={[
+                                styles.itemWrapper,
+                                { width: items.length < maxItemsPerRow ? 'auto' : itemWidth },
+                            ]}
+                        >
                             {item}
                         </View>
                     ))}
                 </View>
-            ) : moduleList.length === 4 ? (
-                <View style={styles.row}>
-                    {moduleList.map((item, index) => (
-                        <View key={index} style={styles.itemWrapper}>
-                            {item}
-                        </View>
-                    ))}
-                </View>
-            ) : (
-                <View style={styles.row}>
-                    {moduleList.slice(0, 3).map((item, index) => (
-                        <View key={index} style={styles.itemWrapper}>
-                            {item}
-                        </View>
-                    ))}
-                    {moduleList.length < 3 && <View style={styles.itemWrapper} />}
-                </View>
-            )}
-        </View>
-    );
+            );
+        }
+        return rows;
+    };
+
+    return <View style={styles.container}>{renderRows()}</View>;
 };
 
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        paddingHorizontal: 16,
         paddingBottom: 16,
-    },
-    columnContainer: {
-        flexDirection: 'column',
-        alignItems: 'center',
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         width: '100%',
         marginBottom: 8,
+        alignItems: 'center', // Vertically align items
     },
     itemWrapper: {
-        flex: 1,
         alignItems: 'center',
-    },
-    wrapContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
     },
 });
 

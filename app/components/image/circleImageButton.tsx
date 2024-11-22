@@ -1,26 +1,25 @@
-import React, { useState } from 'react';
-import { View, Image, StyleSheet, TouchableWithoutFeedback, } from 'react-native';
-import { SvgXml } from 'react-native-svg'; // Use SvgXml for inline SVGs
-import { Colors, Assets } from '../../constants'; // Adjust paths accordingly
+import React, { useState, useEffect } from 'react';
+import { View, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { Colors, Assets } from '../../constants';
 
-// Type for image path, it can be a URL string or an asset path
 type Uri = string;
 
 interface CircleImageButtonProps {
-  height?: number; // Optional height, defaults to 30
-  width?: number; // Optional width, defaults to 30
-  imagePath: Uri; // URI for the image, can be an asset or URL
-  isAsset?: boolean; // Flag to determine if the image is an asset
-  press?: () => void; // Optional press function for the button
-  border?: number; // Optional border width, defaults to 0
-  isProfile?: boolean; // Flag to determine if the image is a profile picture
+  height?: number;
+  width?: number;
+  imagePath: Uri;
+  isAsset?: boolean;
+  press?: () => void;
+  border?: number;
+  isProfile?: boolean;
 }
 
 const CircleImageButton: React.FC<CircleImageButtonProps> = ({
   height = 30,
   width = 30,
   imagePath,
-  isAsset = true,
+  isAsset = false,
   press,
   border = 0,
   isProfile = false,
@@ -31,7 +30,22 @@ const CircleImageButton: React.FC<CircleImageButtonProps> = ({
     ? Assets.defaultAvatar
     : Assets.placeHolderImage;
 
+  useEffect(() => {
+    setImageError(false);
+  }, [imagePath]);
+
   const renderImage = () => {
+
+    if (!imagePath || imagePath.trim() === '') {
+      return (
+        <Image
+          source={placeholderImage}
+          style={[styles.image, { width, height }]}
+          resizeMode="cover"
+        />
+      );
+    }
+
     if (imageError) {
       return (
         <Image
@@ -48,10 +62,12 @@ const CircleImageButton: React.FC<CircleImageButtonProps> = ({
 
     return (
       <Image
-        source={isAsset ? { uri: imagePath } : { uri: imagePath }}
+        source={{ uri: imagePath }}
         style={[styles.image, { width, height }]}
         resizeMode="cover"
-        onError={() => setImageError(true)}
+        onError={(e) => {
+          setImageError(true);
+        }}
       />
     );
   };

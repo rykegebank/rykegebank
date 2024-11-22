@@ -23,6 +23,5 @@ export const request = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DEL
         delete config.headers;
     }
     const response = await apiClient(config);
-    console.log('request '+url+ passHeader+' '+response.data);
     return response.data;
 };

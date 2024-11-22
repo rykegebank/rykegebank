@@ -12,6 +12,11 @@ const Strings = {
     transaction: "Transaction",
     referral: "Referral",
     latestTransaction: "Latest Transactions",
+    loadingPleaseWait: "Loading, please wait...",
+
+    error: "Error",
+    success: "Success",
+    somethingWentWrong: "Something went wrong",
 };
 
 export default Strings;

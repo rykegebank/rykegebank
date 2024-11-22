@@ -36,12 +36,12 @@ const NoDataFoundScreen: FC<NoDataFoundScreenProps> = ({
   return isNoInternet ? (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
-        <LottieView
+        {/* <LottieView
           source={Assets.noInternet}
           autoPlay
           loop
           style={{ height: windowHeight * imageHeight, width: windowWidth * 0.6 }}
-        />
+        /> */}
         <View style={styles.textContainer}>
           <Text style={styles.noInternetText}>{Strings.noInternet}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={checkConnectivity}>

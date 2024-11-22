@@ -33,7 +33,6 @@ const initialState: GeneralSettingsState = {
 export const fetchGeneralSettings = createAsyncThunk(
     'generalSettings/fetch',
     async (_, { rejectWithValue }) => {
-        console.log('fetchGeneralSettings called');
         try {
             const url = Endpoints.generalSettings;
             const response = await request(url, 'GET', null, false);
@@ -42,7 +41,6 @@ export const fetchGeneralSettings = createAsyncThunk(
 
             return parsedResponse;
         } catch (error: any) {
-            console.log('Error during fetchGeneralSettings:', error);
             return rejectWithValue(error.message || 'Failed to fetch general settings');
         }
     }
@@ -56,12 +54,10 @@ const generalSettingsSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchGeneralSettings.pending, (state) => {
-                console.log('fetchGeneralSettings is loading...');
                 state.isLoading = true;
                 state.error = null;
             })
             .addCase(fetchGeneralSettings.fulfilled, (state, action: PayloadAction<GeneralSettingsResponseModel>) => {
-                console.log('fetchGeneralSettings fulfilled');
                 state.isLoading = false;
                 state.settings = action.payload;
                 state.error = null;
@@ -70,7 +66,6 @@ const generalSettingsSlice = createSlice({
                 const modules = action.payload.data?.general_setting?.modules || {};
 
                 // Set module enablement based on the fetched response
-                console.log('modules.deposit ' + modules.deposit)
                 state.isDepositEnable = modules.deposit == '1';
                 state.isWithdrawEnable = modules.withdraw == '1';
                 state.isFDREnable = modules.fdr == '1';
@@ -79,7 +74,6 @@ const generalSettingsSlice = createSlice({
                 state.isReferralEnable = modules.referral_system == '1';
             })
             .addCase(fetchGeneralSettings.rejected, (state, action: PayloadAction<any>) => {
-                console.log('fetchGeneralSettings rejected');
                 state.isLoading = false;
                 state.error = action.payload;
             });

@@ -4,6 +4,8 @@ const Assets = {
     loanIcon: require('../../assets/images/common/loan.png'),
     defaultAvatar: require('../../assets/images/common/profile.png'),
     placeHolderImage: require('../../assets/images/common/place_holder.png'),
+    errorIcon: require('../../assets/icons/error.svg'),
+    successIcon: require('../../assets/icons/success_icon.svg'),
 };
 
 

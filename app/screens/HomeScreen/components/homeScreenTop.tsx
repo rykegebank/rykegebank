@@ -21,14 +21,14 @@ const HomeScreenTop: React.FC = () => {
             <View style={styles.row}>
                 <TouchableOpacity
                     style={{ flex: 8 }}
-                    onPress={() => navigation.navigate(Routes.login)}>
+                    onPress={() => navigation.navigate(Routes.profile)}>
                     <View style={styles.profileContainer}>
                         <CircleImageButton
                             height={Dimensions.size40}
                             width={Dimensions.size40}
-                            imagePath={`${Endpoints.domain}/assets/images/user/profile/${imagePath}`}
+                            imagePath={`${Endpoints.domain}assets/images/user/profile/${imagePath}`}
                             isAsset={false}
-                            press={() => navigation.navigate(Routes.login)}
+                            press={() => navigation.navigate(Routes.profile)}
                             isProfile={true}
                         />
                         <View style={styles.infoContainer}>

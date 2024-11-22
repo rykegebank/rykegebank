@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../../store';
 import { DashboardResponseModel } from '../../../data/dashboard'; // Make sure to import the appropriate types
 import { request } from '../../../utils/apiClient';
-import { formatNumber } from '../../../utils/stringFormatHelper';
 import { Endpoints } from '../../../constants';
-import { selectGeneralSettings, getCurrencyOrUsername } from '../../../hooks/generalSettings';
-
+import { getCurrencyOrUsername } from '../../../hooks/generalSettings';
+import { formatNumber } from '../../../utils/stringFormatHelper';
+import { manageApiException } from '../../../utils/errorHandler';
 // Define state structure
 interface HomeState {
     isLoading: boolean;
@@ -83,7 +83,6 @@ export const loadData = createAsyncThunk(
     }
 );
 
-// Define the home slice
 const homeSlice = createSlice({
     name: 'home',
     initialState,
@@ -98,6 +97,7 @@ const homeSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(loadData.fulfilled, (state, action: PayloadAction<any>) => {
+
                 state.username = action.payload.username;
                 state.email = action.payload.email;
                 state.accountNumber = action.payload.accountNumber;
@@ -114,6 +114,7 @@ const homeSlice = createSlice({
                 if (action.payload === 'No internet connection') {
                     state.noInternet = true;
                 }
+                manageApiException(action.payload || action.error.message);
             });
     },
 });

@@ -4,6 +4,8 @@ export const windowHeight = dimensions.get('window').height;
 export const windowWidth = dimensions.get('window').width;
 
 const Dimensions = {
+  windowHeight,
+  windowWidth,
   appLogoHeight: 110.00,
   appLogoWidth: 110.00,
 
@@ -20,6 +22,7 @@ const Dimensions = {
   space20: 20,
 
   //sizes
+  size10: 10,
   size20: 20,
   size35: 35,
   size40: 40,
