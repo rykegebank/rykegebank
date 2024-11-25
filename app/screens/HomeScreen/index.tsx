@@ -3,13 +3,12 @@ import {
     View,
     StyleSheet,
     RefreshControl,
-    ScrollView,
-    SafeAreaView
+    ScrollView
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadData, setNoInternetStatus } from './hooks/homeSlice';
 import HomeScreenTop from './components/homeScreenTop';
-import NoDataFoundScreen from '../../components/noData';
+import NoInternet from '../../components/noData/noInternet';
 import LoadingIndicator from '../../components/loader/loadingIndicator';
 import HomeScreenItemsSection from './components/homeScreenItemSection';
 import { Colors, Dimensions, Strings } from '../../constants';
@@ -30,7 +29,7 @@ const HomeScreen: React.FC = () => {
 
     if (noInternet) {
         return (
-            <NoDataFoundScreen
+            <NoInternet
                 isNoInternet={true}
                 press={(value) => {
                     if (value) {
@@ -43,8 +42,6 @@ const HomeScreen: React.FC = () => {
     }
 
     return (
-        // Wrap the entire screen in SafeAreaView to ensure content respects safe areas
-        <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
                 <ScrollView
                     refreshControl={
@@ -77,7 +74,6 @@ const HomeScreen: React.FC = () => {
                     </View>
                 )}
             </View>
-        </SafeAreaView>
     );
 };
 

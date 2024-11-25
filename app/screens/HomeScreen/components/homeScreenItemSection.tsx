@@ -8,7 +8,7 @@ import TopButtons from './topButtons';
 import CustomDivider from '../../../components/divider/customDivider';
 import CustomText from '../../../components/text/customText';
 import { RootState } from '../../../store';
-import NoDataFound from '../../../components/noData/component/NoDataFound';
+import NoDataFound from '../../../components/noData/NoDataFound';
 import LatestTransactionListItem from '../components/latestTransactionListItem';
 import { formatNumber } from '../../../utils/stringFormatHelper';
 import { isoStringToLocalDateOnly, isoStringToLocalTimeOnly } from '../../../utils/dateConvert';

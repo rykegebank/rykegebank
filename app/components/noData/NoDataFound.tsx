@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Dimensions, Strings } from '../../../constants';
-import { getUnselectedIconColor, getTextColor } from '../../../constants/colors';
-import MyIcon from '../../../../assets/images/common/no_data.svg';
+import { Dimensions, Strings } from '../../constants';
+import { getUnselectedIconColor, getTextColor } from '../../constants/colors';
+import MyIcon from '../../../assets/images/common/no_data.svg';
 
 interface NoDataFoundProps {
   topMargin?: number;
