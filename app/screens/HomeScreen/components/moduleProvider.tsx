@@ -1,6 +1,6 @@
 import React from 'react';
 
-import CircleAnimatedButtonWithText from '../../../components/buttons/circleAnimatedButtonText';
+import CircleAnimatedButtonWithText from '../../../components/Buttons/circleAnimatedButtonText';
 import Deposit from '../../../../assets/images/deposit_1.svg';
 import Fdr from '../../../../assets/images/fdr.svg';
 import Dps from '../../../../assets/images/dps.svg';
@@ -8,7 +8,7 @@ import Withdraw from '../../../../assets/images/withdraw.svg';
 import Transfer from '../../../../assets/images/transfer_solid.svg';
 import Transaction from '../../../../assets/images/transaction_solid.svg';
 import Referral from '../../../../assets/images/referral.svg';
-import CustomImage from '../../../components/image/customImage';
+import CustomImage from '../../../components/Image/customImage';
 import { Colors, Strings, Dimensions, Assets, Routes } from '../../../constants';
 
 interface ModuleProviderProps {

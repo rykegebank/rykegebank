@@ -1,20 +1,22 @@
 import React from 'react';
-import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
 
-import { Colors, Routes, Dimensions, Endpoints } from '../../../constants';
+import { Colors, Routes, Dimensions } from '../../../constants';
+
+import {URLS} from '../../../data/urls';
 import BalanceAnimationContainer from './../components/balanceAnimationContainer';
-import CircleImageButton from '../../../components/image/circleImageButton';
-import CustomText from '../../../components/text/customText';
+import CircleImageButton from '../../../components/Image/circleImageButton';
+import CustomText from '../../../components/Text/customText';
 import { hexToRgba } from '../../../utils/helperFunctions';
-import { RootState } from '../../../store';
+import { useHomeQuery } from '../hooks/home'; 
 
 const HomeScreenTop: React.FC = () => {
     const navigation = useNavigation();
-    const { balance, currencySymbol, accountNumber, username, imagePath } = useSelector(
-        (state: RootState) => state.home
-    );
+
+    const { data, isLoading, error } = useHomeQuery(); 
+
+    const { balance, currencySymbol, accountNumber, username, imagePath } = data || {};
 
     return (
         <View style={styles.container}>
@@ -26,22 +28,26 @@ const HomeScreenTop: React.FC = () => {
                         <CircleImageButton
                             height={Dimensions.size40}
                             width={Dimensions.size40}
-                            imagePath={`${Endpoints.domain}assets/images/user/profile/${imagePath}`}
+                            imagePath={`${URLS.baseUrl}assets/images/user/profile/${imagePath}`}
                             isAsset={false}
                             press={() => navigation.navigate(Routes.profile)}
                             isProfile={true}
                         />
                         <View style={styles.infoContainer}>
-                            <CustomText fontSize={Dimensions.fontLarge} color={Colors.colorWhite} style={styles.text}> {username} </CustomText>
-                            <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(Colors.colorWhite, 0.8)} style={styles.text}> {accountNumber} </CustomText>
+                            <CustomText fontSize={Dimensions.fontLarge} color={Colors.colorWhite} style={styles.text}>
+                                {username}
+                            </CustomText>
+                            <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(Colors.colorWhite, 0.8)} style={styles.text}>
+                                {accountNumber}
+                            </CustomText>
                         </View>
                     </View>
                 </TouchableOpacity>
 
                 <View style={styles.balanceContainer}>
                     <BalanceAnimationContainer
-                        amount={balance}
-                        curSymbol={currencySymbol}
+                        amount={balance ?? ''}
+                        curSymbol={currencySymbol ?? ''}
                     />
                 </View>
             </View>
@@ -54,7 +60,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.primaryColor,
         paddingTop: Dimensions.space20,
         paddingHorizontal: Dimensions.space15,
-        height: 90
+        height: 90,
     },
     row: {
         flexDirection: 'row',
@@ -65,16 +71,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    profileImage: {
-        height: 40,
-        width: 40,
-        borderRadius: Dimensions.space20,
-    },
     infoContainer: {
         marginLeft: Dimensions.space15,
     },
     text: {
-        paddingBottom: Dimensions.space5
+        paddingBottom: Dimensions.space5,
     },
     balanceContainer: {
         width: 130,

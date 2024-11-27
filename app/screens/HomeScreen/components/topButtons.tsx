@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
 import ModuleProvider from './moduleProvider';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store';
+import { useGeneralSettings } from '../../../hooks/generalSettings';
 import { useNavigation } from '@react-navigation/native';
 
 const TopButtons: React.FC = () => {
     const navigation = useNavigation();
+
+    const { settings } = useGeneralSettings();
+
     const {
         isDepositEnable,
         isWithdrawEnable,
         isFDREnable,
         isDPSEnable,
         isLoanEnable,
-        isReferralEnable,
-    } = useSelector((state: RootState) => state.generalSettings);
+        isReferralEnable
+    } = settings;
 
     const [moduleList, setModuleList] = useState<JSX.Element[]>([]);
 
     const screenWidth = Dimensions.get('window').width;
-    const totalPadding = 32 + 24; // Horizontal padding and spacing
+    const totalPadding = 32 + 24;
     const maxItemsPerRow = 4;
     const itemWidth = (screenWidth - totalPadding) / maxItemsPerRow;
 
@@ -30,12 +32,12 @@ const TopButtons: React.FC = () => {
             isFDREnable,
             isDPSEnable,
             isLoanEnable,
-            isReferralEnable, 
+            isReferralEnable,
             navigation
         });
 
         setModuleList(modules.filter(Boolean) as JSX.Element[]);
-    }, [isDepositEnable, isWithdrawEnable, isFDREnable, isDPSEnable, isLoanEnable, isReferralEnable]);
+    }, [isDepositEnable, isWithdrawEnable, isFDREnable, isDPSEnable, isLoanEnable, isReferralEnable, navigation]);
 
     const renderRows = () => {
         const rows = [];
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         marginBottom: 8,
-        alignItems: 'center', // Vertically align items
+        alignItems: 'center',
     },
     itemWrapper: {
         alignItems: 'center',

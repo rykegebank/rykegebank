@@ -4,7 +4,7 @@ import LottieView from 'lottie-react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { Assets, Strings, Colors, Dimensions } from '../../constants';
 import { windowHeight, windowWidth } from '../../constants/dimensions';
-import NoDataFound from './NoDataFound';
+import NoDataFound from './noDataFound';
 
 interface NoInternetProps {
   title?: string;

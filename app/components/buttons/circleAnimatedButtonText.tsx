@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TouchableWithoutFeedback, Animated, StyleSheet } from 'react-native';
-import CustomText from '../../components/text/customText';
+import CustomText from '../Text/customText';
 import { Dimensions } from '../../constants';
 
 interface CircleAnimatedButtonWithTextProps {

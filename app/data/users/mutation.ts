@@ -16,7 +16,7 @@ export interface SignUpParams {
     agree: number;
 }
 
-interface SignUpResponse { 
+interface SignUpResponse {
     data: any
 }
 
@@ -32,14 +32,14 @@ export const useSignUp = () => {
     const navigation = useNavigation()
     return useMutation({
         mutationFn: async (params: SignUpParams) => {
-    
+
             console.log(params)
             const {
-                data 
+                data
             } = await api.post<SignUpResponse>(URLS.signUp, {
                 ...params
             })
-        
+
         },
         onSuccess: (data) => {
             navigation.goBack()
@@ -52,7 +52,7 @@ export const useForgotPassword = () => {
     const navigation = useNavigation()
     return useMutation({
         mutationFn: async (params: ForgotPasswordParams) => {
-    
+
             const {
                 data ,
             } = await api.post<ForgotPasswordResponse>(URLS.forgotPassword, {
@@ -73,5 +73,5 @@ export const useForgotPassword = () => {
                 navigation.goBack()
             }
         },
-      });
+    });
 } 

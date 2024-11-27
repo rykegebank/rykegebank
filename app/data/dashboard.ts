@@ -17,15 +17,6 @@ export class DashboardResponseModel {
     this.message = json?.message ? new Message(json.message) : undefined;
     this.data = json?.data ? new Data(json.data) : undefined;
   }
-
-  toJson(): any {
-    return {
-      remark: this.remark,
-      status: this.status,
-      message: this.message?.toJson(),
-      data: this.data?.toJson(),
-    };
-  }
 }
 
 export interface Message {
@@ -37,12 +28,6 @@ export class Message {
 
   constructor(json?: any) {
     this.text = json?.text;
-  }
-
-  toJson(): any {
-    return {
-      text: this.text,
-    };
   }
 }
 
@@ -65,15 +50,6 @@ export class Data {
     this.latest_credits = json?.latest_credits ? new LatestCredits(json.latest_credits) : undefined;
     this.latest_debits = json?.latest_debits ? new LatestDebits(json.latest_debits) : undefined;
   }
-
-  toJson(): any {
-    return {
-      user: this.user?.toJson(),
-      dashboard_data: this.dashboard_data?.toJson(),
-      latest_credits: this.latest_credits?.toJson(),
-      latest_debits: this.latest_debits?.toJson(),
-    };
-  }
 }
 
 export interface LatestDebits {
@@ -91,14 +67,6 @@ export class LatestDebits {
     this.data = json?.data?.map((item: any) => new LatestDebitsData(item)) || [];
     this.next_page_url = json?.next_page_url;
     this.path = json?.path;
-  }
-
-  toJson(): any {
-    return {
-      data: this.data?.map((item) => item.toJson()),
-      next_page_url: this.next_page_url,
-      path: this.path,
-    };
   }
 }
 
@@ -148,24 +116,6 @@ export class LatestDebitsData {
     this.created_at = json?.created_at;
     this.updated_at = json?.updated_at;
   }
-
-  toJson(): any {
-    return {
-      id: this.id,
-      user_id: this.user_id,
-      branch_id: this.branch_id,
-      branch_staff_id: this.branch_staff_id,
-      amount: this.amount,
-      charge: this.charge,
-      post_balance: this.post_balance,
-      trx_type: this.trx_type,
-      trx: this.trx,
-      details: this.details,
-      remark: this.remark,
-      created_at: this.created_at,
-      updated_at: this.updated_at,
-    };
-  }
 }
 
 export interface LatestCredits {
@@ -183,14 +133,6 @@ export class LatestCredits {
     this.data = json?.data?.map((item: any) => new LatestCreditsData(item)) || [];
     this.next_page_url = json?.next_page_url;
     this.path = json?.path;
-  }
-
-  toJson(): any {
-    return {
-      data: this.data?.map((item) => item.toJson()),
-      next_page_url: this.next_page_url,
-      path: this.path,
-    };
   }
 }
 
@@ -240,24 +182,6 @@ export class LatestCreditsData {
     this.created_at = json?.created_at;
     this.updated_at = json?.updated_at;
   }
-
-  toJson(): any {
-    return {
-      id: this.id,
-      user_id: this.user_id,
-      branch_id: this.branch_id,
-      branch_staff_id: this.branch_staff_id,
-      amount: this.amount,
-      charge: this.charge,
-      post_balance: this.post_balance,
-      trx_type: this.trx_type,
-      trx: this.trx,
-      details: this.details,
-      remark: this.remark,
-      created_at: this.created_at,
-      updated_at: this.updated_at,
-    };
-  }
 }
 
 export interface DashboardData {
@@ -284,17 +208,6 @@ export class DashboardData {
     this.total_loan = json?.total_loan?.toString();
     this.total_dps = json?.total_dps?.toString();
     this.total_trx = json?.total_trx?.toString();
-  }
-
-  toJson(): any {
-    return {
-      total_deposit: this.total_deposit,
-      total_fdr: this.total_fdr,
-      total_withdraw: this.total_withdraw,
-      total_loan: this.total_loan,
-      total_dps: this.total_dps,
-      total_trx: this.total_trx,
-    };
   }
 }
 
@@ -383,37 +296,6 @@ export class User {
     this.created_at = json?.created_at;
     this.updated_at = json?.updated_at;
   }
-
-  toJson(): any {
-    return {
-      id: this.id,
-      branch_id: this.branch_id,
-      branch_staff_id: this.branch_staff_id,
-      account_number: this.account_number,
-      firstname: this.firstname,
-      lastname: this.lastname,
-      username: this.username,
-      email: this.email,
-      country_code: this.country_code,
-      mobile: this.mobile,
-      ref_by: this.ref_by,
-      referral_commission_count: this.referral_commission_count,
-      balance: this.balance,
-      image: this.image,
-      address: this.address?.toJson(),
-      status: this.status,
-      ev: this.ev,
-      sv: this.sv,
-      ver_code_send_at: this.ver_code_send_at,
-      ts: this.ts,
-      tv: this.tv,
-      tsc: this.tsc,
-      kv: this.kv,
-      otp_verified: this.otp_verified,
-      created_at: this.created_at,
-      updated_at: this.updated_at,
-    };
-  }
 }
 
 export interface Address {
@@ -431,13 +313,5 @@ export class Address {
     this.city = json?.city?.toString();
     this.country = json?.country?.toString();
     this.postal_code = json?.postal_code?.toString();
-  }
-
-  toJson(): any {
-    return {
-      city: this.city,
-      country: this.country,
-      postal_code: this.postal_code,
-    };
   }
 }

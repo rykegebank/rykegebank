@@ -1,22 +1,19 @@
 import React, { FC } from 'react';
 import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
-import { useSelector } from 'react-redux';
 
 import { Colors, Dimensions, Strings } from '../../../constants';
 import { getCardBg } from '../../../constants/colors';
 import TopButtons from './topButtons';
-import CustomDivider from '../../../components/divider/customDivider';
-import CustomText from '../../../components/text/customText';
-import { RootState } from '../../../store';
-import NoDataFound from '../../../components/noData/NoDataFound';
+import CustomDivider from '../../../components/Divider/customDivider';
+import CustomText from '../../../components/Text/customText';
+import NoDataFound from '../../../components/NoData/noDataFound';
 import LatestTransactionListItem from '../components/latestTransactionListItem';
 import { formatNumber } from '../../../utils/stringFormatHelper';
 import { isoStringToLocalDateOnly, isoStringToLocalTimeOnly } from '../../../utils/dateConvert';
+import { useHomeQuery } from "../hooks/home";
 
 const HomeScreenItemsSection: React.FC = () => {
-  const { debitsLists, currencySymbol, currency } = useSelector(
-    (state: RootState) => state.home
-  );
+  const { data, isLoading, error, refetch } = useHomeQuery();
 
   return (
     <View style={styles.container}>
@@ -32,11 +29,11 @@ const HomeScreenItemsSection: React.FC = () => {
           {Strings.latestTransaction}
         </CustomText>
 
-        {debitsLists.length === 0 ? (
+        {data?.debitsLists.length === 0 ? (
           <NoDataFound topMargin={60} />
         ) : (
           <FlatList
-            data={debitsLists}
+            data={data?.debitsLists}
             keyExtractor={(item, index) => index.toString()}
             scrollEnabled={false}
             contentContainerStyle={styles.flatListContainer}
@@ -46,8 +43,8 @@ const HomeScreenItemsSection: React.FC = () => {
                 isCredit={item.trx_type === '+'}
                 trx={item.trx || ''}
                 date={`${isoStringToLocalDateOnly(item.created_at || '')}, ${isoStringToLocalTimeOnly(item.created_at || '')}`}
-                amount={`${currencySymbol}${formatNumber(item.amount || "")}`}
-                postBalance={`${formatNumber(item.post_balance || "")} ${currency}`}
+                amount={`${data?.currencySymbol}${formatNumber(item.amount || "")}`}
+                postBalance={`${formatNumber(item.post_balance || "")} ${data?.currency}`}
                 onPressed={() => { }}
               />
             )}
