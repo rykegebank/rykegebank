@@ -1,7 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
-import api from '../data/api';
-import { URLS } from '../data/urls';
-import { GeneralSettingsResponseModel } from '../data/generalSettings';
+import { useGeneralSettingsQuery } from '../data/generalSettings/queries';
 
 interface GeneralSettingsState {
     isDepositEnable: boolean;
@@ -14,24 +11,8 @@ interface GeneralSettingsState {
     currencySymbol: string;
 }
 
-const fetchGeneralSettings = async () => {
-    try {
-        const response = await api.get(URLS.generalSettings);
-
-        // console.log('Raw General Settings Response:', response.data);
-
-        return response.data;
-    } catch (error: any) {
-        console.error('Error fetching general settings:', error.message || 'Unknown error');
-        throw new Error(error.message || 'Failed to fetch general settings');
-    }
-};
-
 export const useGeneralSettings = () => {
-    const { data, error, isLoading } = useQuery<GeneralSettingsResponseModel, Error>({
-        queryKey: ['generalSettings'],
-        queryFn: fetchGeneralSettings,
-    });
+    const { data, error, isLoading } = useGeneralSettingsQuery();
 
     const settings: GeneralSettingsState = {
         isDepositEnable: false,
@@ -40,13 +21,12 @@ export const useGeneralSettings = () => {
         isDPSEnable: false,
         isLoanEnable: false,
         isReferralEnable: false,
-        currencyText: 'tbd',
+        currencyText: '',
         currencySymbol: '',
     };
 
     if (data) {
         const modules = data.data?.general_setting?.modules || {};
-        // console.log('Parsed modules:', data.data?.general_setting);
 
         settings.isDepositEnable = modules.deposit == '1';
         settings.isWithdrawEnable = modules.withdraw == '1';
@@ -56,10 +36,8 @@ export const useGeneralSettings = () => {
         settings.isReferralEnable = modules.referral_system == '1';
 
         const model = data.data?.general_setting;
-        settings.currencyText = model?.cur_text ?? 'tbd';
+        settings.currencyText = model?.cur_text ?? '';
         settings.currencySymbol = model?.cur_sym ?? '';
-
-        // console.log('Parsed Settings:', settings);
     }
 
     const getCurrencyOrUsername = ({
@@ -72,9 +50,9 @@ export const useGeneralSettings = () => {
         if (isCurrency) {
             return isSymbol ? settings.currencySymbol : settings.currencyText;
         } else {
-            return 'tbd';
+            return 'tbd'; // need to fetch from shared pref
         }
-    };
+    }
 
     return {
         settings,

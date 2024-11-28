@@ -31,7 +31,7 @@ export const useBalanceAnimation = (): UseBalanceAnimationResult => {
           duration: 500,
           useNativeDriver: false,
         }),
-        Animated.delay(2000),
+        Animated.delay(1500),
         Animated.timing(circleOpacity, {
           toValue: 1,
           duration: 500,

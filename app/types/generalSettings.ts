@@ -6,11 +6,11 @@ export interface GeneralSettingsResponseModel {
 }
 
 export interface Message {
-  [key: string]: any; // Customize this type as per the expected structure of `Message`
+  [key: string]: any; 
 }
 
 export interface Data {
-  general_setting?: GeneralSetting;  // This should be optional since it can be missing
+  general_setting?: GeneralSetting;  
 }
 
 export interface GeneralSetting {
@@ -37,7 +37,7 @@ export interface GeneralSetting {
   registration?: string;
   active_template?: string;
   system_info?: string;
-  modules?: Modules;  // Optional module data
+  modules?: Modules; 
   account_no_length?: string;
   account_no_prefix?: string;
   otp_time?: string;
@@ -50,7 +50,7 @@ export interface GeneralSetting {
   last_dps_cron?: string;
   last_fdr_cron?: string;
   last_loan_cron?: string;
-  created_at?: any; // Replace `any` with the actual type if known
+  created_at?: any;
   updated_at?: string;
 }
 

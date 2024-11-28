@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../../../data/api";
 import { URLS } from "../../../data/urls";
-import { DashboardResponseModel } from "../../../data/dashboard";
+import { DashboardResponseModel } from "../../../types/dashboard";
 import { formatNumber } from "../../../utils/stringFormatHelper";
 import { useGeneralSettings } from "../../../hooks/generalSettings";
 
