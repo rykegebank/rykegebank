@@ -21,8 +21,9 @@ const HomeScreenItemsSection: React.FC = () => {
         contentContainerStyle={styles.scrollViewContainer}
         showsVerticalScrollIndicator={false}>
         <TopButtons />
-        <CustomDivider space={20} />
+        <CustomDivider space={10} />
         <CustomText
+          style={styles.space}
           fontSize={Dimensions.fontLarge}
           color={Colors.labelTextColor}
           fontWeight={'500'}>
@@ -56,6 +57,9 @@ const HomeScreenItemsSection: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  space: {
+    paddingVertical: Dimensions.space5,
+  },
   container: {
     flex: 1,
     backgroundColor: getCardBg(),
