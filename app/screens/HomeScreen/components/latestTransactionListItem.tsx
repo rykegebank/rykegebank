@@ -8,8 +8,8 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { Colors, Dimensions } from '../../../constants';
-import CustomDivider from '../../../components/Divider/customDivider';
-import CustomText from '../../../components/Text/customText';
+import CustomDivider from '../../../components/dividers/customDivider';
+import CustomText from '../../../components/Texts/customText';
 import { getTextColor } from '../../../constants/colors';
 import { hexToRgba } from '../../../utils/helperFunctions';
 

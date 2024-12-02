@@ -6,8 +6,8 @@ import { Colors, Routes, Dimensions } from '../../../constants';
 
 import {URLS} from '../../../data/urls';
 import BalanceAnimationContainer from './../components/balanceAnimationContainer';
-import CircleImageButton from '../../../components/Image/circleImageButton';
-import CustomText from '../../../components/Text/customText';
+import CircleImageButton from '../../../components/ImageContainer/circleImageButton';
+import CustomText from '../../../components/Texts/customText';
 import { hexToRgba } from '../../../utils/helperFunctions';
 import { useHomeQuery } from '../hooks/home'; 
 

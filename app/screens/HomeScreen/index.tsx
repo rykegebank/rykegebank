@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../store"
 import { useHomeQuery } from "./hooks/home";
 import HomeScreenTop from "./components/homeScreenTop";
-import NoInternet from "../../components/NoData/noInternet";
-import LoadingIndicator from "../../components/Loader/loadingIndicator";
+import NoInternet from "../../components/NoDataFound/noInternet";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 import HomeScreenItemsSection from "./components/homeScreenItemSection";
 import { Colors, Dimensions, Strings } from "../../constants";
 import { hexToRgba } from "../../utils/helperFunctions";
