@@ -8,7 +8,17 @@ import { TextInput } from "react-native-paper";
 import { request } from "../../utils/apiClient";
 import { Endpoints, Routes } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "../../hooks/useAuth";
+import { LoginParams, useAuth } from "../../hooks/useAuth";
+import { z } from "zod";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const loginSchema = z.object({
+  email: z.coerce
+    .string()
+    .min(6, { message: "The username must be at least 6 characters." }),
+  password: z.string().min(1),
+});
 const LoginScreen = () => {
   const [checked, setChecked] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -16,13 +26,22 @@ const LoginScreen = () => {
   const { login } = useAuth();
   const navigation = useNavigation();
 
-  const signIn = async () => {
-    login({
-      email: "user@demo.com",
-      password: "User_321",
-    });
+  const onSubmit = (data: LoginParams) => {
+    login(data);
   };
 
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<LoginParams>({
+    resolver: zodResolver(loginSchema),
+    mode: "onSubmit",
+    defaultValues: {
+      email: "user@demo.com",
+      password: "User_321",
+    },
+  });
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Let's sign you in.</Text>
@@ -30,22 +49,41 @@ const LoginScreen = () => {
         Welcome back, please enter your details
       </Text>
 
-      <GenericInput
-        label="Username or Email"
-        mode="outlined"
-        style={styles.input}
-      />
-      <GenericInput
-        label="Password"
-        mode="outlined"
-        secureTextEntry={!passwordVisible}
-        right={
-          <TextInput.Icon
-            icon={passwordVisible ? "eye-off" : "eye"}
-            onPress={() => setPasswordVisible(!passwordVisible)}
+      <Controller
+        control={control}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <GenericInput
+            label="Username or Email"
+            mode="outlined"
+            value={value}
+            style={styles.input}
+            error={error?.message}
           />
-        }
-        style={styles.input}
+        )}
+        name="email"
+        rules={{ required: true }}
+      />
+
+      <Controller
+        control={control}
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <GenericInput
+            label="Password"
+            mode="outlined"
+            value={value}
+            secureTextEntry={!passwordVisible}
+            right={
+              <TextInput.Icon
+                icon={passwordVisible ? "eye-off" : "eye"}
+                onPress={() => setPasswordVisible(!passwordVisible)}
+              />
+            }
+            style={styles.input}
+            error={error?.message}
+          />
+        )}
+        name="password"
+        rules={{ required: true }}
       />
 
       <View style={styles.row}>
@@ -63,7 +101,7 @@ const LoginScreen = () => {
       </View>
 
       <GenericButton
-        onPress={signIn}
+        onPress={handleSubmit(onSubmit)}
         mode="contained"
         style={styles.signInButton}
       >
@@ -121,7 +159,8 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     fontSize: 14,
-    color: "#007bff",
+    color: "#1e293b",
+    textDecorationLine: "underline",
   },
   signInButton: {
     backgroundColor: "#1e293b",
@@ -138,8 +177,9 @@ const styles = StyleSheet.create({
   },
   signUp: {
     fontSize: 14,
-    color: "#007bff",
+    color: "#1e293b",
     fontWeight: "bold",
+    textDecorationLine: "underline",
   },
 });
 

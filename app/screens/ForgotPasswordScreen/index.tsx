@@ -11,7 +11,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface ForgotPassword {
+interface ForgotPasswordDetails {
   value: string;
 }
 
@@ -26,11 +26,16 @@ const ForgotPasswordScreen = () => {
   const navigation = useNavigation();
   const forgotPassword = useForgotPassword();
 
+  const onSubmit = (data: ForgotPasswordDetails) => {
+    forgotPassword.mutate({
+      value: data.value,
+    });
+  };
   const {
     control,
     handleSubmit,
     formState: { isValid },
-  } = useForm<ForgotPassword>({
+  } = useForm<ForgotPasswordDetails>({
     resolver: zodResolver(forgotPasswordSchema),
     mode: "onSubmit",
   });
@@ -38,7 +43,14 @@ const ForgotPasswordScreen = () => {
     <View style={styles.container}>
       {/* Appbar */}
       <View style={styles.header}>
-        <EvilIcons name="arrow-left" size={24} color="#ffffff" />
+        <EvilIcons
+          name="arrow-left"
+          size={24}
+          color="#ffffff"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
         <Text style={styles.headerTitle}>Forgot Password</Text>
       </View>
 
@@ -68,11 +80,7 @@ const ForgotPasswordScreen = () => {
         <GenericButton
           mode="contained"
           style={styles.submitButton}
-          onPress={() => {
-            forgotPassword.mutate({
-              value: "",
-            });
-          }}
+          onPress={handleSubmit(onSubmit)}
         >
           Submit
         </GenericButton>

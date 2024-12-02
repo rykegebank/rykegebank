@@ -48,23 +48,30 @@ export const useSignUp = () => {
 } 
 
 
-
-
 export const useForgotPassword = () => {
     const navigation = useNavigation()
     return useMutation({
         mutationFn: async (params: ForgotPasswordParams) => {
     
             const {
-                data 
+                data ,
             } = await api.post<ForgotPasswordResponse>(URLS.forgotPassword, {
                 ...params
             })
+
+            return data
+            // console.log(data)
         
         },
         onSuccess: (data) => {
-            Alert.alert('Code has been sent to your email')
-            navigation.goBack()
+            if(data?.message?.error?.[0]) {
+
+                Alert.alert(data?.message?.error?.[0])
+            } else {
+
+                Alert.alert('Code has been sent to your email')
+                navigation.goBack()
+            }
         },
       });
 } 
