@@ -6,7 +6,7 @@ import { getCardBg } from '../../../constants/colors';
 import TopButtons from './topButtons';
 import CustomDivider from '../../../components/Divider/customDivider';
 import CustomText from '../../../components/Text/customText';
-import NoDataFound from '../../../components/NoData/noDataFound';
+import NoDataFound from '../../../components/NoData/NoDataFound';
 import LatestTransactionListItem from '../components/latestTransactionListItem';
 import { formatNumber } from '../../../utils/stringFormatHelper';
 import { isoStringToLocalDateOnly, isoStringToLocalTimeOnly } from '../../../utils/dateConvert';
