@@ -4,7 +4,7 @@ import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
 import { Colors, Dimensions, Strings } from '../../../constants';
 import { getCardBg } from '../../../constants/colors';
 import TopButtons from './topButtons';
-import CustomDivider from '../../../components/dividers/customDivider';
+import CustomDivider from '../../../components/Dividers/customDivider';
 import CustomText from '../../../components/Texts/customText';
 import NoDataFound from '../../../components/NoDataFound/NoDataFound';
 import LatestTransactionListItem from '../components/latestTransactionListItem';
