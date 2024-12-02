@@ -1,5 +1,7 @@
 import React from "react";
 import { View, StyleSheet, RefreshControl, ScrollView } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../../store"
 import { useHomeQuery } from "./hooks/home";
 import HomeScreenTop from "./components/homeScreenTop";
 import NoInternet from "../../components/NoData/noInternet";
@@ -7,17 +9,21 @@ import LoadingIndicator from "../../components/Loader/loadingIndicator";
 import HomeScreenItemsSection from "./components/homeScreenItemSection";
 import { Colors, Dimensions, Strings } from "../../constants";
 import { hexToRgba } from "../../utils/helperFunctions";
+import { setOffline } from '../../hooks/internetSlice';
 
 const HomeScreen = () => {
-    const { data, isFetching, error, refetch } = useHomeQuery();
+    const { isFetching, refetch } = useHomeQuery();
+    const dispatch = useDispatch<AppDispatch>();
+    const { isOffline } = useSelector((state: RootState) => state.internet)
 
-    if (error?.message === "No internet connection") {
+    if (isOffline) {
         return (
             <NoInternet
                 isNoInternet={true}
                 press={(value) => {
                     if (value) {
                         refetch();
+                        dispatch(setOffline(false));
                     }
                 }}
             />

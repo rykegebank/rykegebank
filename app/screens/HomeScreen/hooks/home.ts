@@ -1,9 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
+import { setOffline } from "../../../hooks/internetSlice";
 import api from "../../../data/api";
 import { URLS } from "../../../data/urls";
 import { DashboardResponseModel } from "../../../types/dashboard";
 import { formatNumber } from "../../../utils/stringFormatHelper";
 import { useGeneralSettings } from "../../../hooks/generalSettings";
+import { manageApiException } from '../../../utils/errorHandler';
 
 interface HomeData {
     username: string;
@@ -16,18 +19,17 @@ interface HomeData {
     debitsLists: any[];
 }
 
-// Fetch Function with useQuery
 export const useHomeQuery = () => {
+    const dispatch = useDispatch();
     const { getCurrencyOrUsername } = useGeneralSettings();
 
-    return useQuery<HomeData>({
-        queryKey: ['homeData'],
+    return useQuery<HomeData, Error>({
+        queryKey: ["homeData"],
         queryFn: async () => {
             try {
                 const response = await api.get(URLS.dashboard);
                 const model = response.data as DashboardResponseModel;
 
-                console.log('model ', model);
                 const debitsLists = [
                     ...(model.data?.latest_credits?.data?.map((credit) => ({
                         ...credit,
@@ -49,11 +51,14 @@ export const useHomeQuery = () => {
                     debitsLists,
                 };
             } catch (error: any) {
+                const errorMessage = error.response?.data?.message || error.message || "An error occurred";
                 if (error.response?.status === 503) {
-                    throw new Error("No internet connection");
+                    dispatch(setOffline(true));
                 }
-                throw new Error(error?.response?.data?.message || error.message || "An error occurred");
+                manageApiException(error);
+                throw new Error(errorMessage);
             }
-        },
+        }
+
     });
 };

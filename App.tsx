@@ -1,5 +1,7 @@
 import React from "react";
 import RootStack from "./app/navigations";
+import { store } from "./app/store";
+import { Provider } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FlashMessage from "react-native-flash-message";
 import {
@@ -13,6 +15,7 @@ const App = () => {
   const queryClient = new QueryClient();
 
   return (
+    <Provider store={store}>
     <QueryClientProvider client={queryClient}>
       <PaperProvider>
         <SafeAreaView style={{ flex: 1 }}>
@@ -21,6 +24,7 @@ const App = () => {
         </SafeAreaView>
       </PaperProvider>
     </QueryClientProvider>
+    </Provider>
   );
 };
 

@@ -6,6 +6,7 @@ export const getErrorMessage = (exception: any): string => {
     }
     return 'Something went wrong. Please try again.';
 };
+
 export const manageApiException = async (exception: any) => {
     const errorMessage = getErrorMessage(exception);
     showError(errorMessage);
