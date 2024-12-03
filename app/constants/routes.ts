@@ -2,6 +2,7 @@ type RoutesType = {
   splash: string;
   login: string;
   home: string;
+  main: string;
   deposit: string;
   fdr: string;
   dps: string;
@@ -11,6 +12,7 @@ type RoutesType = {
   transaction: string;
   referral: string;
   profile: string;
+  menu: string;
   register: string;
   forgotPassword: string;
 };
@@ -19,6 +21,7 @@ const Routes: RoutesType = {
   splash: "Splash",
   login: "Login",
   home: "Home",
+  main: "Main",
   deposit: "Deposit",
   fdr: "Fdr",
   dps: "Dps",
@@ -28,6 +31,7 @@ const Routes: RoutesType = {
   transaction: "Transaction",
   referral: "Referral",
   profile: "Profile",
+  menu: "Menu",
   register: "Register",
   forgotPassword: "ForgotPassword",
 };

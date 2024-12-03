@@ -13,6 +13,7 @@ const Dimensions = {
   fontSmall: 11.00,
   fontDefault: 13,
   fontLarge: 15,
+  extraLarge: 20,
 
   //white space
   space5: 5,
@@ -24,9 +25,12 @@ const Dimensions = {
   //sizes
   size10: 10,
   size20: 20,
+  size23: 23,
+  size25: 25,
   size35: 35,
   size40: 40,
   size60: 60,
+  size65: 65,
   size80: 80,
 };
 

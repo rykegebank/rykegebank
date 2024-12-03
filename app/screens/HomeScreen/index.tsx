@@ -1,6 +1,8 @@
 import React from "react";
 import { View, StyleSheet, RefreshControl, ScrollView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
+import { useFocusEffect } from '@react-navigation/native';
+
 import { RootState, AppDispatch } from "../../store"
 import { useHomeQuery } from "./hooks/home";
 import HomeScreenTop from "./components/homeScreenTop";
@@ -14,7 +16,8 @@ import { setOffline } from '../../hooks/internetSlice';
 const HomeScreen = () => {
     const { isFetching, refetch } = useHomeQuery();
     const dispatch = useDispatch<AppDispatch>();
-    const { isOffline } = useSelector((state: RootState) => state.internet)
+    const { isOffline } = useSelector((state: RootState) => state.internet);
+
 
     if (isOffline) {
         return (

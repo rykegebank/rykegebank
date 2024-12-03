@@ -13,6 +13,9 @@ const Strings = {
     referral: "Referral",
     latestTransaction: "Latest Transactions",
     loadingPleaseWait: "Loading, please wait...",
+    home: "Home",
+    menu: "Menu",
+    profile: "Profile",
 
     error: "Error",
     success: "Success",

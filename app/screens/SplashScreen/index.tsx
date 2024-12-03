@@ -23,6 +23,7 @@ const SplashScreen: React.FC = () => {
 
   if (isLoading) {
     return (
+
       <View style={styles.container}>
         <Image source={Assets.appLogo} style={{ height: Dimensions.appLogoHeight, width: Dimensions.appLogoWidth }} />
       </View>

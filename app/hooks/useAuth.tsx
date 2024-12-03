@@ -15,7 +15,7 @@ export const useAuth = () => {
   const onAuthSuccess = () => {
     navigation.reset({
       index: 0,
-      routes: [{ name: Routes.home }],
+      routes: [{ name: Routes.main }],
     });
   };
 
