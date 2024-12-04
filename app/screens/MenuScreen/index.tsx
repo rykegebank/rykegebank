@@ -1,15 +1,15 @@
 import AppBar from '../../components/GenericAppBar';
 import { Strings } from '../../constants'
 
-
-const WithdrawScreen = () => {
+const MenuScreen = () => {
     return (
         <>
-              <AppBar
-                title={Strings.withdrawal}
+            <AppBar
+                title={Strings.menu}
+                showBackButton={false}
             />
         </>
     );
 };
 
-export default WithdrawScreen;
+export default MenuScreen;

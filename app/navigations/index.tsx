@@ -1,6 +1,7 @@
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import LoginScreen from "../screens/LoginScreen";
 import SplashScreen from "../screens/SplashScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -16,13 +17,26 @@ import ProfileScreen from "../screens/ProfileScreen";
 import Routes from "../constants/routes";
 import RegisterScreen from "../screens/RegisterScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
-
-export type RootStackParamList = {
-  LoginScreen: undefined;
-  ProfileScreen: undefined;
-};
+import MenuScreen from "../screens/MenuScreen";
+import BottomNav from "../components/BottomNav";
 
 const Stack = createNativeStackNavigator();
+
+const Tab = createBottomTabNavigator();
+
+const BottomTabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <BottomNav {...props} />}
+    >
+      <Tab.Screen name={Routes.home} component={HomeScreen} />
+      <Tab.Screen name={Routes.transfer} component={TransferScreen} />
+      <Tab.Screen name={Routes.transaction} component={TransactionScreen} />
+      <Tab.Screen name={Routes.menu} component={MenuScreen} />
+    </Tab.Navigator>
+  );
+};
 
 const RootStack = () => {
   return (
@@ -33,23 +47,21 @@ const RootStack = () => {
       >
         <Stack.Screen name={Routes.splash} component={SplashScreen} />
         <Stack.Screen name={Routes.login} component={LoginScreen} />
-        <Stack.Screen name={Routes.home} component={HomeScreen} />
+        <Stack.Screen name={Routes.register} component={RegisterScreen} />
+        <Stack.Screen name={Routes.forgotPassword} component={ForgotPasswordScreen} />
+
+        <Stack.Screen name={Routes.main} component={BottomTabNavigator} />
+
         <Stack.Screen name={Routes.deposit} component={DepositScreen} />
         <Stack.Screen name={Routes.fdr} component={FdrScreen} />
         <Stack.Screen name={Routes.dps} component={DpsScreen} />
         <Stack.Screen name={Routes.loan} component={LoanScreen} />
         <Stack.Screen name={Routes.withdraw} component={WithdrawScreen} />
-        <Stack.Screen name={Routes.transfer} component={TransferScreen} />
-        <Stack.Screen name={Routes.transaction} component={TransactionScreen} />
         <Stack.Screen name={Routes.referral} component={ReferralScreen} />
         <Stack.Screen name={Routes.profile} component={ProfileScreen} />
-        <Stack.Screen name={Routes.register} component={RegisterScreen} />
-        <Stack.Screen
-          name={Routes.forgotPassword}
-          component={ForgotPasswordScreen}
-        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
 export default RootStack;
