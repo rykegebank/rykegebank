@@ -43,7 +43,6 @@ const CountriesDropdown = ({
           }}
         >
           {options.map((e) => {
-            // console.log(e);
             return (
               <Picker.Item
                 key={e.country_code}

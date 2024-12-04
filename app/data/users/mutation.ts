@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import api from "../api";
 import { URLS } from "../urls";
 import { Alert } from "react-native";
+import { Routes } from "../../constants";
 
 export interface SignUpParams {
     email: string;
@@ -17,7 +18,13 @@ export interface SignUpParams {
 }
 
 interface SignUpResponse {
-    data: any
+    status: string
+    message: {
+        error: string[]
+    }
+    data: {
+        access_token: string
+    }
 }
 
 
@@ -32,17 +39,21 @@ export const useSignUp = () => {
     const navigation = useNavigation()
     return useMutation({
         mutationFn: async (params: SignUpParams) => {
-
-            console.log(params)
             const {
                 data
-            } = await api.post<SignUpResponse>(URLS.signUp, {
-                ...params
-            })
+            } = await api.post<SignUpResponse>(URLS.signUp, params)
 
+            return data
         },
-        onSuccess: (data) => {
-            navigation.goBack()
+        onSuccess: (data: SignUpResponse) => {
+            if (data.status === 'success') {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: Routes.home }],
+                  });
+            } else {
+                Alert.alert('Unable to register', data.message.error[0])
+            }
         },
       });
 } 

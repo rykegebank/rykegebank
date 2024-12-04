@@ -1,24 +1,20 @@
 import api from "./api";
 import { URLS } from "./urls";
 
-interface SignInParams {
-  email: string;
+export interface SignInParams {
+  username: string;
   password: string;
 }
 
 
-interface SignInResponse {
+export interface SignInResponse {
   data: {
-    access_token: string;
-  };
+    data: {
+      access_token: string;
+    };
+  }
 }
 
-export const signIn = ({
-  email,
-  password,
-}: SignInParams): Promise<SignInResponse> =>
-  api.post(URLS.signIn, {
-    email,
-    password,
-  });
+export const signIn = (params: SignInParams): Promise<SignInResponse> =>
+  api.post(URLS.signIn, params);
 

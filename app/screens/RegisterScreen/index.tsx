@@ -19,6 +19,11 @@ import { useFetchCountries } from "../../data/countries/queries";
 import CountriesDropdown from "./components/CountriesDropdown";
 import { SignUpParams, useSignUp } from "../../data/users/mutation";
 import { useNavigation } from "@react-navigation/native";
+import {
+  getCountry,
+  getCountryCode,
+  getMobileCode,
+} from "../../utils/countries";
 
 interface RegistrationDetails extends SignUpParams {}
 
@@ -59,26 +64,30 @@ const RegisterScreen = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { isValid },
   } = useForm<RegistrationDetails>({
     resolver: zodResolver(registrationSchema),
     mode: "onSubmit",
     defaultValues: {
-      username: "potaaaaaa1",
-      password: "tetsetest",
-      password_confirmation: "tetsetest",
-      email: "tes1t@gmail.com",
-      country: "Philippines",
-      country_code: "PH",
-      mobile_code: "63",
-      mobile: "9066870459",
-      agree: 1,
+      agree: 0,
     },
+    // defaultValues: {
+    //   username: "rykege123",
+    //   password: "rykege123",
+    //   password_confirmation: "rykege123",
+    //   email: "rykegebank@gmail.com",
+    //   country: "Philippines",
+    //   country_code: "PH",
+    //   mobile_code: "63",
+    //   mobile: "9066870458",
+    //   agree: 1,
+    // },
   });
 
   const onSubmit = (data: RegistrationDetails) => {
-    // console.log(data);
-    // return;
+    console.log(data);
+    return;
     signUp.mutate(data);
   };
 
@@ -143,7 +152,11 @@ const RegisterScreen = () => {
               label="Select a country"
               options={countries}
               selectedValue={value}
-              onSelect={onChange}
+              onSelect={(newValue: string) => {
+                onChange(getCountry(newValue));
+                setValue("country_code", getCountryCode(newValue));
+                setValue("mobile_code", getMobileCode(newValue));
+              }}
               style={{ marginBottom: 16 }}
               error={error?.message}
             />
@@ -161,6 +174,7 @@ const RegisterScreen = () => {
               onChangeText={onChange}
               style={styles.input}
               error={error?.message}
+              keyboardType="numeric"
             />
           )}
           name="mobile"
@@ -179,7 +193,7 @@ const RegisterScreen = () => {
               right={
                 <TextInput.Icon
                   icon={passwordVisible ? "eye-off" : "eye"}
-                  onPress={() => setPasswordVisible(!passwordVisible)}
+                  onPress={() => setPasswordVisible((e) => !e)}
                 />
               }
               error={error?.message}
@@ -196,12 +210,12 @@ const RegisterScreen = () => {
               label="Confirm Password"
               value={value}
               onChangeText={onChange}
-              secureTextEntry={!passwordVisible}
+              secureTextEntry={!confirmPasswordVisible}
               style={styles.input}
               right={
                 <TextInput.Icon
                   icon={confirmPasswordVisible ? "eye-off" : "eye"}
-                  onPress={() => setConfirmPasswordVisible(!passwordVisible)}
+                  onPress={() => setConfirmPasswordVisible((e) => !e)}
                 />
               }
               error={error?.message}

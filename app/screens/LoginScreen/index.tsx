@@ -5,16 +5,16 @@ import Checkbox from "expo-checkbox";
 import GenericInput from "../../components/GenericInput";
 import GenericButton from "../../components/GenericButton";
 import { TextInput } from "react-native-paper";
-import { request } from "../../utils/apiClient";
-import { Endpoints, Routes } from "../../constants";
+import { Routes } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
-import { LoginParams, useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SignInParams } from "../../data/auth";
 
 const loginSchema = z.object({
-  email: z.coerce
+  username: z.coerce
     .string()
     .min(6, { message: "The username must be at least 6 characters." }),
   password: z.string().min(1),
@@ -26,7 +26,8 @@ const LoginScreen = () => {
   const { login } = useAuth();
   const navigation = useNavigation();
 
-  const onSubmit = (data: LoginParams) => {
+  const onSubmit = (data: SignInParams) => {
+    console.log(data);
     login(data);
   };
 
@@ -34,13 +35,13 @@ const LoginScreen = () => {
     control,
     handleSubmit,
     formState: { isValid },
-  } = useForm<LoginParams>({
+  } = useForm<SignInParams>({
     resolver: zodResolver(loginSchema),
     mode: "onSubmit",
-    defaultValues: {
-      email: "user@demo.com",
-      password: "User_321",
-    },
+    // defaultValues: {
+    //   username: "rykegebank@gmail.com",
+    //   password: "rykege123",
+    // },
   });
   return (
     <View style={styles.container}>
@@ -58,9 +59,10 @@ const LoginScreen = () => {
             value={value}
             style={styles.input}
             error={error?.message}
+            onChangeText={onChange}
           />
         )}
-        name="email"
+        name="username"
         rules={{ required: true }}
       />
 
@@ -80,6 +82,7 @@ const LoginScreen = () => {
             }
             style={styles.input}
             error={error?.message}
+            onChangeText={onChange}
           />
         )}
         name="password"
