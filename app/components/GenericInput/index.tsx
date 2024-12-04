@@ -10,7 +10,7 @@ const GenericInput = ({ style, error, ...props }) => {
         style={[{ backgroundColor: "white" }, style]}
         {...props}
       />
-      {error && <Text style={{ color: "red" }}>*{error}</Text>}
+      {error && <Text style={{ color: "red", marginBottom: 5 }}>*{error}</Text>}
     </>
   );
 };

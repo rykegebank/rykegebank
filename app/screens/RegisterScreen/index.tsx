@@ -26,21 +26,23 @@ import {
 } from "../../utils/countries";
 
 interface RegistrationDetails extends SignUpParams {}
-
+const required_field_error_msg = "This field is required";
 const registrationSchema = z
   .object({
-    username: z.coerce
+    username: z
       .string()
       .min(6, { message: "The username must be at least 6 characters." }),
     email: z.coerce
       .string()
-      .min(1, { message: "This field is required" })
+      .min(1, { message: required_field_error_msg })
       .email("This is not a valid email."),
-    password: z.string().min(1),
-    password_confirmation: z.string().min(1),
+    password: z.string().min(1, { message: required_field_error_msg }),
+    password_confirmation: z
+      .string()
+      .min(1, { message: required_field_error_msg }),
+    mobile: z.string().min(1, { message: required_field_error_msg }),
     country_code: z.string().min(1),
     mobile_code: z.string().min(1),
-    mobile: z.string().min(1),
     country: z.string().min(1),
     agree: z.number(),
   })
@@ -49,7 +51,7 @@ const registrationSchema = z
       ctx.addIssue({
         code: "custom",
         message: "The passwords did not match",
-        path: ["confirmPassword"],
+        path: ["password_confirmation"],
       });
     }
   });
@@ -72,17 +74,6 @@ const RegisterScreen = () => {
     defaultValues: {
       agree: 0,
     },
-    // defaultValues: {
-    //   username: "rykege123",
-    //   password: "rykege123",
-    //   password_confirmation: "rykege123",
-    //   email: "rykegebank@gmail.com",
-    //   country: "Philippines",
-    //   country_code: "PH",
-    //   mobile_code: "63",
-    //   mobile: "9066870458",
-    //   agree: 1,
-    // },
   });
 
   const onSubmit = (data: RegistrationDetails) => {
@@ -230,6 +221,7 @@ const RegisterScreen = () => {
             control={control}
             render={({ field: { onChange, value } }) => (
               <Checkbox
+                color={"#1e293b"}
                 value={value == 1}
                 onValueChange={(value) => {
                   onChange(value ? 1 : 0);
@@ -242,9 +234,7 @@ const RegisterScreen = () => {
 
           <Text style={styles.checkboxText}>
             I agree with the{" "}
-            <TouchableOpacity>
-              <Text style={styles.linkText}>privacy & policies</Text>
-            </TouchableOpacity>
+            <Text style={styles.linkText}>Privacy & Policies</Text>
           </Text>
         </View>
       </View>
@@ -252,7 +242,7 @@ const RegisterScreen = () => {
       <GenericButton
         mode="contained"
         onPress={handleSubmit(onSubmit, (err) => {
-          console.log(err);
+          console.log("test", err);
         })}
         style={styles.signupButton}
         labelStyle={styles.signupButtonText}
@@ -297,18 +287,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   input: {
-    marginBottom: 12,
+    marginBottom: 8,
   },
   checkboxContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 16,
+    marginTop: 10,
   },
   checkboxText: {
     fontSize: 14,
     color: "#757575",
     marginLeft: 8,
-    marginTop: 20,
   },
   linkText: {
     color: "#1a1f71",
