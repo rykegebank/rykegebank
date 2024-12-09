@@ -35,7 +35,6 @@ const CircleImageButton: React.FC<CircleImageButtonProps> = ({
   }, [imagePath]);
 
   const renderImage = () => {
-
     if (!imagePath || imagePath.trim() === '') {
       return (
         <Image
