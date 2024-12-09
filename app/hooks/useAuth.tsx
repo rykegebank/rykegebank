@@ -12,7 +12,7 @@ export const useAuth = () => {
     if (access_token) {
       navigation.reset({
         index: 0,
-        routes: [{ name: Routes.home }],
+        routes: [{ name: Routes.main }],
       });
     } else {
       Alert.alert("Wrong username or password");
