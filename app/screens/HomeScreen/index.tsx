@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, RefreshControl, ScrollView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { useFocusEffect } from '@react-navigation/native';
-
+import { useQueryClient } from "@tanstack/react-query";
 import { RootState, AppDispatch } from "../../store"
 import { useHomeQuery } from "./hooks/home";
 import HomeScreenTop from "./components/homeScreenTop";
@@ -17,6 +16,7 @@ const HomeScreen = () => {
     const { isFetching, refetch } = useHomeQuery();
     const dispatch = useDispatch<AppDispatch>();
     const { isOffline } = useSelector((state: RootState) => state.internet);
+    const queryClient = useQueryClient();
 
 
     if (isOffline) {
@@ -25,7 +25,7 @@ const HomeScreen = () => {
                 isNoInternet={true}
                 press={(value) => {
                     if (value) {
-                        refetch();
+                        queryClient.resetQueries({ queryKey: ["homeData"] });
                         dispatch(setOffline(false));
                     }
                 }}

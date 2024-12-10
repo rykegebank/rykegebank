@@ -29,7 +29,6 @@ export const useHomeQuery = () => {
             try {
                 const response = await api.get(URLS.dashboard);
                 const model = response.data as DashboardResponseModel;
-
                 // Combine and sort debits and credits by created_at
                 const debitsLists = [
                     ...(model.data?.latest_credits?.data?.map((credit) => ({
@@ -59,13 +58,14 @@ export const useHomeQuery = () => {
                 };
             } catch (error: any) {
                 // const errorMessage = error.response?.data?.message || error.message || "An error occurred";
-                if (error.response?.status === 503 ||  error.message.includes('undefined')) {
+                if (error.response?.status === 503 || error.message.includes('Network Error')) {
                     dispatch(setOffline(true));
                 }
                 await manageApiException(error);
-                throw new Error( "An error occurred");
+                throw new Error("An error occurred");
             }
         },
-        retry: 0,
+        retry: 0, 
+        
     });
 };

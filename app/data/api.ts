@@ -20,12 +20,24 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   (response) => {
-    // console.log("Response:", response);
+    console.log("Response:", response);
     return response;
   },
   (error) => {
-    console.log('error', JSON.stringify(error, null, 2));
-  },
+    if (error.response) {
+      console.error("Response Error:", {
+        status: error.response.status,
+        data: error.response.data,
+      });
+    } else if (error.request) {
+      console.error("No Response Error:", error.request);
+    } else {
+      console.error("Unexpected Error:", error.message);
+    }
+
+    return Promise.reject(error);
+  }
 );
+
 
 export default api;

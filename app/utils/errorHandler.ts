@@ -10,9 +10,12 @@ export const getErrorMessage = (exception: any): string => {
         if (exception?.message) {
             message = exception.message;
         }
-
-        if (typeof message === 'string' && message.includes('undefined')) {
+        if (message.includes('Network Error')) {
             message = 'Internet connection issue. Please check your network.';
+        }
+
+        if (typeof exception === 'string') {
+            return exception;
         }
 
         return message;  // Return the final message
