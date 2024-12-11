@@ -38,6 +38,9 @@ const ForgotPasswordScreen = () => {
   } = useForm<ForgotPasswordDetails>({
     resolver: zodResolver(forgotPasswordSchema),
     mode: "onSubmit",
+    // defaultValues: {
+    //   value: "lorencehernandez97@gmail.com",
+    // },
   });
   return (
     <View style={styles.container}>

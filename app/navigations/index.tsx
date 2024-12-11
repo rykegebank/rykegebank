@@ -19,6 +19,9 @@ import RegisterScreen from "../screens/RegisterScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import MenuScreen from "../screens/MenuScreen";
 import BottomNav from "../components/BottomNav";
+import CompleteProfileScreen from "../screens/CompleteProfileScreen";
+import ForgotPasswordVerificationScreen from "../screens/ForgotPasswordVerificationScreen";
+import PasswordResetScreen from "../screens/PasswordResetScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,7 +51,10 @@ const RootStack = () => {
         <Stack.Screen name={Routes.splash} component={SplashScreen} />
         <Stack.Screen name={Routes.login} component={LoginScreen} />
         <Stack.Screen name={Routes.register} component={RegisterScreen} />
-        <Stack.Screen name={Routes.forgotPassword} component={ForgotPasswordScreen} />
+        <Stack.Screen
+          name={Routes.forgotPassword}
+          component={ForgotPasswordScreen}
+        />
 
         <Stack.Screen name={Routes.main} component={BottomTabNavigator} />
 
@@ -59,6 +65,18 @@ const RootStack = () => {
         <Stack.Screen name={Routes.withdraw} component={WithdrawScreen} />
         <Stack.Screen name={Routes.referral} component={ReferralScreen} />
         <Stack.Screen name={Routes.profile} component={ProfileScreen} />
+        <Stack.Screen
+          name={Routes.completeProfile}
+          component={CompleteProfileScreen}
+        />
+        <Stack.Screen
+          name={Routes.forgotPasswordVerification}
+          component={ForgotPasswordVerificationScreen}
+        />
+        <Stack.Screen
+          name={Routes.resetPassword}
+          component={PasswordResetScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

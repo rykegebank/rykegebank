@@ -11,6 +11,7 @@ export interface SignInResponse {
   data: {
     data: {
       access_token: string;
+      profile_complete: number;
     };
   }
 }

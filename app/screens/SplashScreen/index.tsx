@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Colors, Dimensions, Assets, Routes } from "../../constants";
 import { useGeneralSettings } from "../../hooks/generalSettings";
+import { removeAccessToken } from "../../logic/token";
 
 const SplashScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -11,6 +12,7 @@ const SplashScreen: React.FC = () => {
   const { settings, isLoading, error } = useGeneralSettings();
 
   useEffect(() => {
+    removeAccessToken();
     if (!isLoading && !error) {
       const timer = setTimeout(() => {
         navigation.navigate(Routes.login);
@@ -23,13 +25,17 @@ const SplashScreen: React.FC = () => {
 
   if (isLoading) {
     return (
-
       <View style={styles.container}>
-        <Image source={Assets.appLogo} style={{ height: Dimensions.appLogoHeight, width: Dimensions.appLogoWidth }} />
+        <Image
+          source={Assets.appLogo}
+          style={{
+            height: Dimensions.appLogoHeight,
+            width: Dimensions.appLogoWidth,
+          }}
+        />
       </View>
     );
   }
-
 
   return (
     <View style={[styles.container, { backgroundColor: Colors.primaryColor }]}>

@@ -39,8 +39,8 @@ const LoginScreen = () => {
     resolver: zodResolver(loginSchema),
     mode: "onSubmit",
     // defaultValues: {
-    //   username: "rykegebank@gmail.com",
-    //   password: "rykege123",
+    //   username: "lorence1234",
+    //   password: "Lorence1@",
     // },
   });
   return (

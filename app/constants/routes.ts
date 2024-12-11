@@ -15,6 +15,9 @@ type RoutesType = {
   menu: string;
   register: string;
   forgotPassword: string;
+  completeProfile: string;
+  forgotPasswordVerification: string
+  resetPassword: string
 };
 
 const Routes: RoutesType = {
@@ -34,6 +37,9 @@ const Routes: RoutesType = {
   menu: "Menu",
   register: "Register",
   forgotPassword: "ForgotPassword",
+  completeProfile: "completeProfile",
+  forgotPasswordVerification: "forgotPasswordVerification",
+  resetPassword: "resetPassword"
 };
 
 export default Routes;

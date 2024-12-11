@@ -4,6 +4,7 @@ import api from "../api";
 import { URLS } from "../urls";
 import { Alert } from "react-native";
 import { Routes } from "../../constants";
+import { setAccessToken } from "../../logic/token";
 
 export interface SignUpParams {
     email: string;
@@ -27,30 +28,67 @@ interface SignUpResponse {
     }
 }
 
+interface SignUpData {
+    access_token: string
+}
 
 interface ForgotPasswordParams {
     value: string
 }
 
 interface ForgotPasswordResponse {
-    data: any
+    status: string
+    message: {
+        error: string[]
+    }
 }
+interface VerifyCodeParams {
+    code: string
+    email: string
+}
+
+interface VerfiyCodeResponse {
+    status: string
+    message: {
+        error: string[]
+    }
+}
+
+interface ResetPasswordParams {
+
+    token: string
+    email: string
+    password: string
+    password_confirmation: string
+}
+
+interface ResetPasswordResponse { 
+    
+    status: string
+    message: {
+        error: string[]
+    }
+}
+
 export const useSignUp = () => {
     const navigation = useNavigation()
     return useMutation({
         mutationFn: async (params: SignUpParams) => {
+
             const {
                 data
-            } = await api.post<SignUpResponse>(URLS.signUp, params)
-
+            } = await api.post<SignUpResponse>(URLS.signUp, {
+                ...params
+            })
+            
             return data
+
         },
-        onSuccess: (data: SignUpResponse) => {
+        onSuccess: async (data: SignUpResponse) => {
             if (data.status === 'success') {
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: Routes.home }],
-                  });
+                await setAccessToken(data.data.access_token)
+                navigation.navigate(Routes.completeProfile)
+
             } else {
                 Alert.alert('Unable to register', data.message.error[0])
             }
@@ -70,18 +108,89 @@ export const useForgotPassword = () => {
                 ...params
             })
 
-            return data
-            // console.log(data)
+            return {
+                ...data, email: params.value
+            }      // console.log(data)
         
         },
         onSuccess: (data) => {
-            if(data?.message?.error?.[0]) {
+            if(data.status === 'success') {
+                navigation.navigate(Routes.forgotPasswordVerification, {
+                    email: data.email
+                })
 
-                Alert.alert(data?.message?.error?.[0])
             } else {
 
-                Alert.alert('Code has been sent to your email')
-                navigation.goBack()
+                Alert.alert(JSON.stringify(data.message))
+            }
+        },
+    });
+} 
+
+
+export const useVerifyCode = () => {
+    const navigation = useNavigation()
+    return useMutation({
+        mutationFn: async (params: VerifyCodeParams) => {
+            console.log(params)
+
+            const {
+                data ,
+            } = await api.post<VerfiyCodeResponse>(URLS.verifyCode, {
+                ...params
+            })
+
+            return {
+                ...data, code: params.code, email: params.email
+            }
+        },
+            // console.log(data)
+        
+    
+        onSuccess: (data) => {
+            if(data.status === 'success') {
+                navigation.navigate(Routes.resetPassword, {
+                    token: data.code,
+                    email: data.email
+                })
+
+            } else {
+
+                Alert.alert(JSON.stringify(data.message))
+            }
+        },
+    });
+} 
+
+
+
+export const useResetPassword = () => {
+    const navigation = useNavigation()
+    return useMutation({
+        mutationFn: async (params: ResetPasswordParams) => {
+            console.log(params)
+
+            const {
+                data ,
+            } = await api.post<ResetPasswordResponse>(URLS.resetPassword, {
+                ...params
+            })
+
+            return data
+        },
+            // console.log(data)
+        
+    
+        onSuccess: (data) => {
+            if(data.status === 'success') {
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: Routes.login }],
+                  });
+
+            } else {
+
+                Alert.alert(JSON.stringify(data.message))
             }
         },
     });

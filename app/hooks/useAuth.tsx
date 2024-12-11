@@ -4,16 +4,25 @@ import { useNavigation } from "@react-navigation/native";
 import { SignInParams, SignInResponse, signIn } from "../data/auth";
 import { Routes } from "../constants";
 import { Alert } from "react-native";
+import { setAccessToken } from "../logic/token";
 
 export const useAuth = () => {
   const navigation = useNavigation();
 
-  const onAuthSuccess = (access_token: string) => {
-    if (access_token) {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: Routes.main }],
-      });
+  const onAuthSuccess = async (data: any) => {
+    if (data.access_token) {
+      await setAccessToken(data.access_token);
+      if (data.user.profile_complete === 0) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: Routes.completeProfile }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: Routes.main }],
+        });
+      }
     } else {
       Alert.alert("Wrong username or password");
     }
@@ -23,7 +32,7 @@ export const useAuth = () => {
     mutationFn: async ({ username, password }: SignInParams) => {
       const { data } = await signIn({ username, password });
 
-      return data?.data?.access_token;
+      return data?.data;
     },
     onSuccess: onAuthSuccess,
   });

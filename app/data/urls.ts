@@ -6,6 +6,9 @@ type URLSType = {
   forgotPassword: string;
   dashboard: string;
   generalSettings: string;
+  submitUser: string;
+  verifyCode: string;
+  resetPassword: string
 };
 
 export const URLS: URLSType = {
@@ -15,5 +18,9 @@ export const URLS: URLSType = {
   allCountries: "/get-countries",
   forgotPassword: "/password/email",
   dashboard: "/dashboard",
-  generalSettings: "/general-setting"
+  generalSettings: "/general-setting",
+  submitUser: "/user-data-submit",
+  verifyCode: "/password/verify-code",
+  resetPassword: "/password/reset",
+
 };

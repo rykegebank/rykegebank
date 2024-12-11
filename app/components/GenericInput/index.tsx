@@ -9,6 +9,7 @@ const GenericInput = ({ style, error, ...props }) => {
         mode="outlined"
         style={[{ backgroundColor: "white" }, style]}
         {...props}
+        autoCapitalize="none"
       />
       {error && <Text style={{ color: "red", marginBottom: 5 }}>*{error}</Text>}
     </>

@@ -36,7 +36,16 @@ const registrationSchema = z
       .string()
       .min(1, { message: required_field_error_msg })
       .email("This is not a valid email."),
-    password: z.string().min(1, { message: required_field_error_msg }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters." })
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        {
+          message:
+            "Password must contains at least one uppercase, one lowercase, one number, one special character",
+        }
+      ),
     password_confirmation: z
       .string()
       .min(1, { message: required_field_error_msg }),
@@ -63,6 +72,7 @@ const RegisterScreen = () => {
 
   const navigation = useNavigation();
   const signUp = useSignUp();
+
   const {
     control,
     handleSubmit,
@@ -71,14 +81,21 @@ const RegisterScreen = () => {
   } = useForm<RegistrationDetails>({
     resolver: zodResolver(registrationSchema),
     mode: "onSubmit",
-    defaultValues: {
-      agree: 0,
-    },
+    // defaultValues: {
+    //   agree: 1,
+    //   country: "Philippines",
+    //   country_code: "PH",
+    //   email: "lorencehernandez97@gmail.com",
+    //   mobile: "9066870459",
+    //   mobile_code: "63",
+    //   password: "Lorence1@",
+    //   password_confirmation: "Lorence1@",
+    //   username: "lorence1234",
+    // },
   });
 
   const onSubmit = (data: RegistrationDetails) => {
-    console.log(data);
-    return;
+    console.log("Registering: " + data);
     signUp.mutate(data);
   };
 
