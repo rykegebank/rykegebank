@@ -47,20 +47,14 @@ const TopButtons: React.FC = () => {
             rows.push(
                 <View
                     key={i}
-                    style={[
-                        styles.row,
-                        {
-                            justifyContent:
-                                items.length < maxItemsPerRow ? 'center' : 'space-between',
-                        },
-                    ]}
+                    style={styles.row}
                 >
                     {items.map((item, index) => (
                         <View
                             key={index}
                             style={[
                                 styles.itemWrapper,
-                                { width: items.length < maxItemsPerRow ? 'auto' : itemWidth },
+                                { width: itemWidth }, // Ensure uniform width for items
                             ]}
                         >
                             {item}
@@ -83,7 +77,7 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         width: '100%',
-        marginBottom: 8,
+        marginVertical: 8,  // Add consistent vertical margin between rows
         alignItems: 'center',
     },
     itemWrapper: {
