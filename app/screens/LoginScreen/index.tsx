@@ -12,22 +12,21 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInParams } from "../../data/auth";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 
 const loginSchema = z.object({
-  username: z.coerce
-    .string()
-    .min(6, { message: "The username must be at least 6 characters." }),
-  password: z.string().min(1),
+  username: z.string().min(6),
+  password: z.string().min(6),
 });
+
 const LoginScreen = () => {
   const [checked, setChecked] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const { login } = useAuth();
+  const { login, isLoading, error } = useAuth();
   const navigation = useNavigation();
 
   const onSubmit = (data: SignInParams) => {
-    console.log(data);
     login(data);
   };
 
@@ -43,6 +42,7 @@ const LoginScreen = () => {
     //   password: "Lorence1@",
     // },
   });
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Let's sign you in.</Text>
@@ -89,6 +89,7 @@ const LoginScreen = () => {
         rules={{ required: true }}
       />
 
+      {error && <Text style={{ color: "red", marginBottom: 5 }}>{error}</Text>}
       <View style={styles.row}>
         <View style={styles.checkboxContainer}>
           <Checkbox value={checked} onValueChange={setChecked} />
@@ -104,12 +105,10 @@ const LoginScreen = () => {
       </View>
 
       <GenericButton
+        disabled={!isValid}
         onPress={handleSubmit(onSubmit)}
-        mode="contained"
-        style={styles.signInButton}
-      >
-        Sign In
-      </GenericButton>
+        title="Sign In"
+      />
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Don't have an account? </Text>
@@ -121,6 +120,10 @@ const LoginScreen = () => {
           <Text style={styles.signUp}>Sign Up Now</Text>
         </TouchableOpacity>
       </View>
+
+      {isLoading && (
+        <LoadingIndicator isLoading={true} message="Logging in.." />
+      )}
     </View>
   );
 };

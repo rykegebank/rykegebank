@@ -80,13 +80,12 @@ const ForgotPasswordScreen = () => {
           name="value"
           rules={{ required: true }}
         />
+
         <GenericButton
-          mode="contained"
-          style={styles.submitButton}
+          disabled={!isValid}
           onPress={handleSubmit(onSubmit)}
-        >
-          Submit
-        </GenericButton>
+          title="Submit"
+        />
       </View>
     </View>
   );

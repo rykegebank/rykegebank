@@ -257,15 +257,10 @@ const RegisterScreen = () => {
       </View>
 
       <GenericButton
-        mode="contained"
-        onPress={handleSubmit(onSubmit, (err) => {
-          console.log("test", err);
-        })}
-        style={styles.signupButton}
-        labelStyle={styles.signupButtonText}
-      >
-        Sign Up
-      </GenericButton>
+        disabled={!isValid}
+        onPress={handleSubmit(onSubmit)}
+        title="Sign Up"
+      />
     </ScrollView>
   );
 };

@@ -5,6 +5,8 @@ import { URLS } from "../urls";
 import { Alert } from "react-native";
 import { Routes } from "../../constants";
 import { getAccessToken } from "../../logic/token";
+import { useAppDispatch } from "../../store";
+import { setIsProfileCompleted } from "../../store/slices/userSlice";
 
 
 export interface SubmitUserParams {
@@ -23,6 +25,7 @@ interface SubmitUserResponse {
 
 export const useSubmitUser = () => {
     const navigation = useNavigation()
+    const dispatch = useAppDispatch()
     return useMutation({
         mutationFn: async (params: SubmitUserParams) => {
             console.log(params)
@@ -36,6 +39,7 @@ export const useSubmitUser = () => {
         onSuccess: (data: SubmitUserResponse) => {
             console.log('testset', data)
             if (data.status === 'success') {
+                dispatch(setIsProfileCompleted(1))
                 navigation.reset({
                     index: 0,
                     routes: [{ name: Routes.main }],

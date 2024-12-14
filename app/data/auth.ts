@@ -8,6 +8,7 @@ export interface SignInParams {
 
 
 export interface SignInResponse {
+  status: string,
   data: {
     data: {
       access_token: string;

@@ -127,12 +127,10 @@ const PasswordResetScreen = () => {
         />
 
         <GenericButton
-          mode="contained"
+          disabled={!isValid}
           onPress={handleSubmit(onSubmit)}
-          style={styles.button}
-        >
-          Submit
-        </GenericButton>
+          title="Submit"
+        />
       </View>
     </View>
   );

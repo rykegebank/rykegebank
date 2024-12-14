@@ -16,7 +16,7 @@ type RoutesType = {
   register: string;
   forgotPassword: string;
   completeProfile: string;
-  forgotPasswordVerification: string
+  codeVerification: string
   resetPassword: string
 };
 
@@ -38,7 +38,7 @@ const Routes: RoutesType = {
   register: "Register",
   forgotPassword: "ForgotPassword",
   completeProfile: "completeProfile",
-  forgotPasswordVerification: "forgotPasswordVerification",
+  codeVerification: "CodeVerification",
   resetPassword: "resetPassword"
 };
 

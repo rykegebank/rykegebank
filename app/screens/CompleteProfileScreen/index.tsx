@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from "react-native";
 import GenericInput from "../../components/GenericInput";
 
@@ -52,7 +53,7 @@ const CompleteProfileScreen = () => {
 
   const navigation = useNavigation();
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         {/* <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -114,7 +115,7 @@ const CompleteProfileScreen = () => {
       >
         <Text style={styles.updateButtonText}>Update Profile</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

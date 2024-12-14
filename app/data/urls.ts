@@ -8,7 +8,9 @@ type URLSType = {
   generalSettings: string;
   submitUser: string;
   verifyCode: string;
-  resetPassword: string
+  resetPassword: string;
+  verifyMobile: string;
+  verifyEmail: string
 };
 
 export const URLS: URLSType = {
@@ -22,5 +24,7 @@ export const URLS: URLSType = {
   submitUser: "/user-data-submit",
   verifyCode: "/password/verify-code",
   resetPassword: "/password/reset",
+  verifyMobile: '/verify-mobile',
+  verifyEmail: '/verify-email'
 
 };

@@ -8,10 +8,10 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-  console.log('intercepter', config)
-
+  // console.log('intercepter', config)
 
   const token = await getAccessToken()
+  
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -20,7 +20,7 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
   (response) => {
-    console.log("Response:", response);
+    // console.log("Response:", response);
     return response;
   },
   (error) => {

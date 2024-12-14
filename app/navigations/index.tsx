@@ -20,8 +20,8 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import MenuScreen from "../screens/MenuScreen";
 import BottomNav from "../components/BottomNav";
 import CompleteProfileScreen from "../screens/CompleteProfileScreen";
-import ForgotPasswordVerificationScreen from "../screens/ForgotPasswordVerificationScreen";
 import PasswordResetScreen from "../screens/PasswordResetScreen";
+import CodeVerificationScreen from "../screens/CodeVerificationScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -70,8 +70,8 @@ const RootStack = () => {
           component={CompleteProfileScreen}
         />
         <Stack.Screen
-          name={Routes.forgotPasswordVerification}
-          component={ForgotPasswordVerificationScreen}
+          name={Routes.codeVerification}
+          component={CodeVerificationScreen}
         />
         <Stack.Screen
           name={Routes.resetPassword}

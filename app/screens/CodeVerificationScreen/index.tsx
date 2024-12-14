@@ -14,24 +14,55 @@ import GenericCard from "../../components/GenericCard";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import { Routes } from "../../constants";
 import { Controller, useForm } from "react-hook-form";
-import { useVerifyCode } from "../../data/users/mutation";
+import {
+  useVerifyCode,
+  useVerifyEmail,
+  useVerifySms,
+} from "../../data/users/mutation";
+import { useAppSelector } from "../../store";
 
-const ForgotPasswordVerificationScreen = () => {
-  const { email } = useRoute().params || {};
+const CodeVerificationScreen = () => {
+  const { forForgotPassword = false } = useRoute().params;
+
+  const { ev, sv, email, mobile } = useAppSelector((state) => state.user);
+
   const navigation = useNavigation();
-  const verifyCode = useVerifyCode();
+
+  const verifyCode = useVerifyCode(); //forgot password verification
+
+  const verifyEmail = useVerifyEmail();
+
+  const verifySms = useVerifySms();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(email);
-    verifyCode.mutate({
-      code: data.otp.join(""),
-      email: email,
-    });
+
+  const onSubmit = async (data: any) => {
+    const otp = data.otp.join("");
+    if (forForgotPassword) {
+      // for password verification
+      console.log("verifying password code...");
+      const test = await verifyCode.mutate({
+        code: otp,
+        email: email,
+      });
+      console.log("zxczczxc", test);
+    } else if (ev === 0) {
+      console.log("verifying email...");
+      verifyEmail.mutate({
+        code: otp,
+      });
+    } else if (sv === 0) {
+      console.log("verifying sms...");
+      verifySms.mutate({
+        code: otp,
+      });
+    }
   };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -54,14 +85,16 @@ const ForgotPasswordVerificationScreen = () => {
 
         {/* Instruction Text */}
         <Text style={styles.instructionText}>
-          A 6 digits verification code sent to your email address:
-          <Text style={styles.emailText}> p*****************@gmail.com</Text>
+          A 6 digits verification code sent to your{" "}
+          {sv === 0 ? "mobile number" : "email address"}:
+          <Text style={styles.emailText}> {sv === 0 ? mobile : email}</Text>
         </Text>
 
         {/* OTP Input Fields */}
         <View style={styles.otpContainer}>
           {[...Array(6)].map((_, index) => (
             <Controller
+              key={index}
               control={control}
               render={({
                 field: { onChange, value },
@@ -93,13 +126,10 @@ const ForgotPasswordVerificationScreen = () => {
           </Text>
         )}
         {/* Verify Button */}
-        <GenericButton
-          style={styles.verifyButton}
-          onPress={handleSubmit(onSubmit)}
-        >
-          Verify
-        </GenericButton>
 
+        <View style={styles.verifyButton}>
+          <GenericButton onPress={handleSubmit(onSubmit)} title="Verify" />
+        </View>
         {/* Resend Text */}
         <View style={styles.resendContainer}>
           <Text style={styles.resendText}>Didn’t receive the code? </Text>
@@ -194,4 +224,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPasswordVerificationScreen;
+export default CodeVerificationScreen;

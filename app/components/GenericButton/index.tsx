@@ -1,16 +1,65 @@
 import React from "react";
-import { Button as PaperButton } from "react-native-paper";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 
-const GenericButton = ({ children, style, ...props }) => {
+interface ButtonProps {
+  title: string;
+  onPress: () => void;
+  style?: ViewStyle;
+  textStyle?: TextStyle;
+  disabled?: boolean;
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+const GenericButton: React.FC<ButtonProps> = ({
+  title,
+  onPress,
+  style,
+  textStyle,
+  disabled = false,
+  backgroundColor = "#1e293b",
+  textColor = "#FFFFFF",
+}) => {
   return (
-    <PaperButton
-      mode="contained"
-      style={[{ borderRadius: 4, paddingVertical: 8 }, style]}
-      {...props}
+    <TouchableOpacity
+      style={[
+        styles.button,
+        { backgroundColor },
+        style,
+        disabled && styles.disabled,
+      ]}
+      onPress={onPress}
+      disabled={disabled}
     >
-      {children}
-    </PaperButton>
+      <Text style={[styles.text, { color: textColor }, textStyle]}>
+        {title}
+      </Text>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+});
 
 export default GenericButton;

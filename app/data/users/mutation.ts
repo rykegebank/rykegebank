@@ -4,7 +4,9 @@ import api from "../api";
 import { URLS } from "../urls";
 import { Alert } from "react-native";
 import { Routes } from "../../constants";
-import { setAccessToken } from "../../logic/token";
+import { getAccessToken, setAccessToken } from "../../logic/token";
+import { useAppDispatch } from "../../store";
+import { setEmail, setIsAuthenticated, setIsEmailVerified, setIsProfileCompleted, setIsSmsVerified, setMobile, setUser } from "../../store/slices/userSlice";
 
 export interface SignUpParams {
     email: string;
@@ -25,12 +27,10 @@ interface SignUpResponse {
     }
     data: {
         access_token: string
+        user: any
     }
 }
 
-interface SignUpData {
-    access_token: string
-}
 
 interface ForgotPasswordParams {
     value: string
@@ -40,6 +40,9 @@ interface ForgotPasswordResponse {
     status: string
     message: {
         error: string[]
+    }
+    data: {
+        email: string
     }
 }
 interface VerifyCodeParams {
@@ -54,6 +57,9 @@ interface VerfiyCodeResponse {
     }
 }
 
+interface VerfiyParams {
+    code: string
+}
 interface ResetPasswordParams {
 
     token: string
@@ -62,6 +68,13 @@ interface ResetPasswordParams {
     password_confirmation: string
 }
 
+
+interface RykegeApiResponse { 
+    status: string
+    message: {
+        error: string[]
+    }
+}
 interface ResetPasswordResponse { 
     
     status: string
@@ -72,6 +85,7 @@ interface ResetPasswordResponse {
 
 export const useSignUp = () => {
     const navigation = useNavigation()
+    const dispatch = useAppDispatch();
     return useMutation({
         mutationFn: async (params: SignUpParams) => {
 
@@ -86,9 +100,18 @@ export const useSignUp = () => {
         },
         onSuccess: async (data: SignUpResponse) => {
             if (data.status === 'success') {
-                await setAccessToken(data.data.access_token)
-                navigation.navigate(Routes.completeProfile)
+                const { user, access_token } = data.data
+                const { ev, sv, email, mobile } = user;
+                await setAccessToken(access_token)
+                dispatch(setIsAuthenticated(true))
+                dispatch(setUser(user))
+                dispatch(setIsEmailVerified(ev))
+                dispatch(setIsSmsVerified(sv))
+                dispatch(setIsProfileCompleted(0))
+                dispatch(setEmail(email))
+                dispatch(setMobile(mobile))
 
+                navigation.navigate(Routes.codeVerification)
             } else {
                 Alert.alert('Unable to register', data.message.error[0])
             }
@@ -99,6 +122,7 @@ export const useSignUp = () => {
 
 export const useForgotPassword = () => {
     const navigation = useNavigation()
+    const dispatch = useAppDispatch()
     return useMutation({
         mutationFn: async (params: ForgotPasswordParams) => {
 
@@ -108,16 +132,14 @@ export const useForgotPassword = () => {
                 ...params
             })
 
-            return {
-                ...data, email: params.value
-            }      // console.log(data)
+            return data   
         
         },
         onSuccess: (data) => {
             if(data.status === 'success') {
-                navigation.navigate(Routes.forgotPasswordVerification, {
-                    email: data.email
-                })
+                
+                dispatch(setEmail(data.data.email))
+                navigation.navigate(Routes.codeVerification,{forForgotPassword: true})
 
             } else {
 
@@ -133,7 +155,6 @@ export const useVerifyCode = () => {
     return useMutation({
         mutationFn: async (params: VerifyCodeParams) => {
             console.log(params)
-
             const {
                 data ,
             } = await api.post<VerfiyCodeResponse>(URLS.verifyCode, {
@@ -144,19 +165,16 @@ export const useVerifyCode = () => {
                 ...data, code: params.code, email: params.email
             }
         },
-            // console.log(data)
-        
     
         onSuccess: (data) => {
+            console.log('dataa', data)
             if(data.status === 'success') {
                 navigation.navigate(Routes.resetPassword, {
                     token: data.code,
                     email: data.email
                 })
-
             } else {
-
-                Alert.alert(JSON.stringify(data.message))
+                Alert.alert('Verification code is incorrect. Please try again')
             }
         },
     });
@@ -191,6 +209,75 @@ export const useResetPassword = () => {
             } else {
 
                 Alert.alert(JSON.stringify(data.message))
+            }
+        },
+    });
+} 
+
+
+
+
+export const useVerifyEmail = () => {
+    const navigation = useNavigation()
+    const dispatch = useAppDispatch();
+    return useMutation({
+        mutationFn: async (params: VerfiyParams) => {
+            console.log(params)
+
+            const {
+                data,
+            } = await api.post<RykegeApiResponse>(URLS.verifyMobile, {
+                ...params
+            })
+
+            return data
+        },
+        
+    
+        onSuccess: async (data) => {
+            console.log('email verification result -> ', data)
+            if(data.status === 'success') {
+                dispatch(setIsEmailVerified(1))
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: Routes.completeProfile }],
+                  });
+
+            } else {
+                Alert.alert('Verification code is incorrect. Please try again')
+            }
+        }
+    });
+} 
+
+
+export const useVerifySms = () => {
+    const navigation = useNavigation()
+    const dispatch = useAppDispatch()
+    return useMutation({
+        mutationFn: async (params: VerfiyParams) => {
+            console.log(params)
+
+            const {
+                data,
+            } = await api.post<RykegeApiResponse>(URLS.verifyMobile, {
+                ...params
+            })
+
+            return data
+        },
+        
+    
+        onSuccess: (data) => {
+            if(data.status === 'success') {
+                console.log(data)
+                dispatch(setIsSmsVerified(1))
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: Routes.completeProfile }],
+                  });
+            } else {
+                Alert.alert('Verification code is incorrect. Please try again')
             }
         },
     });
