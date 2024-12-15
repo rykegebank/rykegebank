@@ -36,7 +36,9 @@ const profileSchema = z.object({
 
 const CompleteProfileScreen = () => {
   const { requestPermission } = usePermission(
-    PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+    Platform.OS === "android"
+      ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+      : undefined
   );
 
   const submitProfile = useSubmitUser();

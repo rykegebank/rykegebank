@@ -6,9 +6,11 @@ const usePermission = (permission) => {
   const [status, setStatus] = useState(null);
 
   useEffect(() => {
+    if (!permission) return;
     const getPermissionStatus = async () => {
       // Check the current permission status
       const currentStatus = await check(permission);
+      console.log(currentStatus);
       setStatus(currentStatus);
     };
 
@@ -16,6 +18,7 @@ const usePermission = (permission) => {
   }, [permission]);
 
   const requestPermission = async () => {
+    if (!permission) return;
     try {
       // Request permission
       const result = await request(permission);
