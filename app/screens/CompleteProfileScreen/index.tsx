@@ -21,6 +21,7 @@ import useImagePicker from "../../hooks/useImagePicker";
 import GenericError from "../../components/GenericError";
 import usePermission from "../../hooks/usePermissions";
 import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 interface ProfileDetails extends SubmitUserParams {}
 const required_field_error_msg = "This field is required";
 const profileSchema = z.object({
@@ -139,6 +140,9 @@ const CompleteProfileScreen = () => {
       >
         <Text style={styles.updateButtonText}>Update Profile</Text>
       </TouchableOpacity>
+      {submitProfile.isPending && (
+        <LoadingIndicator isLoading={true} message="Logging in.." />
+      )}
     </ScrollView>
   );
 };

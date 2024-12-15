@@ -10,6 +10,7 @@ import { Controller, useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 
 interface ForgotPasswordDetails {
   value: string;
@@ -87,6 +88,9 @@ const ForgotPasswordScreen = () => {
           title="Submit"
         />
       </View>
+      {forgotPassword.isPending && (
+        <LoadingIndicator isLoading={true} message="Logging in.." />
+      )}
     </View>
   );
 };

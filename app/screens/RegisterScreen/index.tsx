@@ -24,6 +24,7 @@ import {
   getCountryCode,
   getMobileCode,
 } from "../../utils/countries";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 
 interface RegistrationDetails extends SignUpParams {}
 const required_field_error_msg = "This field is required";
@@ -262,6 +263,9 @@ const RegisterScreen = () => {
         onPress={handleSubmit(onSubmit)}
         title="Sign Up"
       />
+      {signUp.isPending && (
+        <LoadingIndicator isLoading={true} message="Logging in.." />
+      )}
     </ScrollView>
   );
 };

@@ -20,6 +20,7 @@ import {
   useVerifySms,
 } from "../../data/users/mutation";
 import { useAppSelector } from "../../store";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 
 const CodeVerificationScreen = () => {
   const { forForgotPassword } = useRoute().params || {
@@ -140,6 +141,11 @@ const CodeVerificationScreen = () => {
           </TouchableOpacity>
         </View>
       </View>
+      {(verifyCode.isPending ||
+        verifyEmail.isPending ||
+        verifySms.isPending) && (
+        <LoadingIndicator isLoading={true} message="Logging in.." />
+      )}
     </View>
   );
 };

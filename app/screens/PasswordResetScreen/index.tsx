@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useResetPassword } from "../../data/users/mutation";
+import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 const required_field_error_msg = "This field is required";
 const resetPasswordSchema = z
   .object({
@@ -74,7 +75,6 @@ const PasswordResetScreen = () => {
         />
         <Text style={styles.headerText}>Reset Your Password</Text>
       </View>
-
       <View style={styles.content}>
         <Text style={styles.title}>Reset Your Password</Text>
         <Text style={styles.subtitle}>
@@ -132,6 +132,9 @@ const PasswordResetScreen = () => {
           title="Submit"
         />
       </View>
+      {resetPassword.isPending && (
+        <LoadingIndicator isLoading={true} message="Logging in.." />
+      )}
     </View>
   );
 };
