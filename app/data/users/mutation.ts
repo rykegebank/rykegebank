@@ -227,7 +227,7 @@ export const useVerifyEmail = () => {
 
             const {
                 data,
-            } = await api.post<RykegeApiResponse>(URLS.verifyMobile, {
+            } = await api.post<RykegeApiResponse>(URLS.verifyEmail, {
                 ...params
             })
 

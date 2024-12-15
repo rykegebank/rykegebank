@@ -1,5 +1,5 @@
 import { EvilIcons } from "@expo/vector-icons";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { SubmitUserParams, useSubmitUser } from "../../data/profile/mutation";
 import { useNavigation, useRoute } from "@react-navigation/core";
+import useImagePicker from "../../hooks/useImagePicker";
+import GenericError from "../../components/GenericError";
 
 interface ProfileDetails extends SubmitUserParams {}
 const required_field_error_msg = "This field is required";
@@ -31,6 +33,9 @@ const profileSchema = z.object({
 
 const CompleteProfileScreen = () => {
   const submitProfile = useSubmitUser();
+
+  const { pickImageFromGallery, imageUri, error } = useImagePicker();
+
   const {
     control,
     handleSubmit,
@@ -40,18 +45,22 @@ const CompleteProfileScreen = () => {
     resolver: zodResolver(profileSchema),
     mode: "onSubmit",
     defaultValues: {
-      //   firstname: "lorence",
-      //   lastname: "hernandez",
+      firstname: "lorence",
+      lastname: "hernandez",
       image: undefined,
     },
   });
 
   const onSubmitProfile = (data: ProfileDetails) => {
-    console.log(data);
     submitProfile.mutate(data);
   };
 
-  const navigation = useNavigation();
+  useEffect(() => {
+    if (imageUri) {
+      setValue("image", imageUri);
+    }
+  }, [imageUri, setValue]);
+
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
@@ -66,13 +75,17 @@ const CompleteProfileScreen = () => {
       <View style={styles.profileSection}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={{ uri: "https://via.placeholder.com/100" }} // Placeholder image URL
+            source={{ uri: imageUri ?? "https://via.placeholder.com/100" }} // Placeholder image URL
             style={styles.profileImage}
           />
-          <TouchableOpacity style={styles.editIcon}>
+          <TouchableOpacity
+            style={styles.editIcon}
+            onPress={pickImageFromGallery}
+          >
             <EvilIcons name="pencil" size={16} color="#fff" />
           </TouchableOpacity>
         </View>
+        {error && <GenericError message={"testset"} marginTop={12} />}
       </View>
 
       {/* Input Fields */}

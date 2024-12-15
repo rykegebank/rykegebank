@@ -257,7 +257,8 @@ const RegisterScreen = () => {
       </View>
 
       <GenericButton
-        disabled={!isValid}
+        disabled={false}
+        style={styles.signupButton}
         onPress={handleSubmit(onSubmit)}
         title="Sign Up"
       />

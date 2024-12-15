@@ -29,9 +29,37 @@ export const useSubmitUser = () => {
     return useMutation({
         mutationFn: async (params: SubmitUserParams) => {
             console.log(params)
+            const formData = new FormData();
+
+            formData.append('firstname', params.firstname)
+            formData.append('lastname', params.lastname)
+            formData.append('address', params.address)
+            formData.append('city', params.city)
+            formData.append('state', params.state)
+            formData.append('zip', params.zip)
+            
+            const uri = params.image
+
+            if (uri) {
+                const uriParts = uri.split('.');
+                const fileType = uriParts[uriParts.length - 1];
+    
+                   
+                formData.append('image', {
+                    uri,
+                    name: `profile.${fileType}`,
+                    type: `image/${fileType}`,
+                });
+            }
+  
+
             const {
                 data
-            } = await api.post<SubmitUserResponse>(URLS.submitUser, params)
+            } = await api.post<SubmitUserResponse>(URLS.submitUser, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
             
             return data
 
