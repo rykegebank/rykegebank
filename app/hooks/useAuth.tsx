@@ -55,10 +55,7 @@ export const useAuth = () => {
         }
       } else {
         console.log("logging in -> for verificaiton");
-        navigation.reset({
-          index: 0,
-          routes: [{ name: Routes.codeVerification }],
-        });
+        navigation.navigate(Routes.codeVerification);
       }
     } else {
       throw "Wrong username or password.";
