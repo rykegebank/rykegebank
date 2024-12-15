@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Platform,
 } from "react-native";
 import GenericInput from "../../components/GenericInput";
 
@@ -18,7 +19,8 @@ import { SubmitUserParams, useSubmitUser } from "../../data/profile/mutation";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import useImagePicker from "../../hooks/useImagePicker";
 import GenericError from "../../components/GenericError";
-
+import usePermission from "../../hooks/usePermissions";
+import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
 interface ProfileDetails extends SubmitUserParams {}
 const required_field_error_msg = "This field is required";
 const profileSchema = z.object({
@@ -32,6 +34,10 @@ const profileSchema = z.object({
 });
 
 const CompleteProfileScreen = () => {
+  const { requestPermission } = usePermission(
+    PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+  );
+
   const submitProfile = useSubmitUser();
 
   const { pickImageFromGallery, imageUri, error } = useImagePicker();
@@ -51,6 +57,14 @@ const CompleteProfileScreen = () => {
     },
   });
 
+  const onProfileUpload = async () => {
+    if (Platform.OS === "android") {
+      if (await requestPermission()) {
+        return pickImageFromGallery();
+      }
+    }
+    pickImageFromGallery();
+  };
   const onSubmitProfile = (data: ProfileDetails) => {
     submitProfile.mutate(data);
   };
@@ -78,10 +92,7 @@ const CompleteProfileScreen = () => {
             source={{ uri: imageUri ?? "https://via.placeholder.com/100" }} // Placeholder image URL
             style={styles.profileImage}
           />
-          <TouchableOpacity
-            style={styles.editIcon}
-            onPress={pickImageFromGallery}
-          >
+          <TouchableOpacity style={styles.editIcon} onPress={onProfileUpload}>
             <EvilIcons name="pencil" size={16} color="#fff" />
           </TouchableOpacity>
         </View>
