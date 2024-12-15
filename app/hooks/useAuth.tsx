@@ -28,8 +28,8 @@ export const useAuth = () => {
   const onAuthSuccess = async (data: any) => {
     console.log("onAuthSuccess");
     if (data.status === "success") {
-      const { user, access_token, profile_complete } = data.data;
-      const { ev, sv, email, mobile } = user;
+      const { user, access_token } = data.data;
+      const { ev, sv, email, mobile, profile_complete } = user;
       await setAccessToken(access_token);
       dispatch(setUser(user));
       dispatch(setIsAuthenticated(true));
