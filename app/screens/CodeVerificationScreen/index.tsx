@@ -22,7 +22,9 @@ import {
 import { useAppSelector } from "../../store";
 
 const CodeVerificationScreen = () => {
-  const { forForgotPassword = false } = useRoute().params;
+  const { forForgotPassword } = useRoute().params || {
+    forForgotPassword: false,
+  };
 
   const { ev, sv, email, mobile } = useAppSelector((state) => state.user);
 

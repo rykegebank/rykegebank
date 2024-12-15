@@ -5,7 +5,7 @@ import { URLS } from "../urls";
 import { Alert } from "react-native";
 import { Routes } from "../../constants";
 import { getAccessToken, setAccessToken } from "../../logic/token";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { setEmail, setIsAuthenticated, setIsEmailVerified, setIsProfileCompleted, setIsSmsVerified, setMobile, setUser } from "../../store/slices/userSlice";
 
 export interface SignUpParams {
@@ -220,6 +220,7 @@ export const useResetPassword = () => {
 export const useVerifyEmail = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch();
+    const { profile_complete } = useAppSelector(state => state.user)
     return useMutation({
         mutationFn: async (params: VerfiyParams) => {
             console.log(params)
@@ -238,10 +239,19 @@ export const useVerifyEmail = () => {
             console.log('email verification result -> ', data)
             if(data.status === 'success') {
                 dispatch(setIsEmailVerified(1))
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: Routes.completeProfile }],
-                  });
+
+                if ( profile_complete === 0 ) {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: Routes.completeProfile }],
+                      });
+                } else {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: Routes.main }],
+                      });
+
+                }
 
             } else {
                 Alert.alert('Verification code is incorrect. Please try again')
@@ -254,6 +264,7 @@ export const useVerifyEmail = () => {
 export const useVerifySms = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
+    const { profile_complete } = useAppSelector(state => state.user)
     return useMutation({
         mutationFn: async (params: VerfiyParams) => {
             console.log(params)
@@ -272,10 +283,19 @@ export const useVerifySms = () => {
             if(data.status === 'success') {
                 console.log(data)
                 dispatch(setIsSmsVerified(1))
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: Routes.completeProfile }],
-                  });
+
+                if ( profile_complete === 0 ) {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: Routes.completeProfile }],
+                      });
+                } else {
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: Routes.main }],
+                      });
+
+                }
             } else {
                 Alert.alert('Verification code is incorrect. Please try again')
             }
