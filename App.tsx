@@ -18,7 +18,6 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <PaperProvider>
           <SafeAreaView style={{ flex: 1 }}>
-            <FlashMessage position="top" />
             {/* <StatusBar
               backgroundColor={Colors.primaryColor}
               barStyle="light-content"
@@ -27,6 +26,14 @@ const App = () => {
           </SafeAreaView>
         </PaperProvider>
       </QueryClientProvider>
+      <FlashMessage
+        position="bottom"
+        style={{
+          marginHorizontal: 15,
+          borderRadius: 8,
+          marginBottom: 10,
+        }}
+      />
     </Provider>
   );
 };

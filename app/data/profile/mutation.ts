@@ -7,6 +7,7 @@ import { Routes } from "../../constants";
 import { getAccessToken } from "../../logic/token";
 import { useAppDispatch } from "../../store";
 import { setIsProfileCompleted } from "../../store/slices/userSlice";
+import toasts from "../../logic/toasts";
 
 
 export interface SubmitUserParams {
@@ -68,6 +69,7 @@ export const useSubmitUser = () => {
             console.log('testset', data)
             if (data.status === 'success') {
                 dispatch(setIsProfileCompleted(1))
+                toasts.genericSuccessToast('Profile completed successfully')
                 navigation.reset({
                     index: 0,
                     routes: [{ name: Routes.main }],

@@ -7,6 +7,7 @@ import { Routes } from "../../constants";
 import { getAccessToken, setAccessToken } from "../../logic/token";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { setEmail, setIsAuthenticated, setIsEmailVerified, setIsProfileCompleted, setIsSmsVerified, setMobile, setUser } from "../../store/slices/userSlice";
+import toasts from "../../logic/toasts";
 
 export interface SignUpParams {
     email: string;
@@ -83,11 +84,17 @@ interface ResetPasswordResponse {
     }
 }
 
+const error = {
+    status: "error"
+}
 export const useSignUp = () => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch();
     return useMutation({
         mutationFn: async (params: SignUpParams) => {
+            if (params.agree === 0) {
+                throw new Error("You must agree with our privacy & policies.")
+            } 
 
             const {
                 data
@@ -97,6 +104,9 @@ export const useSignUp = () => {
             
             return data
 
+        },
+        onError: (error: Error) => {
+            toasts.genericErrorToast(error.message)
         },
         onSuccess: async (data: SignUpResponse) => {
             if (data.status === 'success') {
@@ -110,10 +120,9 @@ export const useSignUp = () => {
                 dispatch(setIsProfileCompleted(0))
                 dispatch(setEmail(email))
                 dispatch(setMobile(mobile))
-
                 navigation.navigate(Routes.codeVerification)
             } else {
-                Alert.alert('Unable to register', data.message.error[0])
+                throw new Error(data.message?.error?.[0] ?? 'Unable to register')
             }
         },
       });
@@ -139,6 +148,8 @@ export const useForgotPassword = () => {
             if(data.status === 'success') {
                 
                 dispatch(setEmail(data.data.email))
+
+                toasts.genericSuccessToast("Password reset email sent to " + data.data.email)
                 navigation.navigate(Routes.codeVerification,{forForgotPassword: true})
 
             } else {
@@ -201,6 +212,8 @@ export const useResetPassword = () => {
     
         onSuccess: (data) => {
             if(data.status === 'success') {
+
+                toasts.genericSuccessToast("Password changed successfully")
                 navigation.reset({
                     index: 0,
                     routes: [{ name: Routes.login }],
@@ -240,6 +253,7 @@ export const useVerifyEmail = () => {
             if(data.status === 'success') {
                 dispatch(setIsEmailVerified(1))
 
+                toasts.genericSuccessToast("Registration successful")
                 if ( profile_complete === 0 ) {
                     navigation.reset({
                         index: 0,
@@ -284,6 +298,7 @@ export const useVerifySms = () => {
                 console.log(data)
                 dispatch(setIsSmsVerified(1))
 
+                toasts.genericSuccessToast("Registration successful")
                 if ( profile_complete === 0 ) {
                     navigation.reset({
                         index: 0,

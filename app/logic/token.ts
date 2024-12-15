@@ -34,4 +34,38 @@ const removeAccessToken = async () => {
   }
 };
 
-export { setAccessToken, getAccessToken, removeAccessToken };
+
+const insertData = async (key, value) => {
+  try {
+    const stringifiedValue = typeof value === 'object' ? JSON.stringify(value) : value;
+    await AsyncStorage.setItem(key, stringifiedValue);
+  } catch (error) {
+    console.error('Error inserting data:', error);
+  }
+};
+
+const fetchData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+    if (value !== null) {
+      return value.startsWith('{') || value.startsWith('[') ? JSON.parse(value) : value;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return null;
+  }
+};
+
+const removeData = async (key) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.error('Error removing data:', error);
+  }
+};
+
+
+
+
+export { setAccessToken, getAccessToken, removeAccessToken, insertData, removeData, fetchData };

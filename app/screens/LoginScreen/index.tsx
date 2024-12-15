@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Alert } from "react-native";
 // import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Checkbox from "expo-checkbox";
@@ -13,7 +13,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignInParams } from "../../data/auth";
 import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
-
+import toasts from "../../logic/toasts";
+import { fetchData, insertData, removeData } from "../../logic/token";
 const loginSchema = z.object({
   username: z.string().min(6),
   password: z.string().min(6),
@@ -21,18 +22,17 @@ const loginSchema = z.object({
 
 const LoginScreen = () => {
   const [checked, setChecked] = useState(false);
+
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const { login, isLoading, error } = useAuth();
-  const navigation = useNavigation();
 
-  const onSubmit = (data: SignInParams) => {
-    login(data);
-  };
+  const navigation = useNavigation();
 
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { isValid },
   } = useForm<SignInParams>({
     resolver: zodResolver(loginSchema),
@@ -42,6 +42,25 @@ const LoginScreen = () => {
     //   password: "Lorence1@",
     // },
   });
+
+  const onSubmit = (data: SignInParams) => {
+    if (checked) {
+      insertData("username", data.username);
+    } else {
+      removeData("username");
+    }
+    login(data);
+  };
+
+  useEffect(() => {
+    const loadDefault = async () => {
+      const username = await fetchData("username");
+      if (username) {
+        setValue("username", username);
+      }
+    };
+    loadDefault();
+  }, [setValue]);
 
   return (
     <View style={styles.container}>
