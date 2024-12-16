@@ -1,5 +1,5 @@
 type URLSType = {
-  baseUrl:string;
+  baseUrl: string;
   signIn: string;
   signUp: string;
   allCountries: string;
@@ -10,11 +10,12 @@ type URLSType = {
   verifyCode: string;
   resetPassword: string;
   verifyMobile: string;
-  verifyEmail: string
+  verifyEmail: string,
+  resendEmail: string
 };
 
 export const URLS: URLSType = {
-  baseUrl:"http://54.91.151.16/",
+  baseUrl: "http://54.91.151.16/",
   signIn: "/login",
   signUp: "/register",
   allCountries: "/get-countries",
@@ -25,6 +26,7 @@ export const URLS: URLSType = {
   verifyCode: "/password/verify-code",
   resetPassword: "/password/reset",
   verifyMobile: '/verify-mobile',
-  verifyEmail: '/verify-email'
+  verifyEmail: '/verify-email',
+  resendEmail: '/password/email',
 
 };

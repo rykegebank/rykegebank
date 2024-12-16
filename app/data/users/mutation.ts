@@ -7,6 +7,7 @@ import { Routes } from "../../constants";
 import { getAccessToken, setAccessToken } from "../../logic/token";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { setEmail, setIsAuthenticated, setIsEmailVerified, setIsProfileCompleted, setIsSmsVerified, setMobile, setUser } from "../../store/slices/userSlice";
+import { startCountdown } from "../../hooks/userHook";
 import toasts from "../../logic/toasts";
 
 export interface SignUpParams {
@@ -61,6 +62,11 @@ interface VerfiyCodeResponse {
 interface VerfiyParams {
     code: string
 }
+
+interface ResendParams {
+    value: string
+}
+
 interface ResetPasswordParams {
 
     token: string
@@ -70,14 +76,14 @@ interface ResetPasswordParams {
 }
 
 
-interface RykegeApiResponse { 
+interface RykegeApiResponse {
     status: string
     message: {
         error: string[]
     }
 }
-interface ResetPasswordResponse { 
-    
+interface ResetPasswordResponse {
+
     status: string
     message: {
         error: string[]
@@ -94,14 +100,14 @@ export const useSignUp = () => {
         mutationFn: async (params: SignUpParams) => {
             if (params.agree === 0) {
                 throw new Error("You must agree with our privacy & policies.")
-            } 
+            }
 
             const {
                 data
             } = await api.post<SignUpResponse>(URLS.signUp, {
                 ...params
             })
-            
+
             return data
 
         },
@@ -120,13 +126,14 @@ export const useSignUp = () => {
                 dispatch(setIsProfileCompleted(0))
                 dispatch(setEmail(email))
                 dispatch(setMobile(mobile))
+                dispatch(startCountdown(120))
                 navigation.navigate(Routes.codeVerification)
             } else {
                 throw new Error(data.message?.error?.[0] ?? 'Unable to register')
             }
         },
-      });
-} 
+    });
+}
 
 
 export const useForgotPassword = () => {
@@ -136,21 +143,22 @@ export const useForgotPassword = () => {
         mutationFn: async (params: ForgotPasswordParams) => {
 
             const {
-                data ,
+                data,
             } = await api.post<ForgotPasswordResponse>(URLS.forgotPassword, {
                 ...params
             })
 
-            return data   
-        
+            return data
+
         },
         onSuccess: (data) => {
-            if(data.status === 'success') {
-                
+            if (data.status === 'success') {
+
                 dispatch(setEmail(data.data.email))
 
                 toasts.genericSuccessToast("Password reset email sent to " + data.data.email)
-                navigation.navigate(Routes.codeVerification,{forForgotPassword: true})
+                dispatch(startCountdown(120))
+                navigation.navigate(Routes.codeVerification, { forForgotPassword: true })
 
             } else {
 
@@ -158,7 +166,7 @@ export const useForgotPassword = () => {
             }
         },
     });
-} 
+}
 
 
 export const useVerifyCode = () => {
@@ -167,7 +175,7 @@ export const useVerifyCode = () => {
         mutationFn: async (params: VerifyCodeParams) => {
             console.log(params)
             const {
-                data ,
+                data,
             } = await api.post<VerfiyCodeResponse>(URLS.verifyCode, {
                 ...params
             })
@@ -176,10 +184,10 @@ export const useVerifyCode = () => {
                 ...data, code: params.code, email: params.email
             }
         },
-    
+
         onSuccess: (data) => {
             console.log('dataa', data)
-            if(data.status === 'success') {
+            if (data.status === 'success') {
                 navigation.navigate(Routes.resetPassword, {
                     token: data.code,
                     email: data.email
@@ -189,7 +197,7 @@ export const useVerifyCode = () => {
             }
         },
     });
-} 
+}
 
 
 
@@ -200,24 +208,24 @@ export const useResetPassword = () => {
             console.log(params)
 
             const {
-                data ,
+                data,
             } = await api.post<ResetPasswordResponse>(URLS.resetPassword, {
                 ...params
             })
 
             return data
         },
-            // console.log(data)
-        
-    
+        // console.log(data)
+
+
         onSuccess: (data) => {
-            if(data.status === 'success') {
+            if (data.status === 'success') {
 
                 toasts.genericSuccessToast("Password changed successfully")
                 navigation.reset({
                     index: 0,
                     routes: [{ name: Routes.login }],
-                  });
+                });
 
             } else {
 
@@ -225,7 +233,7 @@ export const useResetPassword = () => {
             }
         },
     });
-} 
+}
 
 
 
@@ -246,24 +254,24 @@ export const useVerifyEmail = () => {
 
             return data
         },
-        
-    
+
+
         onSuccess: async (data) => {
             console.log('email verification result -> ', data)
-            if(data.status === 'success') {
+            if (data.status === 'success') {
                 dispatch(setIsEmailVerified(1))
 
                 toasts.genericSuccessToast("Registration successful")
-                if ( profile_complete === 0 ) {
+                if (profile_complete === 0) {
                     navigation.reset({
                         index: 0,
                         routes: [{ name: Routes.completeProfile }],
-                      });
+                    });
                 } else {
                     navigation.reset({
                         index: 0,
                         routes: [{ name: Routes.main }],
-                      });
+                    });
 
                 }
 
@@ -272,7 +280,7 @@ export const useVerifyEmail = () => {
             }
         }
     });
-} 
+}
 
 
 export const useVerifySms = () => {
@@ -291,28 +299,56 @@ export const useVerifySms = () => {
 
             return data
         },
-        
-    
+
+
         onSuccess: (data) => {
-            if(data.status === 'success') {
+            if (data.status === 'success') {
                 console.log(data)
                 dispatch(setIsSmsVerified(1))
 
                 toasts.genericSuccessToast("Registration successful")
-                if ( profile_complete === 0 ) {
+                if (profile_complete === 0) {
                     navigation.reset({
                         index: 0,
                         routes: [{ name: Routes.completeProfile }],
-                      });
+                    });
                 } else {
                     navigation.reset({
                         index: 0,
                         routes: [{ name: Routes.main }],
-                      });
+                    });
 
                 }
             } else {
                 Alert.alert('Verification code is incorrect. Please try again')
+            }
+        },
+    });
+}
+
+export const useResendSms = () => {
+    const dispatch = useAppDispatch()
+    return useMutation({
+        mutationFn: async (params: ResendParams) => {
+            console.log(URLS.resendEmail, params)
+
+            const {
+                data,
+            } = await api.post<RykegeApiResponse>(URLS.resendEmail, {
+                ...params
+            })
+
+            return data
+        },
+
+
+        onSuccess: (data) => {
+            console.log(data)
+            if (data.status === 'success') {
+                toasts.genericSuccessToast("Verification code sent successfully")
+                dispatch(startCountdown(120))
+            } else {
+                Alert.alert('Unable to send erification code.')
             }
         },
     });

@@ -18,6 +18,7 @@ import {
   useVerifyCode,
   useVerifyEmail,
   useVerifySms,
+  useResendSms
 } from "../../data/users/mutation";
 import { useAppSelector } from "../../store";
 import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
@@ -27,7 +28,7 @@ const CodeVerificationScreen = () => {
     forForgotPassword: false,
   };
 
-  const { ev, sv, email, mobile } = useAppSelector((state) => state.user);
+  const { ev, sv, email, mobile, timer } = useAppSelector((state) => state.user);
 
   const navigation = useNavigation();
 
@@ -36,6 +37,9 @@ const CodeVerificationScreen = () => {
   const verifyEmail = useVerifyEmail();
 
   const verifySms = useVerifySms();
+
+  const resendSms = useResendSms();
+
 
   const {
     control,
@@ -64,6 +68,14 @@ const CodeVerificationScreen = () => {
         code: otp,
       });
     }
+  };
+
+
+  const onResend = async (data: any) => {
+    console.log("resending sms...");
+    resendSms.mutate({
+      value: email,
+    });
   };
 
   return (
@@ -136,8 +148,8 @@ const CodeVerificationScreen = () => {
         {/* Resend Text */}
         <View style={styles.resendContainer}>
           <Text style={styles.resendText}>Didn’t receive the code? </Text>
-          <TouchableOpacity>
-            <Text style={styles.resendLink}>Resend</Text>
+          <TouchableOpacity onPress={timer == 0 ? onResend : undefined}>
+            <Text style={styles.resendLink}>{timer == 0 ? 'Resend' : timer}</Text>
           </TouchableOpacity>
         </View>
       </View>

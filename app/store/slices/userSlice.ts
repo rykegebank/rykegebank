@@ -1,16 +1,17 @@
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type User = any | null
+type User = any | null;
 
 interface UserState {
-  user: User
+  user: User;
   is_authenticated: boolean;
   profile_complete: number;
   ev: number;
   sv: number;
-  email: string
-  mobile: string
+  email: string;
+  mobile: string;
+  timer: number;
+  isTimerRunning: boolean; // New property to track timer state
 }
 
 const initialState: UserState = {
@@ -20,7 +21,9 @@ const initialState: UserState = {
   ev: 0,
   sv: 0,
   email: '',
-  mobile: ''
+  mobile: '',
+  timer: 0,
+  isTimerRunning: false,
 };
 
 const userSlice = createSlice({
@@ -48,11 +51,27 @@ const userSlice = createSlice({
     setMobile: (state, action: PayloadAction<string>) => {
       state.mobile = action.payload;
     },
+    updateTimer: (state, action: PayloadAction<number>) => {
+      state.timer = action.payload;
+    },
+    setTimerRunning: (state, action: PayloadAction<boolean>) => {
+      state.isTimerRunning = action.payload;
+    },
     resetUser: () => initialState,
   },
 });
 
-export const { setUser, setIsAuthenticated, setIsProfileCompleted, setIsEmailVerified, setIsSmsVerified, resetUser, setEmail, setMobile } =
-  userSlice.actions;
+export const {
+  setUser,
+  setIsAuthenticated,
+  setIsProfileCompleted,
+  setIsEmailVerified,
+  setIsSmsVerified,
+  resetUser,
+  setEmail,
+  setMobile,
+  updateTimer,
+  setTimerRunning,
+} = userSlice.actions;
 
 export default userSlice;
