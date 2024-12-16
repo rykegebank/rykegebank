@@ -82,21 +82,21 @@ const RegisterScreen = () => {
   } = useForm<RegistrationDetails>({
     resolver: zodResolver(registrationSchema),
     mode: "onSubmit",
-    // defaultValues: {
-    //   agree: 1,
-    //   country: "Philippines",
-    //   country_code: "PH",
-    //   email: "lorencehernandez97@gmail.com",
-    //   mobile: "9066870459",
-    //   mobile_code: "63",
-    //   password: "Lorence1@",
-    //   password_confirmation: "Lorence1@",
-    //   username: "lorence1234",
-    // },
+    defaultValues: {
+      agree: 0,
+      // country: "Philippines",
+      // country_code: "PH",
+      // email: "lorencehernandez97@gmail.com",
+      // mobile: "9066870459",
+      // mobile_code: "63",
+      // password: "Lorence1@",
+      // password_confirmation: "Lorence1@",
+      // username: "lorence1234",
+    },
   });
 
   const onSubmit = (data: RegistrationDetails) => {
-    console.log("Registering: " + data);
+    console.log("Registering1: " + JSON.stringify(data));
     signUp.mutate(data);
   };
 

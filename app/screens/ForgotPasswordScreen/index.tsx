@@ -17,10 +17,7 @@ interface ForgotPasswordDetails {
 }
 
 const forgotPasswordSchema = z.object({
-  value: z.coerce
-    .string()
-    .min(1, { message: "This field is required" })
-    .email("This is not a valid email."),
+  value: z.string().min(1, { message: "This field is required" }),
 });
 
 const ForgotPasswordScreen = () => {
