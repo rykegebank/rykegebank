@@ -10,7 +10,7 @@ import NoDataFound from '../../../components/NoDataFound/NoDataFound';
 import LatestTransactionListItem from '../components/latestTransactionListItem';
 import { formatNumber } from '../../../utils/stringFormatHelper';
 import { isoStringToLocalDateOnly, isoStringToLocalTimeOnly } from '../../../utils/dateConvert';
-import { useHomeQuery } from "../hooks/home";
+import { useHomeQuery } from "../hooks/useHome";
 
 const HomeScreenItemsSection: React.FC = () => {
   const { data, isLoading, error, refetch } = useHomeQuery();

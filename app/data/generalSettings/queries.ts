@@ -4,7 +4,7 @@ import { URLS } from '../urls';
 import { GeneralSettingsResponseModel } from '../../types/generalSettings';
 import { manageApiException } from '../../utils/errorHandler';
 
-export const fetchGeneralSettings = async (): Promise<GeneralSettingsResponseModel> => {
+export const useFetchGeneralSettings = async (): Promise<GeneralSettingsResponseModel> => {
     try {
         const response = await api.get(URLS.generalSettings);
         return response.data;
@@ -18,6 +18,6 @@ export const fetchGeneralSettings = async (): Promise<GeneralSettingsResponseMod
 export const useGeneralSettingsQuery = () => {
     return useQuery<GeneralSettingsResponseModel, Error>({
         queryKey: ['generalSettings'],
-        queryFn: fetchGeneralSettings,
+        queryFn: useFetchGeneralSettings,
     });
 };

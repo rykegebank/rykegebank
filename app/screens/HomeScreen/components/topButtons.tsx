@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
 import ModuleProvider from './moduleProvider';
-import { useGeneralSettings } from '../../../hooks/generalSettings';
+import { useGeneralSettings } from '../../../hooks/useGeneralSettings';
 import { useNavigation } from '@react-navigation/native';
 
 const TopButtons: React.FC = () => {

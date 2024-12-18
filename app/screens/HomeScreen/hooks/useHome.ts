@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
-import { setOffline } from "../../../hooks/internetSlice";
+import { setOffline } from "../../../store/slices/internetSlice";
 import api from "../../../data/api";
 import { URLS } from "../../../data/urls";
-import { DashboardResponseModel, LatestCreditsData, LatestDebitsData } from "../../../types/dashboard";
+import { DashboardResponseModel } from "../../../types/dashboard";
 import { formatNumber } from "../../../utils/stringFormatHelper";
-import { useGeneralSettings } from "../../../hooks/generalSettings";
+import { useGeneralSettings } from "../../../hooks/useGeneralSettings";
 import { manageApiException } from '../../../utils/errorHandler';
 
 interface HomeData {
@@ -39,10 +39,9 @@ export const useHomeQuery = () => {
                 ].sort((a, b) => {
                     const dateA = new Date(a.created_at || "").getTime();
                     const dateB = new Date(b.created_at || "").getTime();
-                    return dateB - dateA; // Descending order
+                    return dateB - dateA;
                 });
 
-                // Fetch currency and symbols
                 const currency = getCurrencyOrUsername({ isCurrency: true }) || "";
                 const currencySymbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true }) || "";
 
@@ -57,7 +56,6 @@ export const useHomeQuery = () => {
                     debitsLists,
                 };
             } catch (error: any) {
-                // const errorMessage = error.response?.data?.message || error.message || "An error occurred";
                 if (error.response?.status === 503 || error.message.includes('Network Error')) {
                     dispatch(setOffline(true));
                 }
@@ -65,7 +63,7 @@ export const useHomeQuery = () => {
                 throw new Error("An error occurred");
             }
         },
-        retry: 0, 
-        
+        retry: 0,
+
     });
 };

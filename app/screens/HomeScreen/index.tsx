@@ -3,14 +3,14 @@ import { View, StyleSheet, RefreshControl, ScrollView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { RootState, AppDispatch } from "../../store"
-import { useHomeQuery } from "./hooks/home";
+import { useHomeQuery } from "./hooks/useHome";
 import HomeScreenTop from "./components/homeScreenTop";
 import NoInternet from "../../components/NoDataFound/noInternet";
 import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 import HomeScreenItemsSection from "./components/homeScreenItemSection";
 import { Colors, Dimensions, Strings } from "../../constants";
 import { hexToRgba } from "../../utils/helperFunctions";
-import { setOffline } from '../../hooks/internetSlice';
+import { setOffline } from '../../store/slices/internetSlice';
 
 const HomeScreen = () => {
     const { isFetching, refetch } = useHomeQuery();

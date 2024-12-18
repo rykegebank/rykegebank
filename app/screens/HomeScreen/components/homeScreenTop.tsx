@@ -9,7 +9,7 @@ import BalanceAnimationContainer from './../components/balanceAnimationContainer
 import CircleImageButton from '../../../components/ImageContainer/circleImageButton';
 import CustomText from '../../../components/Texts/customText';
 import { hexToRgba } from '../../../utils/helperFunctions';
-import { useHomeQuery } from '../hooks/home'; 
+import { useHomeQuery } from '../hooks/useHome'; 
 
 const HomeScreenTop: React.FC = () => {
     const navigation = useNavigation();

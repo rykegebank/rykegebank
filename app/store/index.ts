@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import internetReducer from "../hooks/internetSlice"; 
+import internetReducer from "./slices/internetSlice"; 
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userSlice from "./slices/userSlice";
 

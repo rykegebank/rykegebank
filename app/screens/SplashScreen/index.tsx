@@ -3,7 +3,7 @@ import { View, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { Colors, Dimensions, Assets, Routes } from "../../constants";
-import { useGeneralSettings } from "../../hooks/generalSettings";
+import { useGeneralSettings } from "../../hooks/useGeneralSettings";
 import { removeAccessToken } from "../../logic/token";
 
 const SplashScreen: React.FC = () => {

@@ -1,4 +1,4 @@
-import { showErrorMessage } from './flashMessage';
+import toasts from '../logic/toasts';
 
 export const getErrorMessage = (exception: any): string => {
     try {
@@ -32,5 +32,5 @@ export const manageApiException = async (exception: any) => {
 };
 
 const showError = (message: string) => {
-    showErrorMessage(message);
+    toasts.genericErrorToast(message);
 };
