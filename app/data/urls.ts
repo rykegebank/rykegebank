@@ -11,7 +11,8 @@ type URLSType = {
   resetPassword: string;
   verifyMobile: string;
   verifyEmail: string,
-  resendEmail: string
+  resendEmail: string,
+  transactions: string
   profileUpdate: string
   profileChangePassword: string
   referees: string
@@ -32,6 +33,7 @@ export const URLS: URLSType = {
   verifyMobile: '/verify-mobile',
   verifyEmail: '/verify-email',
   resendEmail: '/password/email',
+  transactions: '/transactions',
   profileUpdate: '/profile-setting',
   profileChangePassword: '/change-password',
   referees: '/referees',
