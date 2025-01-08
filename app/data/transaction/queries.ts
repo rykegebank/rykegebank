@@ -19,15 +19,15 @@ export const fetchTransactionHistory = async (
         if (!remark || remark.toLowerCase() === 'all') {
             remark = '';
         }
-        let url = `${URLS.transactions}?page=${page}`;
-        if (type) url += `&type=${type}`;
-        if (remark) url += `&remark=${remark}`;
-        if (searchText) url += `&search=${searchText}`;
-        if (walletType) url += `&walletType=${walletType}`;
+        let url = `${URLS.transactions}?page=${page}&type=${type}&remark=${remark}&search=${searchText}`;
+        // if (type) url += `&type=${type}`;
+        // if (remark) url += `&remark=${remark}`;
+        // if (searchText) url += `&search=${searchText}`;
+        // if (walletType) url += `&walletType=${walletType}`;
         console.log('url test', url);
 
         const response = await api.get(url);
-        console.log('response');
+        console.log('response', response.data);
         return response.data;
     } catch (error: any) {
         manageApiException(error);
@@ -48,6 +48,8 @@ export const useTransactionHistoryQuery = (
         queryKey: ['transactionHistory', page, type, remark, searchText, walletType],
         queryFn: () => fetchTransactionHistory(page, type, remark, searchText, walletType),
         retry: 0,
-        staleTime: 10000,  // 10 seconds
+        staleTime: 10000,
+        gcTime: 0,
+        enabled: false
     });
 };

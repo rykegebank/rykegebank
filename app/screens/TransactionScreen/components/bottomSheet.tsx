@@ -6,9 +6,9 @@ import {
     TouchableOpacity,
     StyleSheet,
     Modal,
-    Dimensions
+    Dimensions,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface Props {
     list: string[] | null;
@@ -16,6 +16,7 @@ interface Props {
     header: string;
     visible: boolean;
     onSelect: (selectedValue: string) => void;
+    onClose: () => void; // Add onClose prop to handle closing the modal
 }
 
 const TransactionBottomSheet: React.FC<Props> = ({
@@ -24,12 +25,11 @@ const TransactionBottomSheet: React.FC<Props> = ({
     header,
     visible,
     onSelect,
+    onClose,
 }) => {
-    const navigation = useNavigation();
-
     const handleSelect = (item: string) => {
-        onSelect(item);  // Call the onSelect function
-        // onClose();  // Close the bottom sheet
+        onSelect(item); // Call the onSelect function
+        onClose(); // Close the bottom sheet
     };
 
     if (!list || list.length === 0) {
@@ -42,6 +42,12 @@ const TransactionBottomSheet: React.FC<Props> = ({
                 <View style={styles.container}>
                     <View style={styles.headerRow}>
                         <Text style={styles.headerText}>{header}</Text>
+                        <TouchableOpacity onPress={() => {
+                            console.log('Close button pressed');
+                            onClose();
+                        }} style={styles.closeButton}>
+                            <MaterialIcons name="close" size={24} color="#000" />
+                        </TouchableOpacity>
                     </View>
                     <FlatList
                         data={list}
@@ -49,7 +55,7 @@ const TransactionBottomSheet: React.FC<Props> = ({
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={styles.itemContainer}
-                                onPress={() => handleSelect(item)}  // Close the sheet on select
+                                onPress={() => handleSelect(item)}
                             >
                                 <Text style={styles.itemText}>
                                     {callFrom === 2
@@ -80,12 +86,18 @@ const styles = StyleSheet.create({
         maxHeight: Dimensions.get('window').height * 0.8,
     },
     headerRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Align header and close icon
+        alignItems: 'center',
         marginBottom: 16,
     },
     headerText: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#000',
+    },
+    closeButton: {
+        padding: 8, // Add some touchable area
     },
     itemContainer: {
         padding: 15,
