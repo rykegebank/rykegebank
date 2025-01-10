@@ -18,8 +18,8 @@ export interface TransactionData {
   trx?: string;
   details?: string;
   remark?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface Transactions {

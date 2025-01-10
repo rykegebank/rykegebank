@@ -7,19 +7,18 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
-    ActivityIndicator,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import AppBar from '../../components/GenericAppBar';
 import FilterRowWidget from './components/filterRow';
-import { Colors } from '../../constants';
+import { Colors, Dimensions, Strings } from '../../constants';
 import CustomTransactionCard from './components/customTransactionCard';
 import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
-import LoadingIndicator from '../../components/LoadingIndicators/loadingIndicator';
 import TransactionBottomSheet from './components/bottomSheet';
 import { useTransactionHistory } from './hooks/useTransactionHistory';
 import { useForm, Controller } from 'react-hook-form';
 import { RootState } from '../../store';
+import SkeletonLoading from './components/transactionSkeleton';
 
 const TransactionScreen = () => {
     const state = useSelector((state: RootState) => state.transactionHistory);
@@ -47,10 +46,8 @@ const TransactionScreen = () => {
     const renderTransactionItem = useCallback(
         ({ item, index }: { item: any; index: number }) => {
             if (state.transactionList.length === index) {
-                return state.nextPageUrl ? (
-                    <View style={styles.footerLoader}>
-                        <ActivityIndicator size="small" color={Colors.primaryColor} />
-                    </View>
+                return !state.isLoading && state.nextPageUrl ? (
+                    <SkeletonLoading />
                 ) : null;
             }
 
@@ -65,8 +62,8 @@ const TransactionScreen = () => {
                         currency={state.currency}
                         changeTextColor={changeTextColor}
                         setExpandIndex={changeExpandIndex}
-                        dateData={item.createdAt}
-                        amountData={`${item.trx_type} ${item.amount}`}
+                        dateData={item.created_at}
+                        amountData={`${item.amount}`}
                         postBalanceData={`${item.post_balance}`}
                     />
                 </TouchableOpacity>
@@ -81,7 +78,7 @@ const TransactionScreen = () => {
                 <View style={styles.searchContainer}>
                     <View style={styles.row}>
                         <View style={styles.expanded}>
-                            <Text style={styles.label}>Type</Text>
+                            <Text style={styles.label}>{Strings.type}</Text>
                             <FilterRowWidget
                                 text={state.selectedTrxType || 'Trx Type'}
                                 press={() => openFilterBottomSheet('type')}
@@ -89,14 +86,14 @@ const TransactionScreen = () => {
                         </View>
                         <View style={styles.spacing15} />
                         <View style={[styles.expanded, styles.flex3]}>
-                            <Text style={styles.label}>Remark</Text>
+                            <Text style={styles.label}>{Strings.remark}</Text>
                             <FilterRowWidget
                                 text={state.selectedRemark || 'Any'}
                                 press={() => openFilterBottomSheet('remark')}
                             />
                         </View>
                     </View>
-                    <Text style={styles.label}>Transaction No</Text>
+                    <Text style={styles.label}>{Strings.transactionNo}</Text>
                     <View style={styles.row}>
                         <Controller
                             control={control}
@@ -140,11 +137,24 @@ const TransactionScreen = () => {
                     </TouchableOpacity>,
                 ]}
             />
+
             <ListHeader />
-            {state.transactionList.length === 0 && !state.filterLoading ? (
-                <NoDataFoundScreen />
-            ) : state.filterLoading ? (
-                <LoadingIndicator isLoading={true} />
+
+            {state.isLoading
+                ? <FlatList
+                    data={Array(3).fill(null)} // Mock data with 3 items
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={() => (
+                        <SkeletonLoading />
+                    )}
+                    contentContainerStyle={styles.container}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                />
+                : null}
+            {state.transactionList.length === 0 && (!state.isLoading) ? (
+                <View style={styles.centered}>
+                    <NoDataFoundScreen />
+                </View>
             ) : (
                 <FlatList
                     data={[...state.transactionList, {}]}
@@ -164,19 +174,25 @@ const TransactionScreen = () => {
                 onSelect={onSelectBottomSheetItem}
                 onClose={closeBottomSheetAction}
             />
+
         </>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        padding: 15,
+        padding: Dimensions.space15,
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     searchContainer: {
-        backgroundColor: '#FFF',
-        borderRadius: 8,
-        padding: 15,
-        margin:15,
+        backgroundColor: Colors.colorWhite,
+        borderRadius: Dimensions.space10,
+        padding: Dimensions.space15,
+        margin: Dimensions.space15,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
@@ -195,12 +211,12 @@ const styles = StyleSheet.create({
         flex: 3,
     },
     label: {
-        fontSize: 14,
+        fontSize: Dimensions.fontLarge,
         fontWeight: 'bold',
         color: '#000',
     },
     textInput: {
-        height: 45,
+        height: Dimensions.size45,
         borderWidth: 1,
         borderColor: '#B0B0B0',
         borderRadius: 4,
@@ -210,30 +226,30 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     searchButton: {
-        height: 45,
-        width: 45,
+        height: Dimensions.size45,
+        width: Dimensions.size45,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Colors.primaryColor,
         borderRadius: 4,
-        marginLeft: 10,
+        marginLeft: Dimensions.space10,
     },
     spacing: {
-        height: 10,
+        height: Dimensions.size10,
     },
     spacing10: {
-        width: 10,
+        width: Dimensions.size10,
     },
     spacing15: {
-        width: 15,
+        width: Dimensions.size15,
     },
     footerLoader: {
-        height: 40,
+        height: Dimensions.size40,
         justifyContent: 'center',
         alignItems: 'center',
     },
     separator: {
-        height: 10,
+        height: Dimensions.size10,
     },
     centered: {
         flex: 1,

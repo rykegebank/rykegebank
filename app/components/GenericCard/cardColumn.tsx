@@ -23,7 +23,6 @@ const CardColumn: React.FC<CardColumnProps> = ({
             <Text style={[styles.header]} numberOfLines={1}>
                 {header}
             </Text>
-            <View style={{ height: 8 }} />
             <Text
                 style={[
                     isDate
@@ -52,7 +51,8 @@ const styles = StyleSheet.create({
     },
     body: {
         fontSize: Dimensions.fontLarge,
-        color: Colors.smallTextColor1,
+        color: Colors.colorBlack,
+        fontWeight: 'bold',
     },
     bodyDate: {
         fontSize: Dimensions.fontDefault,

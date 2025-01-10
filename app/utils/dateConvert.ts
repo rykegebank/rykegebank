@@ -21,3 +21,11 @@ export const isoStringToLocalTimeOnly = (dateTime: string, errorResult: string =
     const parsedDate = new Date(dateTime);
     return format(parsedDate, 'hh:mm aa');
 };
+
+export const localDate = (dateTime: string, errorResult: string = '--'): string => {
+    const parsedDate = new Date(dateTime);
+    return format(parsedDate, 'MMMM dd, yyyy');
+};
+
+
+

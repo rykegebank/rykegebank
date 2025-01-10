@@ -65,7 +65,7 @@ const LatestTransactionListItem: React.FC<LatestTransactionListItemProps> = ({
                 ellipsizeMode="tail"> {date} </CustomText>
             </View>
           </View>
-          <CustomText fontSize={Dimensions.fontSmall} color={hexToRgba(getTextColor(), 0.5)} numberOfLines={1}
+          <CustomText fontSize={Dimensions.fontSmall} color={isCredit ? Colors.greenSuccessColor : Colors.colorRed} numberOfLines={1}
             ellipsizeMode="tail"> {amount} </CustomText>
         </View>
         {isShowDivider ? (

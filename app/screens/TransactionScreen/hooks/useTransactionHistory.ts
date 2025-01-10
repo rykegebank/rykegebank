@@ -17,16 +17,18 @@ import {
     toggleSearch,
     openBottomSheet,
     closeBottomSheet,
+    setCurrency,
 } from '../../../store/slices/transactionHistorySlice';
 import api from '../../../data/api';
 import { TransactionResponse } from '../../../types/transactionHistory';
 import { URLS } from '../../../data/urls';
+import { useGeneralSettings } from "../../../hooks/useGeneralSettings";
 
 export const useTransactionHistory = () => {
     const state = useSelector((state: RootState) => state.transactionHistory);
     const dispatch = useDispatch();
+    const { getCurrencyOrUsername } = useGeneralSettings();
 
-    // Handle API calls with React Query
     const { mutate } = useMutation({
         mutationFn: async ({
             page,
@@ -41,20 +43,21 @@ export const useTransactionHistory = () => {
         }) => {
             const type =
                 selectedTrxType.toLowerCase() === 'all' ||
-                (selectedTrxType.toLowerCase() !== 'plus' && selectedTrxType.toLowerCase() !== 'minus')
+                    (selectedTrxType.toLowerCase() !== 'plus' && selectedTrxType.toLowerCase() !== 'minus')
                     ? ''
                     : selectedTrxType.toLowerCase();
 
             const remark = selectedRemark.toLowerCase() === 'all' ? '' : selectedRemark;
-            if(trxSearchText==undefined){
-              trxSearchText='';
+            if (trxSearchText == undefined) {
+                trxSearchText = '';
             }
             const url = `${URLS.transactions}?page=${page}&type=${type}&remark=${remark}&search=${trxSearchText}`;
-            console.log('url',url)
+            console.log('url', url, state.isLoading)
             const { data } = await api.get<TransactionResponse>(url);
             return data;
         },
         onError: (error) => {
+            dispatch(setLoading(false));
             console.error('Error fetching transactions:', error);
         },
         onSuccess: (data) => {
@@ -64,10 +67,12 @@ export const useTransactionHistory = () => {
                 const transactionData = transactions?.data || [];
                 const nextPageUrl = transactions?.next_page_url || null;
                 console.log('transactionData')
-                if (state.page === 1) {
+                if (state.page == 1) {
                     console.log('Setting transaction list for page 1');
+                    dispatch(setCurrency(getCurrencyOrUsername({ isCurrency: true, isSymbol: true }) || ""));
                     dispatch(setTransactionList(transactionData));
                     dispatch(setRemarksList([{ remark: 'All' }, ...(remarks ?? [])]));
+
                 } else {
                     console.log('Appending transaction list');
                     dispatch(appendTransactionList(transactionData));
@@ -75,16 +80,17 @@ export const useTransactionHistory = () => {
 
                 dispatch(setNextPageUrl(nextPageUrl));
                 dispatch(incrementPage());
+                dispatch(setLoading(false));
             }
         },
     });
 
-    // Filter data by search text
     const filterData = (search: string) => {
         console.log('Filtering data with search text:', search);
+        dispatch(setLoading(true));
+        dispatch(setTransactionList([]));
         dispatch(resetPage());
         dispatch(setTrxSearchText(search));
-        dispatch(setFilterLoading(true));
 
         mutate({
             page: 1,
@@ -93,10 +99,8 @@ export const useTransactionHistory = () => {
             trxSearchText: search,
         });
 
-        dispatch(setFilterLoading(false));
     };
 
-    // Load more transactions when pagination is available
     const loadMore = () => {
         console.log('Loading more transactions, current page:', state.page);
         if (state.nextPageUrl) {
@@ -109,13 +113,11 @@ export const useTransactionHistory = () => {
         }
     };
 
-    // Toggle search bar visibility
     const changeSearchIcon = () => {
         console.log('Toggling search icon visibility');
         dispatch(toggleSearch());
     };
 
-    // Open bottom sheet for filtering
     const openFilterBottomSheet = (filterType: string) => {
         console.log('Opening filter bottom sheet with filter type:', filterType);
         const selectedList =
@@ -128,7 +130,6 @@ export const useTransactionHistory = () => {
         dispatch(openBottomSheet({ selectedList, bottomSheetTitle, callFrom }));
     };
 
-    // Handle selection from bottom sheet
     const onSelectBottomSheetItem = (selectedValue: string) => {
         console.log('Selected value from bottom sheet:', selectedValue);
         dispatch(closeBottomSheet());
@@ -140,13 +141,11 @@ export const useTransactionHistory = () => {
         }
     };
 
-    // Close bottom sheet without changes
     const closeBottomSheetAction = () => {
         console.log('Closing bottom sheet without changes');
         dispatch(closeBottomSheet());
     };
 
-    // Change expand/collapse index for transactions
     const changeExpandIndex = (index: number | null) => {
         console.log('Changing expand index to:', index);
         dispatch(setExpandIndex(index === null ? -1 : index));

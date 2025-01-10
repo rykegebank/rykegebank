@@ -16,7 +16,9 @@ const Strings = {
     home: "Home",
     menu: "Menu",
     profile: "Profile",
-
+    remark: "Remark",
+    transactionNo: "Transaction No",
+    type:"Type",
     error: "Error",
     success: "Success",
     somethingWentWrong: "Something went wrong",
