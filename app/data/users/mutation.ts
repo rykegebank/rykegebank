@@ -75,6 +75,12 @@ interface ResetPasswordParams {
     password_confirmation: string
 }
 
+interface ProfileChangePasswordParams {
+    current_password: string
+    password: string
+    password_confirmation: string
+}
+
 
 interface RykegeApiResponse {
     status: string
@@ -353,3 +359,36 @@ export const useResendSms = () => {
         },
     });
 } 
+
+
+
+export const useChangeProfilePassword = () => {
+    const navigation = useNavigation()
+    return useMutation({
+        mutationFn: async (params: ProfileChangePasswordParams) => {
+            console.log(params)
+
+            const {
+                data,
+            } = await api.post<ResetPasswordResponse>(URLS.profileChangePassword, {
+                ...params
+            })
+
+            return data
+        },
+
+
+        onSuccess: (data) => {
+            if (data.status === 'success') {
+     
+                toasts.genericSuccessToast("Password changed successfully!")
+                 navigation.goBack()
+               
+
+            } else {
+
+                Alert.alert('testset', JSON.stringify(data.message))
+            }
+        },
+    });
+}

@@ -22,6 +22,8 @@ import GenericError from "../../components/GenericError";
 import usePermission from "../../hooks/usePermissions";
 import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
 import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
+import { useAppSelector } from "../../store";
+import AppBar from "../../components/GenericAppBar";
 interface ProfileDetails extends SubmitUserParams {}
 const required_field_error_msg = "This field is required";
 const profileSchema = z.object({
@@ -35,13 +37,16 @@ const profileSchema = z.object({
 });
 
 const CompleteProfileScreen = () => {
+  const { shouldEdit = false } = useRoute().params || {};
+
+  const { user } = useAppSelector((state) => state.user);
   const { requestPermission } = usePermission(
     Platform.OS === "android"
       ? PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
       : undefined
   );
 
-  const submitProfile = useSubmitUser();
+  const submitProfile = useSubmitUser(shouldEdit);
 
   const { pickImageFromGallery, imageUri, error } = useImagePicker();
 
@@ -54,8 +59,6 @@ const CompleteProfileScreen = () => {
     resolver: zodResolver(profileSchema),
     mode: "onSubmit",
     defaultValues: {
-      firstname: "lorence",
-      lastname: "hernandez",
       image: undefined,
     },
   });
@@ -80,15 +83,11 @@ const CompleteProfileScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-          <EvilIcons name="arrow-left" size={24} color="#fff" />
-        </TouchableOpacity> */}
-        <Text style={styles.headerTitle}>Profile Complete</Text>
-      </View>
+      <AppBar
+        title={shouldEdit ? "Edit Profile" : "Profile Complete"}
+        showBackButton={shouldEdit}
+      />
 
-      {/* Profile Section */}
       <View style={styles.profileSection}>
         <View style={styles.profileImageContainer}>
           <Image
@@ -105,17 +104,42 @@ const CompleteProfileScreen = () => {
       {/* Input Fields */}
       <View style={styles.form}>
         {[
-          { placeholder: "First Name", name: "firstname" },
-          { placeholder: "Last Name", name: "lastname" },
-          { placeholder: "Address", name: "address" },
-          { placeholder: "State", name: "state" },
-          { placeholder: "City", name: "city" },
-          { placeholder: "Zip Code", name: "zip" },
+          {
+            placeholder: "First Name",
+            name: "firstname",
+            default: shouldEdit ? user.firstname : "",
+          },
+          {
+            placeholder: "Last Name",
+            name: "lastname",
+            default: shouldEdit ? user.lastname : "",
+          },
+          {
+            placeholder: "Address",
+            name: "address",
+            default: shouldEdit ? user.address?.address : "",
+          },
+          {
+            placeholder: "State",
+            name: "state",
+            default: shouldEdit ? user.address?.state : "",
+          },
+          {
+            placeholder: "City",
+            name: "city",
+            default: shouldEdit ? user.address?.city : "",
+          },
+          {
+            placeholder: "Zip Code",
+            name: "zip",
+            default: shouldEdit ? user.address?.zip : "",
+          },
         ].map((item, index) => {
           return (
             <Controller
               key={index}
               control={control}
+              defaultValue={item.default}
               render={({
                 field: { onChange, value },
                 fieldState: { error },

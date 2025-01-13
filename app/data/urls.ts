@@ -12,6 +12,10 @@ type URLSType = {
   verifyMobile: string;
   verifyEmail: string,
   resendEmail: string
+  profileUpdate: string
+  profileChangePassword: string
+  referees: string
+  referralLink: string
 };
 
 export const URLS: URLSType = {
@@ -28,5 +32,8 @@ export const URLS: URLSType = {
   verifyMobile: '/verify-mobile',
   verifyEmail: '/verify-email',
   resendEmail: '/password/email',
-
+  profileUpdate: '/profile-setting',
+  profileChangePassword: '/change-password',
+  referees: '/referees',
+  referralLink: '/referral-link'
 };

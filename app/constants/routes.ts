@@ -18,6 +18,7 @@ type RoutesType = {
   completeProfile: string;
   codeVerification: string
   resetPassword: string
+  profileChangePassword: string
 };
 
 const Routes: RoutesType = {
@@ -39,7 +40,8 @@ const Routes: RoutesType = {
   forgotPassword: "ForgotPassword",
   completeProfile: "completeProfile",
   codeVerification: "CodeVerification",
-  resetPassword: "resetPassword"
+  resetPassword: "resetPassword",
+  profileChangePassword: "profileChangePassword"
 };
 
 export default Routes;

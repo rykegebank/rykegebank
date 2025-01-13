@@ -6,7 +6,7 @@ import { Alert } from "react-native";
 import { Routes } from "../../constants";
 import { getAccessToken } from "../../logic/token";
 import { useAppDispatch } from "../../store";
-import { setIsProfileCompleted } from "../../store/slices/userSlice";
+import { setEmail, setIsEmailVerified, setIsProfileCompleted, setIsSmsVerified, setMobile, setUser } from "../../store/slices/userSlice";
 import toasts from "../../logic/toasts";
 
 
@@ -24,11 +24,12 @@ interface SubmitUserResponse {
     status: string
 }
 
-export const useSubmitUser = () => {
+export const useSubmitUser = (shouldEdit?: boolean) => {
     const navigation = useNavigation()
     const dispatch = useAppDispatch()
     return useMutation({
         mutationFn: async (params: SubmitUserParams) => {
+            const url = shouldEdit ? URLS.profileUpdate : URLS.submitUser
             console.log(params)
             const formData = new FormData();
 
@@ -56,7 +57,7 @@ export const useSubmitUser = () => {
 
             const {
                 data
-            } = await api.post<SubmitUserResponse>(URLS.submitUser, formData, {
+            } = await api.post<SubmitUserResponse>(url, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 }
@@ -66,10 +67,20 @@ export const useSubmitUser = () => {
 
         },
         onSuccess: (data: SubmitUserResponse) => {
-            console.log('testset', data)
+            console.log('testset', JSON.stringify(data))
             if (data.status === 'success') {
                 dispatch(setIsProfileCompleted(1))
-                toasts.genericSuccessToast('Profile completed successfully')
+                if (shouldEdit) {
+                    const { user } = data.data;
+                    const { ev, sv, email, mobile, profile_complete } = user;
+                    dispatch(setUser(user))
+                    dispatch(setIsEmailVerified(ev));
+                    dispatch(setIsSmsVerified(sv));
+                    dispatch(setIsProfileCompleted(profile_complete));
+                    dispatch(setEmail(email));
+                    dispatch(setMobile(mobile));
+                }
+                toasts.genericSuccessToast(shouldEdit ? 'Profile completed successfully' : 'Profile update success!')
                 navigation.reset({
                     index: 0,
                     routes: [{ name: Routes.main }],
@@ -80,3 +91,4 @@ export const useSubmitUser = () => {
         },
       });
 } 
+
