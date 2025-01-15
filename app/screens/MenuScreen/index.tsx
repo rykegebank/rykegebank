@@ -33,16 +33,16 @@ const MenuScreen = () => {
   ];
 
   const settingsItems = [
-    { title: "Notification", icon: "bell", onPress: () => {} },
-    { title: "Deposit", icon: "cash-plus", onPress: () => {} },
-    { title: "Withdraw", icon: "cash-minus", onPress: () => {} },
-    { title: "Language", icon: "alphabetical", onPress: () => {} },
+    { title: "Notification", icon: "bell", onPress: () => { } },
+    { title: "Deposit", icon: "cash-plus", onPress: () => { } },
+    { title: "Withdraw", icon: "cash-minus", onPress: () => { } },
+    { title: "Language", icon: "alphabetical", onPress: () => { } },
   ];
 
   const otherItems = [
-    { title: "Terms & Conditions", icon: "file-document", onPress: () => {} },
-    { title: "FAQ", icon: "help-circle", onPress: () => {} },
-    { title: "Sign Out", icon: "exit-to-app", onPress: () => {} },
+    { title: "Terms & Conditions", icon: "file-document", onPress: () => { navigation.navigate(Routes.privacy) } },
+    { title: "FAQ", icon: "help-circle", onPress: () => { navigation.navigate(Routes.faqs) } },
+    { title: "Sign Out", icon: "exit-to-app", onPress: () => { } },
   ];
 
   const renderList = (items) => {
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F5F6FA",
-    padding: 16,
   },
   header: {
     marginBottom: 16,

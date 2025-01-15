@@ -10,6 +10,7 @@ const Dimensions = {
   appLogoWidth: 110.00,
 
   //font
+  fontExtraSmall: 9.00,
   fontSmall: 11.00,
   fontDefault: 13,
   fontLarge: 15,

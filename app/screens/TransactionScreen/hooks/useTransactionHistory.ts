@@ -23,6 +23,7 @@ import api from '../../../data/api';
 import { TransactionResponse } from '../../../types/transactionHistory';
 import { URLS } from '../../../data/urls';
 import { useGeneralSettings } from "../../../hooks/useGeneralSettings";
+import { manageApiException } from '../../../utils/errorHandler';
 
 export const useTransactionHistory = () => {
     const state = useSelector((state: RootState) => state.transactionHistory);
@@ -59,6 +60,7 @@ export const useTransactionHistory = () => {
         onError: (error) => {
             dispatch(setLoading(false));
             console.error('Error fetching transactions:', error);
+            manageApiException(error);
         },
         onSuccess: (data) => {
             console.log('API call successful, data:', data);
@@ -81,6 +83,8 @@ export const useTransactionHistory = () => {
                 dispatch(setNextPageUrl(nextPageUrl));
                 dispatch(incrementPage());
                 dispatch(setLoading(false));
+            } else {
+                manageApiException(data.message);
             }
         },
     });

@@ -23,6 +23,9 @@ import CompleteProfileScreen from "../screens/CompleteProfileScreen";
 import PasswordResetScreen from "../screens/PasswordResetScreen";
 import CodeVerificationScreen from "../screens/CodeVerificationScreen";
 import ProfileChangePasswordScreen from "../screens/ProfileChangePasswordScreen";
+import FaqScreen from "../screens/FaqScreen";
+import PrivacyScreen from "../screens/PrivacyScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +84,14 @@ const RootStack = () => {
         <Stack.Screen
           name={Routes.profileChangePassword}
           component={ProfileChangePasswordScreen}
+        />
+        <Stack.Screen
+          name={Routes.faqs}
+          component={FaqScreen}
+        />
+        <Stack.Screen
+          name={Routes.privacy}
+          component={PrivacyScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

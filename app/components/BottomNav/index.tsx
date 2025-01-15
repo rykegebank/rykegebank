@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { StatusBar } from "react-native";
 
 import { Colors, Strings, Dimensions } from '../../constants';
 import Home from '../../../assets/bottomNav/home.svg';
@@ -41,6 +42,9 @@ const BottomNav: React.FC<BottomNavProps> = ({ state, navigation }) => {
 
   return (
     <View style={{ flexDirection: 'row', height: Dimensions.size65, backgroundColor: Colors.colorWhite, elevation: Dimensions.size10 }}>
+      <StatusBar
+        backgroundColor={Colors.primaryColor}
+        barStyle="light-content"/>
       {iconList.map((IconComponent, index) => (
         <TouchableOpacity
           key={index}

@@ -16,6 +16,8 @@ type URLSType = {
   profileUpdate: string
   profileChangePassword: string
   referees: string
+  faq: string
+  policy: string
   referralLink: string
 };
 
@@ -37,5 +39,7 @@ export const URLS: URLSType = {
   profileUpdate: '/profile-setting',
   profileChangePassword: '/change-password',
   referees: '/referees',
+  faq: '/faq',
+  policy:'/policy-pages',
   referralLink: '/referral-link'
 };

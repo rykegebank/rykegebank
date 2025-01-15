@@ -9,6 +9,7 @@ interface GeneralSettingsState {
     isReferralEnable: boolean;
     currencyText: string;
     currencySymbol: string;
+    templateName: string;
 }
 
 export const useGeneralSettings = () => {
@@ -23,6 +24,7 @@ export const useGeneralSettings = () => {
         isReferralEnable: false,
         currencyText: '',
         currencySymbol: '',
+        templateName: ''
     };
 
     if (data) {
@@ -38,6 +40,7 @@ export const useGeneralSettings = () => {
         const model = data.data?.general_setting;
         settings.currencyText = model?.cur_text ?? '';
         settings.currencySymbol = model?.cur_sym ?? '';
+        settings.templateName = model?.active_template ?? '';
     }
 
     const getCurrencyOrUsername = ({
@@ -54,10 +57,15 @@ export const useGeneralSettings = () => {
         }
     }
 
+    const getTemplateName = () => {
+        return settings.templateName
+    }
+
     return {
         settings,
         error,
         isLoading,
         getCurrencyOrUsername,
+        getTemplateName
     };
 };
