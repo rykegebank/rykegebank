@@ -12,7 +12,6 @@ import {
     setTrxSearchText,
     setSelectedRemark,
     setSelectedTrxType,
-    setFilterLoading,
     setExpandIndex,
     toggleSearch,
     openBottomSheet,

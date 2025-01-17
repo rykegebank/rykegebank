@@ -23,6 +23,7 @@ const Dimensions = {
   space10: 10,
   space12: 12,
   space15: 15,
+  space16: 16,
   space20: 20,
 
   //sizes

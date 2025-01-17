@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import userSlice from "./slices/userSlice";
 import internetReducer from "./slices/internetSlice";
 import transactionHistorySlice from "./slices/transactionHistorySlice";
+import languageSlice from "./slices/languageSlice";
 
 export const store = configureStore({
   reducer: {
     internet: internetReducer,
     user: userSlice.reducer,
-    transactionHistory: transactionHistorySlice
+    transactionHistory: transactionHistorySlice,
+    language: languageSlice
   },
 });
 

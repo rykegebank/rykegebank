@@ -24,7 +24,10 @@ import { request, PERMISSIONS, RESULTS } from "react-native-permissions";
 import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 import { useAppSelector } from "../../store";
 import AppBar from "../../components/GenericAppBar";
-interface ProfileDetails extends SubmitUserParams {}
+import { URLS } from '../../data/urls';
+import { Dimensions, Colors, Assets } from "../../constants";
+
+interface ProfileDetails extends SubmitUserParams { }
 const required_field_error_msg = "This field is required";
 const profileSchema = z.object({
   firstname: z.string().min(1, { message: required_field_error_msg }),
@@ -91,7 +94,7 @@ const CompleteProfileScreen = () => {
       <View style={styles.profileSection}>
         <View style={styles.profileImageContainer}>
           <Image
-            source={{ uri: imageUri ?? "https://via.placeholder.com/100" }} // Placeholder image URL
+            source={user.image ? { uri: `${URLS.baseUrl}assets/images/user/profile/${user.image}` } : Assets.defaultAvatar}
             style={styles.profileImage}
           />
           <TouchableOpacity style={styles.editIcon} onPress={onProfileUpload}>
@@ -176,22 +179,22 @@ const CompleteProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.colorWhite,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    backgroundColor: "#1A2B49",
+    padding: Dimensions.space16,
+    backgroundColor: Colors.backgroundColor,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: Dimensions.large,
     fontWeight: "600",
-    color: "#fff",
+    color: Colors.colorWhite,
   },
   profileSection: {
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: Dimensions.space20,
   },
   profileImageContainer: {
     position: "relative",
@@ -214,14 +217,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   form: {
-    paddingHorizontal: 16,
+    paddingHorizontal: Dimensions.space16,
   },
   input: {
     height: 50,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
     marginBottom: 12,
-    fontSize: 16,
+    fontSize: Dimensions.font16,
     color: "#000",
   },
   updateButton: {
@@ -230,11 +233,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: Dimensions.space20,
   },
   updateButtonText: {
-    color: "#fff",
-    fontSize: 16,
+    color: Colors.colorWhite,
+    fontSize: Dimensions.font16,
     fontWeight: "600",
   },
 });
