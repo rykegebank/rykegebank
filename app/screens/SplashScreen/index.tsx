@@ -1,29 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { Colors, Dimensions, Assets, Routes } from "../../constants";
 import { useGeneralSettings } from "../../hooks/useGeneralSettings";
+import { useLanguage } from "../../hooks/useLanguage";
 import { removeAccessToken } from "../../logic/token";
 
 const SplashScreen: React.FC = () => {
   const navigation = useNavigation();
-
-  const { settings, isLoading, error } = useGeneralSettings();
+  const { locale, isLtr, isLoading: isLanguageLoading } = useLanguage();
+  const { settings, isLoading: isSettingsLoading, error } = useGeneralSettings();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     removeAccessToken();
-    if (!isLoading && !error) {
+
+    if (!isLanguageLoading && !isSettingsLoading && !error) {
+      setIsReady(true);
+    }
+  }, [isLanguageLoading, isSettingsLoading, error]);
+
+  useEffect(() => {
+    if (isReady) {
       const timer = setTimeout(() => {
         navigation.navigate(Routes.login);
       }, 3000);
 
-      // Cleanup timeout on unmount
       return () => clearTimeout(timer);
     }
-  }, [isLoading, error, navigation]);
+  }, [isReady, navigation]);
 
-  if (isLoading) {
+  if (isLanguageLoading || isSettingsLoading) {
     return (
       <View style={styles.container}>
         <Image

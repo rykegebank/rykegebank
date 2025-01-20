@@ -21,6 +21,8 @@ type RoutesType = {
   profileChangePassword: string
   depositHistory: string
   notificationList: string
+  faqs: string
+  privacy: string
 };
 
 const Routes: RoutesType = {
@@ -45,8 +47,9 @@ const Routes: RoutesType = {
   resetPassword: "resetPassword",
   profileChangePassword: "profileChangePassword",
   depositHistory: "depositHistory",
-  notificationList: "notificationList"
-  
+  notificationList: "notificationList",
+  faqs: "faqs",
+  privacy: 'privacy'
 };
 
 export default Routes;

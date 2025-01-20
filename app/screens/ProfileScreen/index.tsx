@@ -3,9 +3,11 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Text, Avatar, Button, Card, Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AppBar from "../../components/GenericAppBar";
-import { Colors, Routes, Strings } from "../../constants";
+import { Dimensions, Colors, Routes, Strings } from "../../constants";
+import { URLS } from '../../data/urls';
 import { useNavigation } from "@react-navigation/native";
 import { useAppSelector } from "../../store";
+import CircleImageButton from '../../components/ImageContainer/circleImageButton';
 
 const renderInfoItem = (iconName, label, value) => (
   <View style={styles.infoItem}>
@@ -25,10 +27,16 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   return (
     <View style={{ flex: 1 }}>
-      <AppBar title={Strings.profile} showBackButton />
+      <AppBar title={Strings.profile} />
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <Avatar.Text size={64} label="" style={styles.avatar} />
+          <CircleImageButton
+            height={Dimensions.size65}
+            width={Dimensions.size65}
+            imagePath={`${URLS.baseUrl}assets/images/user/profile/${user.image}`}
+            isAsset={false}
+            isProfile={true}
+          />
           <View style={styles.userInfo}>
             <Text variant="titleMedium" style={styles.username}>
               {user.username}
@@ -95,6 +103,7 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
+    marginLeft:20,
   },
   username: {
     fontWeight: "bold",
@@ -109,7 +118,7 @@ const styles = StyleSheet.create({
   infoCard: {
     padding: 8,
     borderRadius: 8,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.colorWhite,
     elevation: 1,
   },
   infoItem: {

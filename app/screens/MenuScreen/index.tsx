@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
-import { Card, List, Divider, Appbar } from "react-native-paper";
+import { Card, List, Divider } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Routes, Strings } from "../../constants";
+import { Routes, Strings, Colors } from "../../constants";
 import AppBar from "../../components/GenericAppBar";
 import { useNavigation } from "@react-navigation/native";
+import LanguageDialog from "../../components/Language/languageDialog"; // Adjust the path
+import { useLanguage } from "../../hooks/useLanguage";
 
 const MenuScreen = () => {
   const navigation = useNavigation();
+  const [isLanguageDialogVisible, setLanguageDialogVisible] = useState(false);
+  const { languageData } = useLanguage();
+
   const menuItems = [
     {
       title: "Profile",
@@ -32,6 +37,10 @@ const MenuScreen = () => {
     },
   ];
 
+  const handleShowEnglish = async () => {
+    setLanguageDialogVisible(true);
+  };
+
   const settingsItems = [
     {
       title: "Notification",
@@ -54,13 +63,31 @@ const MenuScreen = () => {
         navigation.navigate(Routes.withdraw);
       },
     },
-    { title: "Language", icon: "alphabetical", onPress: () => {} },
+    { title: "Language", icon: "alphabetical", onPress: handleShowEnglish },
   ];
 
   const otherItems = [
-    { title: "Terms & Conditions", icon: "file-document", onPress: () => {} },
-    { title: "FAQ", icon: "help-circle", onPress: () => {} },
-    { title: "Sign Out", icon: "exit-to-app", onPress: () => {} },
+    {
+      title: "Terms & Conditions",
+      icon: "file-document",
+      onPress: () => {
+        navigation.navigate(Routes.privacy);
+      },
+    },
+    {
+      title: "FAQ",
+      icon: "help-circle",
+      onPress: () => {
+        navigation.navigate(Routes.faqs);
+      },
+    },
+    {
+      title: "Sign Out",
+      icon: "exit-to-app",
+      onPress: () => {
+        navigation.navigate(Routes.login);
+      },
+    },
   ];
 
   const renderList = (items) => {
@@ -86,6 +113,15 @@ const MenuScreen = () => {
       <Card style={styles.card}>{renderList(settingsItems)}</Card>
 
       <Card style={styles.card}>{renderList(otherItems)}</Card>
+
+      {/* LanguageDialog is moved here to prevent multiple renderings */}
+      {isLanguageDialogVisible && (
+        <LanguageDialog
+          languageList={languageData}
+          fromSplash={false}
+          onClose={() => setLanguageDialogVisible(false)}
+        />
+      )}
     </View>
   );
 };
@@ -93,25 +129,19 @@ const MenuScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F6FA",
-    padding: 16,
-  },
-  header: {
-    marginBottom: 16,
-  },
-  menuTitle: {
-    fontSize: 16,
-    color: "#000",
+    backgroundColor: Colors.backgroundColor,
   },
   card: {
-    marginBottom: 16,
+    marginBottom: 10,
     borderRadius: 8,
+    margin: 20,
+    backgroundColor: Colors.colorWhite,
     overflow: "hidden",
   },
   icon: {
     marginRight: 16,
     marginLeft: 10,
-    color: "#6B7280",
+    color: Colors.colorBlack,
   },
 });
 

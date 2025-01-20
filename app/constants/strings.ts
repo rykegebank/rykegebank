@@ -1,3 +1,5 @@
+import { LanguageModel } from '../types/language';
+
 const Strings = {
     balance: "Balance",
     noInternet: 'No internet connection',
@@ -23,5 +25,21 @@ const Strings = {
     success: "Success",
     somethingWentWrong: "Something went wrong",
 };
+
+export const languages: LanguageModel[] = [
+    {
+      imageUrl: '',
+      languageName: 'English',
+      countryCode: 'US',
+      languageCode: 'en',
+    },
+    {
+      imageUrl: '',
+      languageName: 'Arabic',
+      countryCode: 'SA',
+      languageCode: 'ar',
+    },
+  ];
+  
 
 export default Strings;

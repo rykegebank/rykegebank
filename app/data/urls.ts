@@ -16,6 +16,9 @@ type URLSType = {
   profileUpdate: string
   profileChangePassword: string
   referees: string
+  faq: string
+  policy: string
+  language: string,
   referralLink: string
   depositHistory: string
   withdrawHistory: string
@@ -40,6 +43,9 @@ export const URLS: URLSType = {
   profileUpdate: '/profile-setting',
   profileChangePassword: '/change-password',
   referees: '/referees',
+  faq: '/faq',
+  policy: '/policy-pages',
+  language: '/language/',
   referralLink: '/referral-link',
   depositHistory: 'deposit/history',
   withdrawHistory: 'withdraw/history',

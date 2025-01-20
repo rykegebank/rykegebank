@@ -3,8 +3,6 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  ViewStyle,
-  TextStyle,
   GestureResponderEvent,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -56,7 +54,9 @@ const AppBar: React.FC<AppBarProps> = ({
       <View
         style={[
           styles.titleContainer,
-          centerTitle && { alignItems: 'center', justifyContent: 'center' },
+          centerTitle
+            ? { alignItems: 'center', justifyContent: 'center' }
+            : { marginLeft: 40 },
         ]}
       >
         {typeof title === 'string' ? (
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Dimensions.space10,
+    padding: Dimensions.space15,
   },
   backButton: {
     position: 'absolute',
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   title: {
     color: Colors.colorWhite,
     fontSize: Dimensions.extraLarge,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
   actionsContainer: {
     flexDirection: 'row',

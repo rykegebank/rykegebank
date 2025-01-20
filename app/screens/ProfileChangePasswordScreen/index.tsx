@@ -3,9 +3,8 @@ import { View, StyleSheet, Text } from "react-native";
 import GenericInput from "../../components/GenericInput";
 import { TextInput } from "react-native-paper";
 import GenericButton from "../../components/GenericButton";
-import { EvilIcons } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/core";
-
+import AppBar from "../../components/GenericAppBar";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,15 +62,7 @@ const ProfileChangePasswordScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <EvilIcons
-          name="arrow-left"
-          size={24}
-          color="#FFFFFF"
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.headerText}>Reset Your Password</Text>
-      </View>
+      <AppBar title="Reset Your Password" showBackButton />
       <View style={styles.content}>
         <Text style={styles.title}>Reset Your Password</Text>
         <Text style={styles.subtitle}>
@@ -178,18 +169,6 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 16,
     backgroundColor: "#1C2434",
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#1E2A38",
-    padding: 16,
-  },
-  headerText: {
-    marginLeft: 16,
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFFFFF",
   },
   content: {
     flex: 1,
