@@ -17,6 +17,9 @@ type URLSType = {
   profileChangePassword: string
   referees: string
   referralLink: string
+  depositHistory: string
+  withdrawHistory: string
+  notificationHistory: string
 };
 
 export const URLS: URLSType = {
@@ -37,5 +40,8 @@ export const URLS: URLSType = {
   profileUpdate: '/profile-setting',
   profileChangePassword: '/change-password',
   referees: '/referees',
-  referralLink: '/referral-link'
+  referralLink: '/referral-link',
+  depositHistory: 'deposit/history',
+  withdrawHistory: 'withdraw/history',
+  notificationHistory: '/notification/history'
 };

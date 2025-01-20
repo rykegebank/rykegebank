@@ -33,9 +33,27 @@ const MenuScreen = () => {
   ];
 
   const settingsItems = [
-    { title: "Notification", icon: "bell", onPress: () => {} },
-    { title: "Deposit", icon: "cash-plus", onPress: () => {} },
-    { title: "Withdraw", icon: "cash-minus", onPress: () => {} },
+    {
+      title: "Notification",
+      icon: "bell",
+      onPress: () => {
+        navigation.navigate(Routes.notificationList);
+      },
+    },
+    {
+      title: "Deposit",
+      icon: "cash-plus",
+      onPress: () => {
+        navigation.navigate(Routes.depositHistory);
+      },
+    },
+    {
+      title: "Withdraw",
+      icon: "cash-minus",
+      onPress: () => {
+        navigation.navigate(Routes.withdraw);
+      },
+    },
     { title: "Language", icon: "alphabetical", onPress: () => {} },
   ];
 

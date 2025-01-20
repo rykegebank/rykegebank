@@ -53,3 +53,57 @@ export const useTransactionHistoryQuery = (
         enabled: false
     });
 };
+
+
+export const useFetchDepositHistory = () => {
+    return useQuery({
+      queryKey: ['deposit_history'],
+      queryFn: async () => {
+  
+        try {
+            const { data: { data: { deposits: { data } } } } = await api.get(URLS.depositHistory)
+
+            return data;
+        } catch(e){
+            console.log(e)
+        }
+      },
+    });
+  };
+  
+export const useFetchWithdrawHistory = () => {
+    return useQuery({
+      queryKey: ['withdraw_history'],
+      queryFn: async () => {
+  
+        try { 
+            const { data: { data: { withdrawals: { data } } } } = await api.get(URLS.withdrawHistory)
+
+            return data;
+        } catch(e){
+            console.log(e)
+        }
+      },
+    });
+  };
+
+  
+
+
+export const useFetchNotifications = () => {
+    return useQuery({
+      queryKey: ['notification_history'],
+      queryFn: async () => {
+  
+        try {
+            const { data: { data: { notifications: { data } } } } = await api.get(URLS.notificationHistory)
+
+            return data;
+        } catch(e){
+            console.log(e)
+        }
+      },
+    });
+  };
+
+  

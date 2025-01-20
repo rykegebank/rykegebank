@@ -9,25 +9,21 @@ import {
 import { Text, Button, Card, Searchbar } from "react-native-paper"; // React Native Paper components
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Colors, Dimensions, Strings } from "../../constants";
-import {
-  useFetchDepositHistory,
-  useFetchWithdrawHistory,
-} from "../../data/transaction/queries";
+import { useFetchDepositHistory } from "../../data/transaction/queries";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Search from "../../components/Search";
 
-const WidrawScreen = () => {
-  const { data: withdrawals } = useFetchWithdrawHistory();
+const DepositHistoryScreen = () => {
+  const { data: deposits } = useFetchDepositHistory();
   const navigation = useNavigation();
   const [isSearch, setIsSearch] = useState(false);
   const [searchedStr, setSearchedStr] = useState("");
 
   const filteredData =
-    withdrawals?.filter((e) => {
+    deposits?.filter((e) => {
       return e.trx.toLowerCase().includes(searchedStr.toLowerCase());
     }) || [];
-
   const renderItem = ({ item }) => (
     <Card style={styles.card}>
       <Card.Content>
@@ -82,7 +78,7 @@ const WidrawScreen = () => {
             navigation.goBack();
           }}
         />
-        <Text style={styles.title}>Withdrawals</Text>
+        <Text style={styles.title}>Deposits</Text>
         <Icon
           name={isSearch ? "close" : "magnify"}
           size={24}
@@ -188,4 +184,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WidrawScreen;
+export default DepositHistoryScreen;
