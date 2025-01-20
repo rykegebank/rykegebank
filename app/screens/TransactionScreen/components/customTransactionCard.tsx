@@ -83,9 +83,9 @@ const CustomTransactionCard: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: Dimensions.font16,
+    fontSize: Dimensions.fontLarge,
     fontWeight: '600',
-    paddingLeft: 5
+    paddingLeft: 3
   },
   regularText: {
     fontSize: Dimensions.fontDefault,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     fontSize: Dimensions.fontSmall,
     fontWeight: 'thin',
     color: Colors.smallTextColor1,
-    paddingLeft: 5
+    paddingLeft: 3
   },
   cardContainer: {
     paddingVertical: Dimensions.space15,

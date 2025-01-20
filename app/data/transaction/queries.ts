@@ -62,7 +62,6 @@ export const useFetchDepositHistory = () => {
   
         try {
             const { data: { data: { deposits: { data } } } } = await api.get(URLS.depositHistory)
-
             return data;
         } catch(e){
             console.log(e)

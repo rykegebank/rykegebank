@@ -32,6 +32,7 @@ const Dimensions = {
   size20: 20,
   size23: 23,
   size25: 25,
+  size30: 30,
   size35: 35,
   size40: 40,
   size45: 45,

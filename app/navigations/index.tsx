@@ -23,7 +23,6 @@ import CompleteProfileScreen from "../screens/CompleteProfileScreen";
 import PasswordResetScreen from "../screens/PasswordResetScreen";
 import CodeVerificationScreen from "../screens/CodeVerificationScreen";
 import ProfileChangePasswordScreen from "../screens/ProfileChangePasswordScreen";
-import DepositHistoryScreen from "../screens/DepositHistoryScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import FaqScreen from "../screens/FaqScreen";
 import PrivacyScreen from "../screens/PrivacyScreen";
@@ -85,10 +84,6 @@ const RootStack = () => {
         <Stack.Screen
           name={Routes.profileChangePassword}
           component={ProfileChangePasswordScreen}
-        />
-        <Stack.Screen
-          name={Routes.depositHistory}
-          component={DepositHistoryScreen}
         />
         <Stack.Screen
           name={Routes.notificationList}

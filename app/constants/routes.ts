@@ -19,7 +19,6 @@ type RoutesType = {
   codeVerification: string
   resetPassword: string
   profileChangePassword: string
-  depositHistory: string
   notificationList: string
   faqs: string
   privacy: string
@@ -46,7 +45,6 @@ const Routes: RoutesType = {
   codeVerification: "CodeVerification",
   resetPassword: "resetPassword",
   profileChangePassword: "profileChangePassword",
-  depositHistory: "depositHistory",
   notificationList: "notificationList",
   faqs: "faqs",
   privacy: 'privacy'

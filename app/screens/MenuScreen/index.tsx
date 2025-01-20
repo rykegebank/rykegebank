@@ -53,7 +53,7 @@ const MenuScreen = () => {
       title: "Deposit",
       icon: "cash-plus",
       onPress: () => {
-        navigation.navigate(Routes.depositHistory);
+        navigation.navigate(Routes.deposit);
       },
     },
     {

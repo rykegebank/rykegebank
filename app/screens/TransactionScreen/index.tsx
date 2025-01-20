@@ -128,11 +128,11 @@ const TransactionScreen = () => {
                 showBackButton={false}
                 backgroundColor={Colors.primaryColor}
                 actions={[
-                    <TouchableOpacity key="toggle" onPress={changeSearchIcon}>
+                    <TouchableOpacity key="toggle" onPress={changeSearchIcon}  style={styles.iconContainer}>
                         <MaterialIcons
                             name={state.isSearch ? 'clear' : 'filter-list'}
-                            size={24}
-                            color={Colors.colorWhite}
+                            size={15}
+                            color={Colors.primaryColor}
                         />
                     </TouchableOpacity>,
                 ]}
@@ -251,11 +251,14 @@ const styles = StyleSheet.create({
     separator: {
         height: Dimensions.size10,
     },
-    centered: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
+    iconContainer: {
+        width: 25,
+        height: 25,
+        borderRadius: 18,
+        backgroundColor: Colors.colorWhite,
+        justifyContent: "center",
+        alignItems: "center",
+      },
 });
 
 export default TransactionScreen;

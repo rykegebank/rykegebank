@@ -4,9 +4,12 @@ import { Appbar, Card, Text, Avatar } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AppBar from "../../components/GenericAppBar";
 import { useFetchNotifications } from "../../data/transaction/queries";
+import { Colors, Dimensions } from "../../constants";
+import NotificationSkeletonLoading from './components/notifSkeletonLoading';
+import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
 
 const NotificationsScreen = () => {
-  const { data: notificationList } = useFetchNotifications();
+  const { data: notificationList, isLoading } = useFetchNotifications();
 
   const renderItem = ({ item }) => (
     <Card style={styles.card}>
@@ -34,11 +37,29 @@ const NotificationsScreen = () => {
     <View style={styles.container}>
       <AppBar title="Notifications" showBackButton />
 
-      <FlatList
+      {isLoading
+        ? <FlatList
+          data={Array(3).fill(null)} // Mock data with 3 items
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={() => (
+            <NotificationSkeletonLoading />
+          )}
+          contentContainerStyle={styles.skeletonContainer}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+        />
+        : null}
+
+      {notificationList.length === 0 && (!isLoading) ? (
+        <View style={styles.centered}>
+          <NoDataFoundScreen />
+        </View>
+      ) : (<FlatList
         data={notificationList}
+        contentContainerStyle={{ paddingVertical: 10 }}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
+      )}
     </View>
   );
 };
@@ -46,22 +67,18 @@ const NotificationsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: Colors.backgroundColor,
   },
-  header: {
-    backgroundColor: "#1F2937", // Dark blue background
-  },
-  headerTitle: {
-    color: "#ffffff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  scrollContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   card: {
-    marginBottom: 12,
+    marginVertical: 5,
+    marginHorizontal: 15,
+    padding: 2,
+    backgroundColor: Colors.colorWhite,
     borderRadius: 8,
     elevation: 2,
   },
@@ -70,7 +87,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   iconContainer: {
-    backgroundColor: "#1F2937", // Dark blue circle
+    backgroundColor: Colors.primaryColor,
   },
   textContainer: {
     flex: 1,
@@ -79,12 +96,18 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#000000", // Black text
+    color: Colors.colorBlack,
     marginBottom: 4,
   },
   date: {
     fontSize: 14,
-    color: "#6B7280", // Gray text
+    color: Colors.colorGrey2,
+  },
+  separator: {
+    height: Dimensions.size10,
+  },
+  skeletonContainer: {
+    padding: Dimensions.space15,
   },
 });
 
