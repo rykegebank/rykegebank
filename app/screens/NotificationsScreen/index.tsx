@@ -9,7 +9,7 @@ import NotificationSkeletonLoading from './components/notifSkeletonLoading';
 import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
 
 const NotificationsScreen = () => {
-  const { data: notificationList, isLoading } = useFetchNotifications();
+  const { data: notificationList = [], isLoading } = useFetchNotifications();
 
   const renderItem = ({ item }) => (
     <Card style={styles.card}>
