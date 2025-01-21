@@ -8,15 +8,15 @@ import {
 } from "react-native";
 import { Text, Button, Card, Searchbar } from "react-native-paper"; // React Native Paper components
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Colors, Dimensions, Strings } from "../../constants";
+import { Colors, Dimensions, Routes, Strings } from "../../constants";
 import { useFetchDepositHistory } from "../../data/transaction/queries";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Search from "../../components/Search";
-import { hexToRgba } from '../../utils/helperFunctions';
-import TransactionSkeleton from '../../components/LoadingIndicators/transactionSkeleton';
-import AppBar from '../../components/GenericAppBar';
-import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
+import { hexToRgba } from "../../utils/helperFunctions";
+import TransactionSkeleton from "../../components/LoadingIndicators/transactionSkeleton";
+import AppBar from "../../components/GenericAppBar";
+import NoDataFoundScreen from "../../components/NoDataFound/NoDataFound";
 
 const DepositScreen = () => {
   const { data: deposits, isLoading } = useFetchDepositHistory();
@@ -34,7 +34,14 @@ const DepositScreen = () => {
   }, []);
 
   const renderItem = ({ item }) => (
-    <Card style={styles.card}>
+    <Card
+      style={styles.card}
+      onPress={() => {
+        navigation.navigate(Routes.depositDetails, {
+          transaction: item,
+        });
+      }}
+    >
       <Card.Content>
         <View style={styles.row}>
           <Text style={styles.label}>TRX No.</Text>
@@ -49,8 +56,9 @@ const DepositScreen = () => {
         <View style={styles.row}>
           <Text style={styles.label}>Amount</Text>
           <Text style={styles.value}>
-            {`${parseFloat(item.final_amount).toFixed(2)} ${item.method_currency
-              }`}
+            {`${parseFloat(item.final_amount).toFixed(2)} ${
+              item.method_currency
+            }`}
           </Text>
         </View>
         <View style={styles.row}>
@@ -59,11 +67,16 @@ const DepositScreen = () => {
             style={{
               paddingHorizontal: 10,
               paddingVertical: 5,
-              backgroundColor: hexToRgba(changeTextColor(item.status), .2),
+              backgroundColor: hexToRgba(changeTextColor(item.status), 0.2),
               borderRadius: 4,
             }}
           >
-            <Text style={[styles.buttonText, { color: changeTextColor(item.status) }]}>
+            <Text
+              style={[
+                styles.buttonText,
+                { color: changeTextColor(item.status) },
+              ]}
+            >
               {item.status === 1
                 ? "Succeed"
                 : "all test data is succeeded for now"}{" "}
@@ -77,7 +90,7 @@ const DepositScreen = () => {
   return (
     <View style={styles.container}>
       <AppBar
-        title="Withdraw"
+        title="Deposit"
         centerTitle
         showBackButton={true}
         backgroundColor={Colors.primaryColor}
@@ -96,26 +109,25 @@ const DepositScreen = () => {
         ]}
       />
       {isSearch && <Search placeholder={"TRX No."} onPress={setSearchedStr} />}
-      {isLoading
-        ? <FlatList
+      {isLoading ? (
+        <FlatList
           data={Array(3).fill(null)} // Mock data with 3 items
           keyExtractor={(_, index) => index.toString()}
-          renderItem={() => (
-            <TransactionSkeleton />
-          )}
+          renderItem={() => <TransactionSkeleton />}
           contentContainerStyle={styles.skeletonContainer}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
-        : null}
-      {filteredData.length === 0 && (!isLoading) ? (
+      ) : null}
+      {filteredData.length === 0 && !isLoading ? (
         <View style={styles.centered}>
           <NoDataFoundScreen />
         </View>
-      ) : (<FlatList
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      ) : (
+        <FlatList
+          data={filteredData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
       )}
     </View>
   );
@@ -131,8 +143,8 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     backgroundColor: Colors.primaryColor,

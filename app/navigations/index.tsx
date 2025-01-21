@@ -26,6 +26,8 @@ import ProfileChangePasswordScreen from "../screens/ProfileChangePasswordScreen"
 import NotificationsScreen from "../screens/NotificationsScreen";
 import FaqScreen from "../screens/FaqScreen";
 import PrivacyScreen from "../screens/PrivacyScreen";
+import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
+import DepositDetailsScreen from "../screens/DepositDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -91,6 +93,22 @@ const RootStack = () => {
         />
         <Stack.Screen name={Routes.faqs} component={FaqScreen} />
         <Stack.Screen name={Routes.privacy} component={PrivacyScreen} />
+        <Stack.Screen
+          options={{
+            presentation: "transparentModal",
+            animation: "fade_from_bottom",
+          }}
+          name={Routes.transactionDetails}
+          component={TransactionDetailsScreen}
+        />
+        <Stack.Screen
+          options={{
+            presentation: "transparentModal",
+            animation: "fade_from_bottom",
+          }}
+          name={Routes.depositDetails}
+          component={DepositDetailsScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
