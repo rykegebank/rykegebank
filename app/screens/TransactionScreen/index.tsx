@@ -36,6 +36,7 @@ const TransactionScreen = () => {
 
     // Initialize transaction data
     useEffect(() => {
+        console.log('called')
         initializeTransactions();
     }, []);
 
@@ -45,12 +46,9 @@ const TransactionScreen = () => {
 
     const renderTransactionItem = useCallback(
         ({ item, index }: { item: any; index: number }) => {
-            if (state.transactionList.length === index) {
-                return !state.isLoading && state.nextPageUrl ? (
-                    <SkeletonLoading />
-                ) : null;
+            if (index === state.transactionList.length - 1 && !state.isLoading && state.nextPageUrl) {
+                return <SkeletonLoading />;
             }
-
             return (
                 <TouchableOpacity onPress={() => changeExpandIndex(index)}>
                     <CustomTransactionCard
@@ -128,7 +126,7 @@ const TransactionScreen = () => {
                 showBackButton={false}
                 backgroundColor={Colors.primaryColor}
                 actions={[
-                    <TouchableOpacity key="toggle" onPress={changeSearchIcon}  style={styles.iconContainer}>
+                    <TouchableOpacity key="toggle" onPress={changeSearchIcon} style={styles.iconContainer}>
                         <MaterialIcons
                             name={state.isSearch ? 'clear' : 'filter-list'}
                             size={15}
@@ -140,24 +138,21 @@ const TransactionScreen = () => {
 
             <ListHeader />
 
-            {state.isLoading
-                ? <FlatList
+            {state.isLoading ? (
+                <FlatList
                     data={Array(3).fill(null)} // Mock data with 3 items
                     keyExtractor={(_, index) => index.toString()}
-                    renderItem={() => (
-                        <SkeletonLoading />
-                    )}
+                    renderItem={() => <SkeletonLoading />}
                     contentContainerStyle={styles.container}
                     ItemSeparatorComponent={() => <View style={styles.separator} />}
                 />
-                : null}
-            {state.transactionList.length === 0 && (!state.isLoading) ? (
+            ) : state.transactionList.length === 0 ? (
                 <View style={styles.centered}>
                     <NoDataFoundScreen />
                 </View>
             ) : (
                 <FlatList
-                    data={[...state.transactionList, {}]}
+                    data={state.transactionList}  // Only show actual data, no mock data
                     renderItem={renderTransactionItem}
                     keyExtractor={(item, index) => index.toString()}
                     contentContainerStyle={styles.container}
@@ -258,7 +253,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.colorWhite,
         justifyContent: "center",
         alignItems: "center",
-      },
+    },
 });
 
 export default TransactionScreen;

@@ -48,8 +48,8 @@ const transactionHistorySlice = createSlice({
   initialState,
   reducers: {
     setCurrency: (state, action: PayloadAction<string>) => {
-        state.currency = action.payload;
-      },
+      state.currency = action.payload;
+    },
     setLoading(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
@@ -70,6 +70,7 @@ const transactionHistorySlice = createSlice({
     },
     resetPage(state) {
       state.page = 1;
+      console.log('page', state.page)
     },
     setTrxSearchText(state, action: PayloadAction<string>) {
       state.trxSearchText = action.payload;
@@ -98,6 +99,9 @@ const transactionHistorySlice = createSlice({
     closeBottomSheet(state) {
       state.isBottomSheetVisible = false;
     },
+    batchUpdate(state, action: PayloadAction<Partial<TransactionState>>) {
+      Object.assign(state, action.payload);
+    },
   },
 });
 
@@ -118,6 +122,7 @@ export const {
   toggleSearch,
   openBottomSheet,
   closeBottomSheet,
+  batchUpdate
 } = transactionHistorySlice.actions;
 
 export default transactionHistorySlice.reducer;

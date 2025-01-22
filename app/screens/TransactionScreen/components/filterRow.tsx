@@ -31,7 +31,7 @@ const FilterRowWidget: React.FC<FilterRowWidgetProps> = ({
                         { color: isFilterBtn ? Colors.colorBlack : Colors.colorBlack },
                     ]}
                 >
-                    {text}
+                    {text ? text.charAt(0).toUpperCase() + text.slice(1) : ''}
                 </Text>
                 <MaterialIcons name="expand-more" type="material" color={iconColor} size={17} />
             </View>

@@ -8,8 +8,7 @@ import {
     setRemarksList,
     setNextPageUrl,
     incrementPage,
-    resetPage,
-    setTrxSearchText,
+    batchUpdate,
     setSelectedRemark,
     setSelectedTrxType,
     setExpandIndex,
@@ -35,12 +34,16 @@ export const useTransactionHistory = () => {
             selectedTrxType,
             selectedRemark,
             trxSearchText,
+            isReset = false,
         }: {
             page: number;
             selectedTrxType: string;
             selectedRemark: string;
             trxSearchText: string;
+            isReset?: boolean;
         }) => {
+            console.log('useMutation');
+
             const type =
                 selectedTrxType.toLowerCase() === 'all' ||
                     (selectedTrxType.toLowerCase() !== 'plus' && selectedTrxType.toLowerCase() !== 'minus')
@@ -52,36 +55,46 @@ export const useTransactionHistory = () => {
                 trxSearchText = '';
             }
             const url = `${URLS.transactions}?page=${page}&type=${type}&remark=${remark}&search=${trxSearchText}`;
-            console.log('url', url, state.isLoading)
+            console.log('url', url, state.isLoading);
             const { data } = await api.get<TransactionResponse>(url);
             return data;
         },
+        retry: 0,
         onError: (error) => {
             dispatch(setLoading(false));
             console.error('Error fetching transactions:', error);
             manageApiException(error);
         },
-        onSuccess: (data) => {
+        onSuccess: (data, variables) => {
+            const { page, selectedTrxType, selectedRemark, trxSearchText, isReset } = variables;
+
             console.log('API call successful, data:', data);
             if (data.status === 'success') {
                 const { transactions, remarks } = data.data;
                 const transactionData = transactions?.data || [];
                 const nextPageUrl = transactions?.next_page_url || null;
-                console.log('transactionData')
-                if (state.page == 1) {
+                console.log('transactionData');
+                if (page === 1) {
                     console.log('Setting transaction list for page 1');
                     dispatch(setCurrency(getCurrencyOrUsername({ isCurrency: true, isSymbol: true }) || ""));
                     dispatch(setTransactionList(transactionData));
                     dispatch(setRemarksList([{ remark: 'All' }, ...(remarks ?? [])]));
-
                 } else {
                     console.log('Appending transaction list');
                     dispatch(appendTransactionList(transactionData));
                 }
 
+                if (isReset) {
+                    dispatch(batchUpdate({
+                        page: 1,
+                        trxSearchText: '',
+                    }));
+                }
+
                 dispatch(setNextPageUrl(nextPageUrl));
                 dispatch(incrementPage());
                 dispatch(setLoading(false));
+
             } else {
                 manageApiException(data.message);
             }
@@ -91,17 +104,13 @@ export const useTransactionHistory = () => {
     const filterData = (search: string) => {
         console.log('Filtering data with search text:', search);
         dispatch(setLoading(true));
-        dispatch(setTransactionList([]));
-        dispatch(resetPage());
-        dispatch(setTrxSearchText(search));
-
         mutate({
             page: 1,
             selectedTrxType: state.selectedTrxType,
             selectedRemark: state.selectedRemark,
             trxSearchText: search,
+            isReset: true
         });
-
     };
 
     const loadMore = () => {
