@@ -1,6 +1,6 @@
 import React from "react";
 import { SafeAreaView, View, FlatList, StyleSheet } from "react-native";
-import FaqListItem from './components/faq_component'; // Replace with your FaqListItem component
+import FaqListItem from './components/faqListItem'; // Replace with your FaqListItem component
 import AppBar from "../../components/GenericAppBar";
 import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicator";
 import { useFaqs } from "./hooks/useFaq";

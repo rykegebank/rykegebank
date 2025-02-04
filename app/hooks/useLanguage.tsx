@@ -4,7 +4,6 @@ import { setLocale, setIsLtr, setError, setLoading, setData, setIsInitialized } 
 import { insertData, fetchData } from '../logic/token';
 import { languages } from '../constants/strings';
 import { SharedPreferenceHelper } from '../constants';
-import { useFetchLanguage } from '../data/language/queries';
 import { useMutation } from '@tanstack/react-query';
 import { URLS } from '../data/urls';
 import api from '../data/api';

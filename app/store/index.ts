@@ -4,13 +4,15 @@ import userSlice from "./slices/userSlice";
 import internetReducer from "./slices/internetSlice";
 import transactionHistorySlice from "./slices/transactionHistorySlice";
 import languageSlice from "./slices/languageSlice";
+import beneficiarySlice from "./slices/beneficiarySlice";
 
 export const store = configureStore({
   reducer: {
     internet: internetReducer,
     user: userSlice.reducer,
     transactionHistory: transactionHistorySlice,
-    language: languageSlice
+    language: languageSlice,
+    beneficiary: beneficiarySlice
   },
 });
 

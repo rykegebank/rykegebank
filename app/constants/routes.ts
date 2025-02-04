@@ -24,6 +24,9 @@ type RoutesType = {
   privacy: string
   transactionDetails: string
   depositDetails: string
+  transferMyBank: string
+  wireTransfer: string
+  transferHistory: string
 };
 
 const Routes: RoutesType = {
@@ -51,7 +54,10 @@ const Routes: RoutesType = {
   faqs: "faqs",
   privacy: 'privacy',
   transactionDetails: 'transactionDetails',
-  depositDetails: 'depositDetails'
+  depositDetails: 'depositDetails',
+  transferHistory: 'transferHistory',
+  transferMyBank: 'transferMyBank',
+  wireTransfer: 'wireTransfer'
 };
 
 export default Routes;

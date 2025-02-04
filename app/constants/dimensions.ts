@@ -25,7 +25,8 @@ const Dimensions = {
   space15: 15,
   space16: 16,
   space20: 20,
-
+  space25: 25,
+  
   //sizes
   size10: 10,
   size15: 15,

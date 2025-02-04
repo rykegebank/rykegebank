@@ -9,6 +9,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useForm, Controller } from 'react-hook-form';
+
 import AppBar from '../../components/GenericAppBar';
 import FilterRowWidget from './components/filterRow';
 import { Colors, Dimensions, Strings } from '../../constants';
@@ -16,7 +18,6 @@ import CustomTransactionCard from './components/customTransactionCard';
 import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
 import TransactionBottomSheet from './components/bottomSheet';
 import { useTransactionHistory } from './hooks/useTransactionHistory';
-import { useForm, Controller } from 'react-hook-form';
 import { RootState } from '../../store';
 import SkeletonLoading from './components/transactionSkeleton';
 

@@ -23,6 +23,7 @@ type URLSType = {
   depositHistory: string
   withdrawHistory: string
   notificationHistory: string
+  myBankBeneficiaryUrl: string
 };
 
 export const URLS: URLSType = {
@@ -49,5 +50,6 @@ export const URLS: URLSType = {
   referralLink: '/referral-link',
   depositHistory: 'deposit/history',
   withdrawHistory: 'withdraw/history',
-  notificationHistory: '/notification/history'
+  notificationHistory: '/notification/history',
+  myBankBeneficiaryUrl: '/beneficiary/own'
 };

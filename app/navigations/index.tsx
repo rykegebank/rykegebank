@@ -29,6 +29,9 @@ import PrivacyScreen from "../screens/PrivacyScreen";
 import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
 import DepositDetailsScreen from "../screens/DepositDetailsScreen";
 
+import TransferMyBank from "../screens/TransferMyBank";
+import TransferHistory from "../screens/TransferHistory";
+import WireTransfer from "../screens/WireTransfer";
 const Stack = createNativeStackNavigator();
 
 const Tab = createBottomTabNavigator();
@@ -109,6 +112,11 @@ const RootStack = () => {
           name={Routes.depositDetails}
           component={DepositDetailsScreen}
         />
+        <Stack.Screen name={Routes.transferMyBank} component={TransferMyBank} />
+        <Stack.Screen name={Routes.wireTransfer} component={WireTransfer} />
+        <Stack.Screen name={Routes.transferHistory} component={TransferHistory} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   );
