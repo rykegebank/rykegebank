@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated, Keyboard, Platform } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
 import RoundedLoadingBtn from '../../../components/GenericButton/roundedLoadingButton';
 import RoundedButton from '../../../components/GenericButton/index';
 import CustomDropDownTextField from '../../../components/GenericInput/DropDownButtonWithTextField';
@@ -46,37 +46,31 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
 }) => {
     const [amountValue, setAmountValue] = useState(amount);
     const [isLimitVisible, setIsLimitVisible] = useState(false);
-    const [sheetHeight, setSheetHeight] = useState(SHEET_HEIGHT);
-    const [slideAnim] = useState(new Animated.Value(SHEET_HEIGHT)); // Initialize animation for sliding effect
+    const [sheetHeight, setSheetHeight] = useState(new Animated.Value(SHEET_HEIGHT)); // Animated height value
+    const [currentHeight, setCurrentHeight] = useState(SHEET_HEIGHT); // Track current height for dynamic updates
 
     useEffect(() => {
         if (isVisible) {
-            // Animate the bottom sheet to slide up when visible
-            Animated.timing(slideAnim, {
-                toValue: 0,
+            // Animate the bottom sheet to slide up with dynamic height when visible
+            Animated.timing(sheetHeight, {
+                toValue: currentHeight, // Dynamically change to desired height
                 duration: 300,
-                useNativeDriver: true,
+                useNativeDriver: false, // Do not use the native driver for height changes
             }).start();
         } else {
             // Animate the bottom sheet to slide down when closed
-            Animated.timing(slideAnim, {
-                toValue: SHEET_HEIGHT,
+            Animated.timing(sheetHeight, {
+                toValue: SCREEN_HEIGHT, // Slide it down out of view
                 duration: 300,
-                useNativeDriver: true,
+                useNativeDriver: false,
             }).start();
         }
-    }, [isVisible]);
+    }, [isVisible, currentHeight]); // Trigger re-animation when visibility or height changes
 
     useEffect(() => {
-        // Adjust the height when the limit visibility changes
-        const newHeight = isLimitVisible ? SCREEN_HEIGHT / 1.2 : SHEET_HEIGHT;
-        setSheetHeight(newHeight);
-        Animated.timing(slideAnim, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: true,
-        }).start();
-    }, [isLimitVisible]);
+        // Adjust height when limit visibility changes
+        setCurrentHeight(isLimitVisible ? SCREEN_HEIGHT * 0.75 : SCREEN_HEIGHT / 2);
+    }, [isLimitVisible]); // Update height dynamically based on limit visibility
 
     const handleAmountChange = (text: string) => {
         setAmountValue(text);
@@ -93,8 +87,7 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                     style={[
                         styles.bottomSheet,
                         {
-                            transform: [{ translateY: slideAnim }],
-                            height: sheetHeight, // Dynamically set the height based on the limit visibility
+                            height: sheetHeight, // Dynamically update height
                         },
                     ]}
                 >

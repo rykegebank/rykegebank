@@ -21,7 +21,7 @@ export const useBeneficiary = () => {
     const { mutateAsync } = useMutation({
         mutationFn: async ({ page, isReset = false }: { page: number, isReset?: boolean }) => {
             dispatch(setLoading(true));
-            const url = `${URLS.language}?page=${page}`;
+            const url = `${URLS.myBankBeneficiaryUrl}?page=${page}`;
             const { data } = await api.get<IBankBeneficiaryResponseModel>(url);
             return data;
         },
