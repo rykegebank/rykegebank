@@ -10,16 +10,30 @@ import {
     appendData,
     setNextPageUrl,
     incrementPage,
-    batchUpdate
+    batchUpdate,
+    setBeneficiaryData,
 } from '../../store/slices/beneficiarySlice';
+import {
+    setBeneficiaryList,
+    setLimits,
+    setAuthorizationList,
+    setSelectedAuthorization,
+    toggleLimitShow,
+} from "../../store/slices/myBankTransferSlice";
+
 import { RootState } from '../../store';
+import { useGeneralSettings } from "../../hooks/useGeneralSettings";
+import { useMyBankTransfer } from '../../screens/TransferMyBank/hooks/useMyBankTransfer';
 
 export const useBeneficiary = () => {
     const dispatch = useDispatch();
-    const { page, beneficiaryList, nextPageUrl } = useSelector((state: RootState) => state.beneficiary);
+    const { getCurrencyOrUsername, getAuthorizationList } = useGeneralSettings();
+
+    const { page, beneficiaryList, nextPageUrl, beneficiaryData } = useSelector((state: RootState) => state.beneficiary);
+    // const { loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData } = useMyBankTransfer();
 
     const { mutateAsync } = useMutation({
-        mutationFn: async ({ page, isReset = false }: { page: number, isReset?: boolean }) => {
+        mutationFn: async ({ page, isReset = false }: { page: number; isReset?: boolean }) => {
             dispatch(setLoading(true));
             const url = `${URLS.myBankBeneficiaryUrl}?page=${page}`;
             const { data } = await api.get<IBankBeneficiaryResponseModel>(url);
@@ -33,12 +47,24 @@ export const useBeneficiary = () => {
             const { page, isReset } = variables;
             dispatch(setLoading(false));
 
-            if (data.status?.toLowerCase() === "success") {
-                dispatch(setNextPageUrl(data.data?.beneficiaries?.nextPageUrl || ""));
+            if (data.status?.toLowerCase() === 'success') {
+                dispatch(setNextPageUrl(data.data?.beneficiaries?.nextPageUrl || ''));
+                dispatch(setBeneficiaryData(data));
+
                 const tempBeneficiaryList = data.data?.beneficiaries?.data || [];
 
                 if (page === 1) {
                     dispatch(setData(tempBeneficiaryList));
+                    // set initial value 
+                    const cur = getCurrencyOrUsername({ isCurrency: true });
+                    const symbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true });
+                    const authList = getAuthorizationList();
+                    if (authList.length > 0) {
+                        dispatch(setSelectedAuthorization(authList[0]));
+                    }
+                    
+                    dispatch(setLimits({ currency: cur, currencySymbol: symbol }));
+
                 } else if (tempBeneficiaryList.length > 0) {
                     dispatch(appendData(tempBeneficiaryList));
                 }
@@ -56,8 +82,8 @@ export const useBeneficiary = () => {
     });
 
     const loadMoreBeneficiary = async () => {
-        mutateAsync({ page });
+        return await mutateAsync({ page });
     };
 
-    return { loadMoreBeneficiary, beneficiaryList, nextPageUrl };
+    return { loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData };
 };

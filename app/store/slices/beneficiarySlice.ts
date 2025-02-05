@@ -1,20 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IData, IBankBeneficiaryResponseModel } from '../../types/beneficiary';
+import { IBankBeneficiaryResponseModel, IData } from '../../types/beneficiary';
 
 interface BeneficiaryState {
+    isLoading: boolean;
     beneficiaryList: IData[];
-    page: number;
     nextPageUrl: string;
-    loading: boolean;
+    page: number;
     trxSearchText: string;
+    beneficiaryData?: IBankBeneficiaryResponseModel;
 }
 
 const initialState: BeneficiaryState = {
+    isLoading: false,
     beneficiaryList: [],
-    page: 1,
     nextPageUrl: '',
-    loading: false,
+    page: 1,
     trxSearchText: '',
+    beneficiaryData: undefined,
 };
 
 const beneficiarySlice = createSlice({
@@ -22,7 +24,7 @@ const beneficiarySlice = createSlice({
     initialState,
     reducers: {
         setLoading: (state, action: PayloadAction<boolean>) => {
-            state.loading = action.payload;
+            state.isLoading = action.payload;
         },
         setData: (state, action: PayloadAction<IData[]>) => {
             state.beneficiaryList = action.payload;
@@ -39,14 +41,24 @@ const beneficiarySlice = createSlice({
         resetPage: (state) => {
             state.page = 1;
         },
-        batchUpdate: (state, action: PayloadAction<{ page?: number; trxSearchText?: string }>) => {
-            if (action.payload.page !== undefined) {
-                state.page = action.payload.page;
-            }
-
+        batchUpdate: (state, action: PayloadAction<Partial<BeneficiaryState>>) => {
+            Object.assign(state, action.payload);
+        },
+        setBeneficiaryData: (state, action: PayloadAction<IBankBeneficiaryResponseModel>) => {
+            state.beneficiaryData = action.payload; // Store the full response
         },
     },
 });
 
-export const { setLoading, setData, appendData, setNextPageUrl, incrementPage, resetPage, batchUpdate } = beneficiarySlice.actions;
+export const {
+    setLoading,
+    setData,
+    appendData,
+    setNextPageUrl,
+    incrementPage,
+    resetPage,
+    batchUpdate,
+    setBeneficiaryData,
+} = beneficiarySlice.actions;
+
 export default beneficiarySlice.reducer;

@@ -48,15 +48,22 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
     const [isLimitVisible, setIsLimitVisible] = useState(false);
     const [sheetHeight, setSheetHeight] = useState(new Animated.Value(SHEET_HEIGHT)); // Animated height value
     const [currentHeight, setCurrentHeight] = useState(SHEET_HEIGHT); // Track current height for dynamic updates
+    const [isFirstOpen, setIsFirstOpen] = useState(true); // Track if it's the first time opening
 
     useEffect(() => {
         if (isVisible) {
-            // Animate the bottom sheet to slide up with dynamic height when visible
-            Animated.timing(sheetHeight, {
-                toValue: currentHeight, // Dynamically change to desired height
-                duration: 300,
-                useNativeDriver: false, // Do not use the native driver for height changes
-            }).start();
+            // If it's the first open, set the height without animation
+            if (isFirstOpen) {
+                setSheetHeight(new Animated.Value(currentHeight)); // No animation
+                setIsFirstOpen(false); // Set to false after the first open
+            } else {
+                // Animate the bottom sheet to slide up with dynamic height when visible
+                Animated.timing(sheetHeight, {
+                    toValue: currentHeight, // Dynamically change to desired height
+                    duration: 300,
+                    useNativeDriver: false, // Do not use the native driver for height changes
+                }).start();
+            }
         } else {
             // Animate the bottom sheet to slide down when closed
             Animated.timing(sheetHeight, {
@@ -65,7 +72,7 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                 useNativeDriver: false,
             }).start();
         }
-    }, [isVisible, currentHeight]); // Trigger re-animation when visibility or height changes
+    }, [isVisible, currentHeight, isFirstOpen]); // Trigger re-animation when visibility or height changes
 
     useEffect(() => {
         // Adjust height when limit visibility changes

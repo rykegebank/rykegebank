@@ -24,24 +24,38 @@ export const useGeneralSettings = () => {
         isReferralEnable: false,
         currencyText: '',
         currencySymbol: '',
-        templateName: ''
+        templateName: '',
     };
 
-    if (data) {
-        const modules = data.data?.general_setting?.modules || {};
+    const generalSetting = data?.data?.general_setting ?? null;
 
-        settings.isDepositEnable = modules.deposit == '1';
-        settings.isWithdrawEnable = modules.withdraw == '1';
-        settings.isFDREnable = modules.fdr == '1';
-        settings.isDPSEnable = modules.dps == '1';
-        settings.isLoanEnable = modules.loan == '1';
-        settings.isReferralEnable = modules.referral_system == '1';
+    if (generalSetting) {
+        const modules = generalSetting.modules || {};
 
-        const model = data.data?.general_setting;
-        settings.currencyText = model?.cur_text ?? '';
-        settings.currencySymbol = model?.cur_sym ?? '';
-        settings.templateName = model?.active_template ?? '';
+        settings.isDepositEnable = modules.deposit === '1';
+        settings.isWithdrawEnable = modules.withdraw === '1';
+        settings.isFDREnable = modules.fdr === '1';
+        settings.isDPSEnable = modules.dps === '1';
+        settings.isLoanEnable = modules.loan === '1';
+        settings.isReferralEnable = modules.referral_system === '1';
+
+        settings.currencyText = generalSetting.cur_text ?? '';
+        settings.currencySymbol = generalSetting.cur_sym ?? '';
+        settings.templateName = generalSetting.active_template ?? '';
     }
+
+    // Generate Authorization List from API data
+    const getAuthorizationList = (): string[] => {
+        if (!generalSetting) return [];
+
+        const modules = generalSetting.modules || {};
+        const authList: string[] = ['Select One'];
+
+        if (modules.otp_email == '1') authList.push('Email');
+        if (modules.otp_sms == '1') authList.push('SMS');
+
+        return authList;
+    };
 
     const getCurrencyOrUsername = ({
         isCurrency = true,
@@ -53,19 +67,21 @@ export const useGeneralSettings = () => {
         if (isCurrency) {
             return isSymbol ? settings.currencySymbol : settings.currencyText;
         } else {
-            return 'tbd'; // need to fetch from shared pref
+            return 'tbd'; // Placeholder if username is needed
         }
-    }
+    };
 
     const getTemplateName = () => {
-        return settings.templateName
-    }
+        return settings.templateName;
+    };
 
     return {
         settings,
+        generalSetting,
         error,
         isLoading,
         getCurrencyOrUsername,
-        getTemplateName
+        getTemplateName,
+        getAuthorizationList, // Now returning from the current API response
     };
 };
