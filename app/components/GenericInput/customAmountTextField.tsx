@@ -39,7 +39,7 @@ const CustomAmountTextField: React.FC<CustomAmountTextFieldProps> = ({
                     ref={controller}
                     style={styles.textInput}
                     placeholder={hintText}
-                    placeholderTextColor={hexToRgba(Colors.colorGrey, 0.5)}
+                    placeholderTextColor={hexToRgba(Colors.colorBlack, 0.5)}
                     keyboardType="numeric"
                     returnKeyType={inputAction}
                     onChangeText={onChanged}
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     labelText: {
-        fontSize: 16,
+        fontSize: Dimensions.fontDefault,
         fontWeight: '600',
         color: Colors.textColor,
     },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 5,
-        fontSize: 16,
+        fontSize: Dimensions.fontDefault,
         color: Colors.colorBlack,
     },
     currencyContainer: {
@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.transparentColor,
     },
     currencyText: {
-        fontSize: 16,
-        color: hexToRgba(Colors.colorGrey, 0.5),
+        fontSize: Dimensions.fontDefault,
+        color: hexToRgba(Colors.colorBlack, 0.5),
         fontWeight: '500',
     },
 });

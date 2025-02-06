@@ -8,11 +8,9 @@ import {
 } from "react-native";
 
 import { EvilIcons } from "@expo/vector-icons";
-import GenericInput from "../../components/GenericInput";
 import GenericButton from "../../components/GenericButton";
 import GenericCard from "../../components/GenericCard";
 import { useNavigation, useRoute } from "@react-navigation/core";
-import { Routes } from "../../constants";
 import { Controller, useForm } from "react-hook-form";
 import {
   useVerifyCode,
@@ -152,8 +150,8 @@ const CodeVerificationScreen = () => {
       {(verifyCode.isPending ||
         verifyEmail.isPending ||
         verifySms.isPending) && (
-        <LoadingIndicator isLoading={true} message="Logging in.." />
-      )}
+          <LoadingIndicator isLoading={true} message="Logging in.." />
+        )}
     </View>
   );
 };

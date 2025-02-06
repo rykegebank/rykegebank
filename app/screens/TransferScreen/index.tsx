@@ -19,7 +19,7 @@ import AppBar from "../../components/GenericAppBar";
 
 
 const TransferScreen: React.FC = () => {
-    const [selectedIndex, setSelectedIndex] = useState<number>(1);
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const isWireTransferEnable = true; // Replace with actual condition
     const navigation = useNavigation();
 

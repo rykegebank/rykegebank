@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { MaterialIcons } from "@expo/vector-icons";
+
 import RoundedLoadingBtn from '../../../components/GenericButton/roundedLoadingButton';
 import RoundedButton from '../../../components/GenericButton/index';
 import CustomDropDownTextField from '../../../components/GenericInput/DropDownButtonWithTextField';
@@ -9,21 +11,23 @@ import WidgetDivider from '../../../components/Dividers/componentDivider';
 import ExpandedSection from '../../../components/Animated/expandedSection';
 import BottomSheetContainer from '../../../components/CustomContainer/bottomSheetContainer';
 import BottomSheetTopRow from '../../../components/RowItem/bottomSheetTopRow';
+import { Colors, Dimensions } from '../../../constants';
 
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SHEET_HEIGHT = SCREEN_HEIGHT / 2;
+const SCREEN_HEIGHT = Dimensions.windowHeight;
+const SHEET_HEIGHT = SCREEN_HEIGHT / 2.1;
 
 interface MyBankTransferBottomSheetProps {
     isVisible: boolean;
     onClose: () => void;
+    onSelectAuthMode: (authMode: string) => void;
     onTransfer: (beneficiaryId: string) => void;
     currencySymbol: string;
     currency: string;
     amount: string;
-    limitPerTrx: number;
-    chargePerTrx: number;
-    dailyMaxLimit: number;
-    monthlyLimit: number;
+    limitPerTrx: string;
+    chargePerTrx: string;
+    dailyMaxLimit: string;
+    monthlyLimit: string;
     authorizationList: string[];
     selectedAuthorizationMode: string;
     submitLoading: boolean;
@@ -33,6 +37,7 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
     isVisible,
     onClose,
     onTransfer,
+    onSelectAuthMode,
     currencySymbol,
     currency,
     amount,
@@ -46,38 +51,34 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
 }) => {
     const [amountValue, setAmountValue] = useState(amount);
     const [isLimitVisible, setIsLimitVisible] = useState(false);
-    const [sheetHeight, setSheetHeight] = useState(new Animated.Value(SHEET_HEIGHT)); // Animated height value
-    const [currentHeight, setCurrentHeight] = useState(SHEET_HEIGHT); // Track current height for dynamic updates
-    const [isFirstOpen, setIsFirstOpen] = useState(true); // Track if it's the first time opening
+    const [sheetHeight, setSheetHeight] = useState(new Animated.Value(SHEET_HEIGHT));
+    const [currentHeight, setCurrentHeight] = useState(SHEET_HEIGHT);
+    const [isFirstOpen, setIsFirstOpen] = useState(true);
 
     useEffect(() => {
         if (isVisible) {
-            // If it's the first open, set the height without animation
             if (isFirstOpen) {
-                setSheetHeight(new Animated.Value(currentHeight)); // No animation
-                setIsFirstOpen(false); // Set to false after the first open
+                setSheetHeight(new Animated.Value(currentHeight));
+                setIsFirstOpen(false);
             } else {
-                // Animate the bottom sheet to slide up with dynamic height when visible
                 Animated.timing(sheetHeight, {
-                    toValue: currentHeight, // Dynamically change to desired height
+                    toValue: currentHeight,
                     duration: 300,
-                    useNativeDriver: false, // Do not use the native driver for height changes
+                    useNativeDriver: false,
                 }).start();
             }
         } else {
-            // Animate the bottom sheet to slide down when closed
             Animated.timing(sheetHeight, {
-                toValue: SCREEN_HEIGHT, // Slide it down out of view
+                toValue: SCREEN_HEIGHT,
                 duration: 300,
                 useNativeDriver: false,
             }).start();
         }
-    }, [isVisible, currentHeight, isFirstOpen]); // Trigger re-animation when visibility or height changes
+    }, [isVisible, currentHeight, isFirstOpen]);
 
     useEffect(() => {
-        // Adjust height when limit visibility changes
-        setCurrentHeight(isLimitVisible ? SCREEN_HEIGHT * 0.75 : SCREEN_HEIGHT / 2);
-    }, [isLimitVisible]); // Update height dynamically based on limit visibility
+        setCurrentHeight(isLimitVisible ? SCREEN_HEIGHT * 0.75 : SCREEN_HEIGHT / 2.1);
+    }, [isLimitVisible]);
 
     const handleAmountChange = (text: string) => {
         setAmountValue(text);
@@ -90,21 +91,17 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
     return (
         <Modal visible={isVisible} animationType="none" transparent onRequestClose={onClose}>
             <View style={styles.overlay}>
-                <Animated.View
-                    style={[
-                        styles.bottomSheet,
-                        {
-                            height: sheetHeight, // Dynamically update height
-                        },
-                    ]}
-                >
+                <Animated.View style={[styles.bottomSheet, { height: sheetHeight }]}>
                     <BottomSheetTopRow header="Transfer Money" onPress={onClose} />
 
                     <BottomSheetContainer>
                         <View style={styles.limitContainer}>
                             <TouchableOpacity onPress={toggleLimitVisibility} style={styles.limitToggle}>
-                                <Text style={styles.limitText}>Transfer Limit</Text>
-                                <Text style={styles.arrow}>{isLimitVisible ? '↑' : '↓'}</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <MaterialIcons name="info-outline" color={Colors.colorGrey} size={18} />
+                                    <Text style={styles.limitText}>Transfer Limit</Text>
+                                </View>
+                                <MaterialIcons name={isLimitVisible ? 'arrow-upward' : 'arrow-drop-down'} color={Colors.colorGrey} size={18} />
                             </TouchableOpacity>
 
                             <ExpandedSection expand={isLimitVisible}>
@@ -113,10 +110,7 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                                     firstText="Limit per Transaction"
                                     secondText={`${currencySymbol}${limitPerTrx}`}
                                 />
-                                <LimitPreviewRow
-                                    firstText="Charge per Transaction"
-                                    secondText={chargePerTrx.toString()}
-                                />
+                                <LimitPreviewRow firstText="Charge per Transaction" secondText={chargePerTrx.toString()} />
                                 <LimitPreviewRow
                                     firstText="Daily Limit"
                                     secondText={`${currencySymbol}${dailyMaxLimit}`}
@@ -129,39 +123,39 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                             </ExpandedSection>
                         </View>
 
-                        <View style={styles.amountContainer}>
-                            <Text style={styles.amountLabel}>Amount</Text>
-                            <CustomAmountTextField
-                                chargeText={amountValue}
-                                onChanged={handleAmountChange}
-                                currency={currency}
-                                labelText="Amount"
-                                hintText="Enter Amount"
-                            />
-                        </View>
-
-                        {authorizationList.length > 1 && (
-                            <View style={styles.authorizationContainer}>
-                                <Text style={styles.authorizationLabel}>Authorization Method</Text>
-                                <CustomDropDownTextField
-                                    selectedValue={selectedAuthorizationMode}
-                                    list={authorizationList}
-                                    onChanged={(value) => {
-                                        // Call the function to change the authorization mode
-                                    }}
+                        {/* Wrapper with border from Amount to Button */}
+                        <View style={styles.borderContainer}>
+                            <View style={styles.amountContainer}>
+                                <Text style={styles.amountLabel}>Amount</Text>
+                                <CustomAmountTextField
+                                    chargeText={amountValue}
+                                    onChanged={handleAmountChange}
+                                    currency={currency}
+                                    labelText="Amount"
+                                    hintText="Enter Amount"
                                 />
                             </View>
-                        )}
 
-                        <View style={styles.buttonContainer}>
-                            {submitLoading ? (
-                                <RoundedLoadingBtn />
-                            ) : (
-                                <RoundedButton
-                                    onPress={() => onTransfer('beneficiaryId')}
-                                    title="Apply Now"
-                                />
+                            {authorizationList.length > 1 && (
+                                <View style={styles.authorizationContainer}>
+                                    <Text style={styles.authorizationLabel}>
+                                        Authorization Method <Text style={{ color: 'red' }}>*</Text>
+                                    </Text>
+                                    <CustomDropDownTextField
+                                        selectedValue={selectedAuthorizationMode}
+                                        list={authorizationList}
+                                        onChanged={(value) => onSelectAuthMode(value)}
+                                    />
+                                </View>
                             )}
+
+                            <View style={styles.buttonContainer}>
+                                {submitLoading ? (
+                                    <RoundedLoadingBtn />
+                                ) : (
+                                    <RoundedButton onPress={() => onTransfer('beneficiaryId')} title="Apply Now" />
+                                )}
+                            </View>
                         </View>
                     </BottomSheetContainer>
                 </Animated.View>
@@ -174,45 +168,56 @@ const styles = StyleSheet.create({
     overlay: {
         flex: 1,
         justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent background
+        backgroundColor: 'rgba(0,0,0,0.5)',
     },
     bottomSheet: {
-        backgroundColor: 'white',
-        borderTopLeftRadius: 16,
-        borderTopRightRadius: 16,
-        padding: 16,
+        backgroundColor: Colors.colorWhite,
+        borderTopLeftRadius: Dimensions.size15,
+        borderTopRightRadius: Dimensions.size15,
+        padding: Dimensions.size15,
     },
     limitContainer: {
-        marginBottom: 20,
+        marginBottom: Dimensions.size20,
+        borderWidth: 1,
+        borderColor: Colors.borderColor,
+        borderRadius: Dimensions.size10,
+        padding: Dimensions.size10,
     },
     limitToggle: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
     },
     limitText: {
-        fontSize: 16,
+        fontSize: Dimensions.fontDefault,
+        fontWeight: '600',
+        color: Colors.colorGrey,
+        marginLeft: Dimensions.space5
     },
     arrow: {
-        fontSize: 20,
-        color: '#ccc',
+        fontSize: Dimensions.extraLarge,
+        color: Colors.colorGrey,
+    },
+    borderContainer: {
+        borderWidth: 1,
+        borderColor: Colors.borderColor,
+        borderRadius: Dimensions.size10,
+        padding: Dimensions.size15,
     },
     amountContainer: {
-        marginBottom: 20,
     },
     amountLabel: {
-        fontSize: 16,
-        marginBottom: 8,
+        fontSize: Dimensions.fontDefault,
     },
     authorizationContainer: {
-        marginBottom: 20,
+        marginBottom: Dimensions.size15,
     },
     authorizationLabel: {
-        fontSize: 16,
+        fontSize: Dimensions.fontDefault,
         marginBottom: 8,
     },
     buttonContainer: {
-        marginTop: 20,
         alignItems: 'center',
     },
 });

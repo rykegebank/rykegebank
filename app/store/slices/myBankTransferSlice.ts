@@ -43,6 +43,7 @@ const myBankTransferSlice = createSlice({
             Object.assign(state, action.payload);
         },
         setAuthorizationList: (state, action: PayloadAction<string[]>) => {
+            console.log('setAuthorizationList', action.payload)
             state.authorizationList = action.payload;
         },
         setSelectedAuthorization: (state, action: PayloadAction<string>) => {

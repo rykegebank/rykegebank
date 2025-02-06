@@ -28,16 +28,15 @@ export const useGeneralSettings = () => {
     };
 
     const generalSetting = data?.data?.general_setting ?? null;
-
     if (generalSetting) {
         const modules = generalSetting.modules || {};
 
-        settings.isDepositEnable = modules.deposit === '1';
-        settings.isWithdrawEnable = modules.withdraw === '1';
-        settings.isFDREnable = modules.fdr === '1';
-        settings.isDPSEnable = modules.dps === '1';
-        settings.isLoanEnable = modules.loan === '1';
-        settings.isReferralEnable = modules.referral_system === '1';
+        settings.isDepositEnable = modules.deposit == '1';
+        settings.isWithdrawEnable = modules.withdraw == '1';
+        settings.isFDREnable = modules.fdr == '1';
+        settings.isDPSEnable = modules.dps == '1';
+        settings.isLoanEnable = modules.loan == '1';
+        settings.isReferralEnable = modules.referral_system == '1';
 
         settings.currencyText = generalSetting.cur_text ?? '';
         settings.currencySymbol = generalSetting.cur_sym ?? '';
@@ -45,17 +44,24 @@ export const useGeneralSettings = () => {
     }
 
     // Generate Authorization List from API data
-    const getAuthorizationList = (): string[] => {
+    // Assuming you modify getAuthorizationList to be async if needed
+    const getAuthorizationList = async (): Promise<string[]> => {
         if (!generalSetting) return [];
 
         const modules = generalSetting.modules || {};
-        const authList: string[] = ['Select One'];
+        const authList: string[] = [];
 
         if (modules.otp_email == '1') authList.push('Email');
         if (modules.otp_sms == '1') authList.push('SMS');
 
+        // Only add 'Select One' if it hasn't been added already
+        if (!authList.includes('Select One')) {
+            authList.unshift('Select One');
+        }
+
         return authList;
     };
+
 
     const getCurrencyOrUsername = ({
         isCurrency = true,
@@ -82,6 +88,6 @@ export const useGeneralSettings = () => {
         isLoading,
         getCurrencyOrUsername,
         getTemplateName,
-        getAuthorizationList, // Now returning from the current API response
+        getAuthorizationList,
     };
 };

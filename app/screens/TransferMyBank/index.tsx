@@ -13,63 +13,42 @@ import {
 import MyBankTransferListItem from './components/myBankTransferListItem';
 import { Colors, Dimensions, Strings } from '../../constants';
 import AppBar from '../../components/GenericAppBar';
-
-interface Beneficiary {
-    accountName: string;
-    accountNumber: string;
-    shortName: string;
-}
+import { useMyBankTransfer } from './hooks/useMyBankTransfer';
+import { useBeneficiary } from '../../data/beneficiary/mutation';
+import { IData } from '../../types/beneficiary';
+import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
+import TransactionSkeleton from "../../components/LoadingIndicators/transactionSkeleton";
 
 const MyBankTransferScreen = () => {
-    const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [hasNext, setHasNext] = useState<boolean>(true);
-    const [page, setPage] = useState<number>(1);
+
+    const {
+        loadPaginationData,
+        hasNext,
+    } = useMyBankTransfer();
+
+    const { loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData } = useBeneficiary();
+
 
     useEffect(() => {
-        fetchBeneficiaries();
-    }, [page]);
+        loadPaginationData();
+    }, []);
 
-    const fetchBeneficiaries = async () => {
-        try {
-            setIsLoading(true);
-            // Simulating API call
-            setTimeout(() => {
-                const newBeneficiaries: Beneficiary[] = [
-                    { accountName: 'John Doe', accountNumber: '123456', shortName: 'JD' },
-                    { accountName: 'Jane Smith', accountNumber: '789012', shortName: 'JS' },
-                ];
-                setBeneficiaries((prev) => [...prev, ...newBeneficiaries]);
-                setIsLoading(false);
-                setHasNext(newBeneficiaries.length > 0);
-            }, 1000);
-        } catch (error) {
-            console.error('Error fetching beneficiaries:', error);
-            setIsLoading(false);
-        }
-    };
 
-    const loadMoreData = () => {
-        if (hasNext && !isLoading) {
-            setPage((prevPage) => prevPage + 1);
-        }
-    };
 
-    const renderItem = ({ item, index }: { item: Beneficiary; index: number }) => (
+    const renderItem = ({ item, index }: { item: IData, index: number }) => (
         <MyBankTransferListItem
-            accountName={item.accountName}
-            accountNumber={item.accountNumber}
-            shortName={item.shortName}
+            accountName={item.account_name ?? ''}
+            accountNumber={item.account_number ?? ''}
+            shortName={item.short_name ?? ''}
             index={index}
         />
     );
 
     return (
         <SafeAreaView style={styles.container}>
-
-
             <AppBar
-                title="Transfer Within Viser Bank"
+                title="Transfer Within MXBank"
                 centerTitle
                 showBackButton={true}
                 backgroundColor={Colors.primaryColor}
@@ -83,19 +62,27 @@ const MyBankTransferScreen = () => {
                     </TouchableOpacity>,
                 ]}
             />
-            {isLoading && beneficiaries.length === 0 ? (
-                <ActivityIndicator size="large" color="#007BFF" />
-            ) : beneficiaries.length === 0 ? (
-                <Text style={styles.noDataText}>No Beneficiaries Found</Text>
+            {true && beneficiaryList.length == 0 ? (
+                <FlatList
+                    data={Array(3).fill(null)} // Mock data with 3 items
+                    keyExtractor={(_, index) => index.toString()}
+                    renderItem={() => <TransactionSkeleton />}
+                    contentContainerStyle={styles.skeletonContainer}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                />
+            ) : beneficiaryList.length === 0 ? (
+                <View style={styles.centered}>
+                    <NoDataFoundScreen />
+                </View>
             ) : (
                 <FlatList
-                    data={beneficiaries}
+                    data={beneficiaryList}
                     keyExtractor={(item, index) => index.toString()}
                     contentContainerStyle={{ padding: 20 }}
                     renderItem={renderItem}
-                    onEndReached={loadMoreData}
+                    onEndReached={loadPaginationData}
                     onEndReachedThreshold={0.5}
-                    ListFooterComponent={isLoading && hasNext ? <ActivityIndicator size="small" color="#007BFF" /> : null}
+                    ListFooterComponent={isLoading && hasNext() ? <ActivityIndicator size="small" color="#007BFF" /> : null}
                 />
             )}
 
@@ -105,9 +92,22 @@ const MyBankTransferScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    separator: {
+        height: Dimensions.size10,
+    },
+    skeletonContainer: {
+        flex: 1,
+        backgroundColor: '#F5F5F5',
+        padding: 20
+    },
     container: {
         flex: 1,
         backgroundColor: '#F5F5F5',
+    },
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     iconContainer: {
         width: 25,

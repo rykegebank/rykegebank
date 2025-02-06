@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.colorWhite,
-    fontSize: Dimensions.extraLarge,
+    fontSize: Dimensions.large,
     fontWeight: 'bold',
   },
   actionsContainer: {

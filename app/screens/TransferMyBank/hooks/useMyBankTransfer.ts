@@ -1,23 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store";
+import { useDispatch } from "react-redux";
 import {
-    setLoading,
-    setBeneficiaryList,
-    setLimits,
-    setAuthorizationList,
     setSelectedAuthorization,
     toggleLimitShow,
 } from "../../../store/slices/myBankTransferSlice";
 
-import { useBeneficiary } from '../../../data/beneficiary/mutation';
-import { useGeneralSettings } from "../../../hooks/useGeneralSettings";
+import { useBeneficiary } from "../../../data/beneficiary/mutation";
 
 export const useMyBankTransfer = () => {
     const dispatch = useDispatch();
-    const bankState = useSelector((state: RootState) => state.myBankTransfer);
-    const beneficiaryState = useSelector((state: RootState) => state.myBankTransfer);
-    const { generalSetting } = useGeneralSettings();
-    const { loadMoreBeneficiary, nextPageUrl, beneficiaryData } = useBeneficiary();
+    const { loadMoreBeneficiary, nextPageUrl } = useBeneficiary();
 
     const changeAuthorizationMode = (value?: string) => {
         if (value) {
@@ -29,17 +20,6 @@ export const useMyBankTransfer = () => {
         await loadMoreBeneficiary();
     };
 
-    const loadLimit = () => {
-        dispatch(
-            setLimits({
-                chargePerTrx: beneficiaryData?.data?.transferCharge ?? "",
-                limitPerTrx: generalSetting?.minimum_transfer_limit ?? "0",
-                dailyMaxLimit: generalSetting?.daily_transfer_limit ?? "0",
-                monthlyLimit: generalSetting?.monthly_transfer_limit ?? "0",
-            })
-        );
-    };
-
     const hasNext = () => nextPageUrl != "" && nextPageUrl != "null";
 
     const handleToggleLimitShow = () => {
@@ -47,11 +27,8 @@ export const useMyBankTransfer = () => {
     };
 
     return {
-        bankState,
-        beneficiaryState,
         changeAuthorizationMode,
         loadPaginationData,
-        loadLimit,
         hasNext,
         handleToggleLimitShow,
     };

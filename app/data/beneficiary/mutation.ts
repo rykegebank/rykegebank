@@ -1,9 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useMutation } from '@tanstack/react-query';
-import { IBankBeneficiaryResponseModel } from '../../types/beneficiary';
-import { URLS } from '../../data/urls';
-import api from '../../data/api';
-import { manageApiException } from '../../utils/errorHandler';
+import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { IBankBeneficiaryResponseModel } from "../../types/beneficiary";
+import { URLS } from "../../data/urls";
+import api from "../../data/api";
+import { manageApiException } from "../../utils/errorHandler";
 import {
     setLoading,
     setData,
@@ -12,25 +13,34 @@ import {
     incrementPage,
     batchUpdate,
     setBeneficiaryData,
-} from '../../store/slices/beneficiarySlice';
+} from "../../store/slices/beneficiarySlice";
 import {
-    setBeneficiaryList,
     setLimits,
     setAuthorizationList,
     setSelectedAuthorization,
-    toggleLimitShow,
 } from "../../store/slices/myBankTransferSlice";
 
-import { RootState } from '../../store';
+import { RootState } from "../../store";
 import { useGeneralSettings } from "../../hooks/useGeneralSettings";
-import { useMyBankTransfer } from '../../screens/TransferMyBank/hooks/useMyBankTransfer';
 
 export const useBeneficiary = () => {
     const dispatch = useDispatch();
-    const { getCurrencyOrUsername, getAuthorizationList } = useGeneralSettings();
-
+    const { getCurrencyOrUsername, getAuthorizationList, generalSetting } = useGeneralSettings();
     const { page, beneficiaryList, nextPageUrl, beneficiaryData } = useSelector((state: RootState) => state.beneficiary);
-    // const { loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData } = useMyBankTransfer();
+
+    // Load Limit Function (Optimized with useCallback)
+    const loadLimit = useCallback(() => {
+        if (!generalSetting) return;
+
+        dispatch(
+            setLimits({
+                chargePerTrx: beneficiaryData?.data?.transfer_charge ?? "",
+                limitPerTrx: generalSetting.minimum_transfer_limit ?? "0",
+                dailyMaxLimit: generalSetting.daily_transfer_limit ?? "0",
+                monthlyLimit: generalSetting.monthly_transfer_limit ?? "0",
+            })
+        );
+    }, [dispatch, generalSetting, beneficiaryData]);
 
     const { mutateAsync } = useMutation({
         mutationFn: async ({ page, isReset = false }: { page: number; isReset?: boolean }) => {
@@ -43,40 +53,45 @@ export const useBeneficiary = () => {
             dispatch(setLoading(false));
             manageApiException(error);
         },
-        onSuccess: (data, variables) => {
-            const { page, isReset } = variables;
+        onSuccess: async (data, { page, isReset }) => {
             dispatch(setLoading(false));
 
-            if (data.status?.toLowerCase() === 'success') {
-                dispatch(setNextPageUrl(data.data?.beneficiaries?.nextPageUrl || ''));
-                dispatch(setBeneficiaryData(data));
-
-                const tempBeneficiaryList = data.data?.beneficiaries?.data || [];
-
-                if (page === 1) {
-                    dispatch(setData(tempBeneficiaryList));
-                    // set initial value 
-                    const cur = getCurrencyOrUsername({ isCurrency: true });
-                    const symbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true });
-                    const authList = getAuthorizationList();
-                    if (authList.length > 0) {
-                        dispatch(setSelectedAuthorization(authList[0]));
-                    }
-                    
-                    dispatch(setLimits({ currency: cur, currencySymbol: symbol }));
-
-                } else if (tempBeneficiaryList.length > 0) {
-                    dispatch(appendData(tempBeneficiaryList));
-                }
-
-                if (isReset) {
-                    dispatch(batchUpdate({ page: 1, trxSearchText: '' }));
-                }
-
-                dispatch(incrementPage());
-            } else {
+            if (data.status?.toLowerCase() !== "success") {
                 manageApiException(data.message);
+                return;
             }
+
+            // Extract Beneficiary Data
+            const { beneficiaries, transfer_charge } = data.data;
+            const tempBeneficiaryList = beneficiaries?.data || [];
+
+            // Update Pagination & Data
+            dispatch(setNextPageUrl(beneficiaries?.next_page_url || ""));
+            dispatch(setBeneficiaryData(data));
+            const authList = await getAuthorizationList();
+            console.log('onSuccess')
+            if (authList.length > 0) {
+                dispatch(setAuthorizationList(authList));
+                dispatch(setSelectedAuthorization(authList[0]));
+            }
+
+            if (page == 1) {
+                dispatch(setData(tempBeneficiaryList));
+
+                // Set initial values
+                const currency = getCurrencyOrUsername({ isCurrency: true });
+                const currencySymbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true });
+
+                dispatch(setLimits({ currency, currencySymbol, chargePerTrx: transfer_charge }));
+                loadLimit(); // Ensure limits are set properly
+            } else if (tempBeneficiaryList.length > 0) {
+                dispatch(appendData(tempBeneficiaryList));
+            }
+            dispatch(incrementPage());
+            if (isReset) {
+                dispatch(batchUpdate({ page: 1 }));
+            }
+
         },
         retry: 0,
     });

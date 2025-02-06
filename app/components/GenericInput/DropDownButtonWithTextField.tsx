@@ -18,7 +18,7 @@ const CustomDropDownTextField: React.FC<CustomDropDownTextFieldProps> = ({
     const [value, setValue] = useState(selectedValue || '');
 
     const filteredList = list.filter((item) => item.trim() !== '');
-
+    console.log('filteredList',filteredList)
     return (
         <View style={styles.container}>
             {title && <Text style={styles.title}>{title}</Text>}
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         marginBottom: Dimensions.space5,
     },
     title: {
-        fontSize: Dimensions.font16,
+        fontSize: Dimensions.fontDefault,
         fontWeight: '600',
         color: Colors.colorBlack,
     },
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         height: 45,
         width: '100%',
         color: Colors.colorBlack,
-        fontSize: Dimensions.font16,
+        fontSize: Dimensions.fontDefault,
     },
 });
 
