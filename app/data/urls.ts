@@ -24,6 +24,9 @@ type URLSType = {
   withdrawHistory: string
   notificationHistory: string
   myBankBeneficiaryUrl: string
+  submitOtpUrl: string
+  resendOtpUrl: string
+  myBankTransferUrl: string
 };
 
 export const URLS: URLSType = {
@@ -51,5 +54,8 @@ export const URLS: URLSType = {
   depositHistory: 'deposit/history',
   withdrawHistory: 'withdraw/history',
   notificationHistory: '/notification/history',
-  myBankBeneficiaryUrl: '/beneficiary/own'
+  myBankBeneficiaryUrl: '/beneficiary/own',
+  submitOtpUrl: 'check/otp/',
+  resendOtpUrl: 'resend/otp/',
+  myBankTransferUrl: 'own/transfer/request/'
 };

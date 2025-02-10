@@ -31,7 +31,7 @@ const TransferScreen: React.FC = () => {
         } else if (selectedIndex === 3) {
             navigation.navigate(Routes.wireTransfer);
         } else if (selectedIndex === 4) {
-            navigation.navigate(Routes.wireTransfer);
+            navigation.navigate(Routes.transferHistory);
         }
     };
 

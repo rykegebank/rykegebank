@@ -16,7 +16,7 @@ interface MyBankTransferState {
 }
 
 const initialState: MyBankTransferState = {
-    isLoading: true,
+    isLoading: false,
     beneficiaryList: [],
     currency: "",
     currencySymbol: "",

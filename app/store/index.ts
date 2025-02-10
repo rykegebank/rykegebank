@@ -6,6 +6,7 @@ import transactionHistorySlice from "./slices/transactionHistorySlice";
 import languageSlice from "./slices/languageSlice";
 import beneficiarySlice from "./slices/beneficiarySlice";
 import myBankTransferSlice from "./slices/myBankTransferSlice";
+import otpSlice from "./slices/otpSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ export const store = configureStore({
     transactionHistory: transactionHistorySlice,
     language: languageSlice,
     beneficiary: beneficiarySlice,
-    myBankTransfer: myBankTransferSlice
+    myBankTransfer: myBankTransferSlice,
+    otp: otpSlice
   },
 });
 

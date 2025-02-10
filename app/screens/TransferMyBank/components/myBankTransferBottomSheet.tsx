@@ -151,9 +151,12 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
 
                             <View style={styles.buttonContainer}>
                                 {submitLoading ? (
-                                    <RoundedLoadingBtn />
+                                    <RoundedLoadingBtn width={.5}/>
                                 ) : (
-                                    <RoundedButton onPress={() => onTransfer('beneficiaryId')} title="Apply Now" />
+                                    <RoundedButton onPress={() => {
+                                        console.log('Amount on button click:', amountValue);
+                                        onTransfer(amountValue);
+                                    }} title="Apply Now" />
                                 )}
                             </View>
                         </View>

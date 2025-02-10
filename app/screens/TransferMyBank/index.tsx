@@ -42,6 +42,7 @@ const MyBankTransferScreen = () => {
             accountNumber={item.account_number ?? ''}
             shortName={item.short_name ?? ''}
             index={index}
+            beneficiaryID={item?.id?.toString() ?? ''}
         />
     );
 

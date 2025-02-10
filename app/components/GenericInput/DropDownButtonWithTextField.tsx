@@ -18,7 +18,6 @@ const CustomDropDownTextField: React.FC<CustomDropDownTextFieldProps> = ({
     const [value, setValue] = useState(selectedValue || '');
 
     const filteredList = list.filter((item) => item.trim() !== '');
-    console.log('filteredList',filteredList)
     return (
         <View style={styles.container}>
             {title && <Text style={styles.title}>{title}</Text>}
@@ -30,9 +29,7 @@ const CustomDropDownTextField: React.FC<CustomDropDownTextFieldProps> = ({
                         if (onChanged) onChanged(itemValue);
                     }}
                     style={styles.picker}
-                    mode="dropdown"
-                >
-                    <Picker.Item label={selectedValue || 'Select'} value="" />
+                    mode="dropdown">
                     {filteredList.map((item, index) => (
                         <Picker.Item key={index} label={item} value={item} />
                     ))}

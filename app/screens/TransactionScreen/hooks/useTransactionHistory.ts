@@ -42,8 +42,6 @@ export const useTransactionHistory = () => {
             trxSearchText: string;
             isReset?: boolean;
         }) => {
-            console.log('useMutation');
-
             const type =
                 selectedTrxType.toLowerCase() === 'all' ||
                     (selectedTrxType.toLowerCase() !== 'plus' && selectedTrxType.toLowerCase() !== 'minus')
@@ -77,7 +75,7 @@ export const useTransactionHistory = () => {
                 if (page === 1) {
                     console.log('Setting transaction list for page 1');
                     dispatch(setCurrency(getCurrencyOrUsername({ isCurrency: true, isSymbol: true }) || ""));
-                    dispatch(setTransactionList(transactionData));
+                    dispatch(setTransactionList(transactionData)); // multiple dispatch causes mutate to be called again
                     dispatch(setRemarksList([{ remark: 'All' }, ...(remarks ?? [])]));
                 } else {
                     console.log('Appending transaction list');

@@ -6,15 +6,14 @@ import { Colors, Dimensions, Strings } from '../../../constants';
 import Send from '../../../../assets/images/transfer/send.svg';
 import MyBankTransferBottomSheet from '../components/myBankTransferBottomSheet'; // Adjust import as needed
 import { useMyBankTransfer } from '.././hooks/useMyBankTransfer';
-import { useBeneficiary } from '../../../data/beneficiary/mutation';
 import { RootState } from '../../../store';
-import { setSelectedAuthorization } from '../../../store/slices/myBankTransferSlice';
 
 interface MyBankTransferListItemProps {
   accountName: string;
   accountNumber: string;
   shortName: string;
   index: number;
+  beneficiaryID: string;
 }
 
 const MyBankTransferListItem: React.FC<MyBankTransferListItemProps> = ({
@@ -22,15 +21,17 @@ const MyBankTransferListItem: React.FC<MyBankTransferListItemProps> = ({
   accountNumber,
   shortName,
   index,
+  beneficiaryID
 }) => {
-  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const bankState = useSelector((state: RootState) => state.myBankTransfer);
+
 
   const {
     changeAuthorizationMode,
     loadPaginationData,
     hasNext,
     handleToggleLimitShow,
+    transferMoney
   } = useMyBankTransfer();
 
   const handleTransfer = () => {
@@ -39,9 +40,10 @@ const MyBankTransferListItem: React.FC<MyBankTransferListItemProps> = ({
   };
 
 
-  const handleTransferAction = (beneficiaryId: string) => {
+  const handleTransferAction = (amount: string) => {
+    transferMoney(beneficiaryID, amount);
     // Perform the transfer action here
-    console.log(`Transfer to ${bankState.authorizationList}`);
+    console.log(`Transfer to ${bankState.authorizationList} ${amount}`);
 
   };
 
@@ -77,7 +79,7 @@ const MyBankTransferListItem: React.FC<MyBankTransferListItemProps> = ({
         authorizationList={bankState.authorizationList}
         selectedAuthorizationMode={bankState.selectedAuthorizationMode ?? ''}
         onSelectAuthMode={changeAuthorizationMode}
-        submitLoading={false}
+        submitLoading={bankState.isLoading}
       />
     </TouchableOpacity>
   );

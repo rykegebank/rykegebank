@@ -5,7 +5,7 @@ const WireTransfer = () => {
     return (
         <>
             <AppBar
-                title={Strings.transfer}
+                title={Strings.wireTransfer}
                 showBackButton={true}
             />
 

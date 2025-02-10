@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import {
     FlatList,
@@ -7,6 +7,7 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
+    RefreshControl,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -24,6 +25,7 @@ import SkeletonLoading from './components/transactionSkeleton';
 const TransactionScreen = () => {
     const state = useSelector((state: RootState) => state.transactionHistory);
     const { control, handleSubmit, setValue, getValues } = useForm();
+
     const {
         filterData,
         loadMore,
@@ -35,11 +37,27 @@ const TransactionScreen = () => {
         initializeTransactions,
     } = useTransactionHistory();
 
+
     // Initialize transaction data
     useEffect(() => {
-        console.log('called')
         initializeTransactions();
     }, []);
+    const prevLength = useRef(state.transactionList.length);
+
+    const handleLoadMore = () => {
+        loadMore();
+    };
+    
+    useEffect(() => {
+        if (!state.isLoading) {
+            prevLength.current = state.transactionList.length; 
+        }
+    }, [state.isLoading]);
+
+
+    const onRefresh = async () => {
+        await filterData(getValues('transactionNo'));  // Refresh data
+    };
 
     const changeTextColor = useCallback((trxType: string) => {
         return trxType === '+' ? Colors.green : Colors.red;
@@ -141,7 +159,7 @@ const TransactionScreen = () => {
 
             {state.isLoading ? (
                 <FlatList
-                    data={Array(3).fill(null)} // Mock data with 3 items
+                    data={Array(3).fill(null)}
                     keyExtractor={(_, index) => index.toString()}
                     renderItem={() => <SkeletonLoading />}
                     contentContainerStyle={styles.container}
@@ -153,13 +171,16 @@ const TransactionScreen = () => {
                 </View>
             ) : (
                 <FlatList
-                    data={state.transactionList}  // Only show actual data, no mock data
+                    data={state.transactionList}
                     renderItem={renderTransactionItem}
                     keyExtractor={(item, index) => index.toString()}
                     contentContainerStyle={styles.container}
                     ItemSeparatorComponent={() => <View style={styles.separator} />}
-                    onEndReached={loadMore}
+                    onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}
+                    refreshControl={
+                        <RefreshControl refreshing={state.transactionList.length == 0} onRefresh={onRefresh} />
+                    }
                 />
             )}
             <TransactionBottomSheet
@@ -170,7 +191,6 @@ const TransactionScreen = () => {
                 onSelect={onSelectBottomSheetItem}
                 onClose={closeBottomSheetAction}
             />
-
         </>
     );
 };

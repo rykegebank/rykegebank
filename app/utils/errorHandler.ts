@@ -17,7 +17,7 @@ export const getErrorMessage = (exception: any): string => {
         if (typeof exception === 'string') {
             return exception;
         }
-
+      
         return message;  // Return the final message
     } catch (e) {
         console.error('Error processing exception:', e);
@@ -26,11 +26,12 @@ export const getErrorMessage = (exception: any): string => {
 };
 
 
-export const manageApiException = async (exception: any) => {
+export const manageApiException = async (exception: any, position: 'top' | 'bottom' = 'bottom') => {
     const errorMessage = getErrorMessage(exception);
-    showError(errorMessage); // Show the error message
+    console.log('manageApiException',errorMessage);
+    showError(errorMessage, position); 
 };
 
-const showError = (message: string) => {
-    toasts.genericErrorToast(message);
+const showError = (message: string, position: 'top' | 'bottom') => {
+    toasts.genericErrorToast(message, position);
 };

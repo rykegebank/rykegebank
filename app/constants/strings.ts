@@ -1,7 +1,7 @@
 import { LanguageModel } from '../types/language';
 
 const Strings = {
-  appName:"MXBank",
+  appName: "MXBank",
   balance: "Balance",
   noInternet: 'No internet connection',
   retry: "Retry",
@@ -34,6 +34,9 @@ const Strings = {
   wireTransfer: "Wire Transfer",
   transferHistory: "Transfer History",
   next: "Next",
+  requestFailed: "Request Failed",
+  invalidAmount: "Invalid Amount",
+  selectAuthModeMsg: "Please select an authorization mode",
 };
 
 export const languages: LanguageModel[] = [

@@ -25,6 +25,7 @@ const CodeVerificationScreen = () => {
   const { forForgotPassword = false } = useRoute().params || {};
 
   const { ev, sv, email, mobile, timer } = useAppSelector((state) => state.user);
+  const otpRefs = Array(6).fill(null);
 
   const navigation = useNavigation();
 
@@ -105,14 +106,27 @@ const CodeVerificationScreen = () => {
             <Controller
               key={index}
               control={control}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <TextInput
+                  ref={(ref) => (otpRefs[index] = ref)}
                   style={styles.otpInput}
                   value={value}
-                  onChangeText={onChange}
+                  onChangeText={(text) => {
+                    if (text.length > 1) return;
+                    onChange(text);
+
+                    if (text && index < 5) {
+                      otpRefs[index + 1]?.focus(); // Move to the next field
+                    }
+                    if (!text && index > 0) {
+                      otpRefs[index - 1]?.focus(); // Move to the previous field on backspace
+                    }
+                  }}
+                  onKeyPress={({ nativeEvent }) => {
+                    if (nativeEvent.key === "Backspace" && !value && index > 0) {
+                      otpRefs[index - 1]?.focus();
+                    }
+                  }}
                   keyboardType="numeric"
                   maxLength={1}
                 />
@@ -129,6 +143,7 @@ const CodeVerificationScreen = () => {
             />
           ))}
         </View>
+
         {errors.otp && (
           <Text style={styles.errorText}>
             Please enter a valid 6-digit OTP.
