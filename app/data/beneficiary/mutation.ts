@@ -31,7 +31,6 @@ export const useBeneficiary = () => {
     // Load Limit Function (Optimized with useCallback)
     const loadLimit = useCallback(() => {
         if (!generalSetting) return;
-
         dispatch(
             setLimits({
                 chargePerTrx: beneficiaryData?.data?.transfer_charge ?? "",
@@ -44,7 +43,6 @@ export const useBeneficiary = () => {
 
     const { mutateAsync } = useMutation({
         mutationFn: async ({ page, isReset = false }: { page: number; isReset?: boolean }) => {
-            dispatch(setLoading(true));
             const url = `${URLS.myBankBeneficiaryUrl}?page=${page}`;
             const { data } = await api.get<IBankBeneficiaryResponseModel>(url);
             return data;
@@ -54,7 +52,6 @@ export const useBeneficiary = () => {
             manageApiException(error);
         },
         onSuccess: async (data, { page, isReset }) => {
-            dispatch(setLoading(false));
 
             if (data.status?.toLowerCase() !== "success") {
                 manageApiException(data.message);
@@ -66,18 +63,13 @@ export const useBeneficiary = () => {
             const tempBeneficiaryList = beneficiaries?.data || [];
 
             // Update Pagination & Data
-            dispatch(setNextPageUrl(beneficiaries?.next_page_url || ""));
-            dispatch(setBeneficiaryData(data));
+
             const authList = await getAuthorizationList();
             console.log('onSuccess')
-            if (authList.length > 0) {
-                dispatch(setAuthorizationList(authList));
-                dispatch(setSelectedAuthorization(authList[0]));
-            }
+
 
             if (page == 1) {
                 dispatch(setData(tempBeneficiaryList));
-
                 // Set initial values
                 const currency = getCurrencyOrUsername({ isCurrency: true });
                 const currencySymbol = getCurrencyOrUsername({ isCurrency: true, isSymbol: true });
@@ -91,14 +83,31 @@ export const useBeneficiary = () => {
             if (isReset) {
                 dispatch(batchUpdate({ page: 1 }));
             }
-
+            if (authList.length > 0) {
+                dispatch(setAuthorizationList(authList));
+                dispatch(setSelectedAuthorization(authList[0]));
+            }
+            dispatch(setLoading(false));
+            dispatch(setNextPageUrl(beneficiaries?.next_page_url || ""));
+            dispatch(setBeneficiaryData(data));
         },
         retry: 0,
     });
 
     const loadMoreBeneficiary = async () => {
-        return await mutateAsync({ page });
+        console.log('wtf')
+        dispatch(setLoading(true));
+        await mutateAsync({ page });
     };
 
-    return { loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData };
+    const reloadBeneficiary = async () => {
+        dispatch(setLoading(true));
+        await mutateAsync({ page: 1 });
+    };
+
+    const hasNext = () => nextPageUrl !== "" && nextPageUrl !== "null";
+
+
+
+    return { hasNext,loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData, reloadBeneficiary };
 };

@@ -1,49 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import {
     View,
-    Text,
     SafeAreaView,
     FlatList,
     TouchableOpacity,
-    ActivityIndicator,
     StyleSheet,
+    RefreshControl,
 } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 import MyBankTransferListItem from './components/myBankTransferListItem';
 import { Colors, Dimensions, Strings } from '../../constants';
 import AppBar from '../../components/GenericAppBar';
 import { useMyBankTransfer } from './hooks/useMyBankTransfer';
 import { useBeneficiary } from '../../data/beneficiary/mutation';
-import { IData } from '../../types/beneficiary';
 import NoDataFoundScreen from '../../components/NoDataFound/NoDataFound';
 import TransactionSkeleton from "../../components/LoadingIndicators/transactionSkeleton";
 
 const MyBankTransferScreen = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const beneficiaryState = useSelector((state: RootState) => state.beneficiary);
 
-    const {
-        loadPaginationData,
-        hasNext,
-    } = useMyBankTransfer();
-
-    const { loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData } = useBeneficiary();
-
+    const { hasNext, beneficiaryList, loadMoreBeneficiary, reloadBeneficiary } = useBeneficiary();
 
     useEffect(() => {
-        loadPaginationData();
+        console.log("useEffect")
+        loadMoreBeneficiary();
     }, []);
 
 
+    const onRefresh = async () => {
+        console.log("onRefresh")
+        await reloadBeneficiary();
+    };
 
-    const renderItem = ({ item, index }: { item: IData, index: number }) => (
-        <MyBankTransferListItem
-            accountName={item.account_name ?? ''}
-            accountNumber={item.account_number ?? ''}
-            shortName={item.short_name ?? ''}
-            index={index}
-            beneficiaryID={item?.id?.toString() ?? ''}
-        />
+    const renderItem = useCallback(
+        ({ item, index }: { item: any; index: number }) => {
+            if (index === beneficiaryList.length - 1 && !beneficiaryState.isLoading && beneficiaryState.nextPageUrl) {
+                return <TransactionSkeleton />;
+            }
+            return (
+                <MyBankTransferListItem
+                    accountName={item.account_name ?? ''}
+                    accountNumber={item.account_number ?? ''}
+                    shortName={item.short_name ?? ''}
+                    index={index}
+                    beneficiaryID={item?.id?.toString() ?? ''}
+                />
+            );
+        },
+        []
     );
 
     return (
@@ -55,15 +62,11 @@ const MyBankTransferScreen = () => {
                 backgroundColor={Colors.primaryColor}
                 actions={[
                     <TouchableOpacity key="toggle" onPress={() => console.log('')} style={styles.iconContainer}>
-                        <MaterialIcons
-                            name={'add'}
-                            size={15}
-                            color={Colors.primaryColor}
-                        />
+                        <MaterialIcons name={'add'} size={15} color={Colors.primaryColor} />
                     </TouchableOpacity>,
                 ]}
             />
-            {true && beneficiaryList.length == 0 ? (
+            {beneficiaryState.isLoading ? (
                 <FlatList
                     data={Array(3).fill(null)} // Mock data with 3 items
                     keyExtractor={(_, index) => index.toString()}
@@ -81,13 +84,16 @@ const MyBankTransferScreen = () => {
                     keyExtractor={(item, index) => index.toString()}
                     contentContainerStyle={{ padding: 20 }}
                     renderItem={renderItem}
-                    onEndReached={loadPaginationData}
+                    onEndReached={() => {
+                        if (hasNext() && !beneficiaryState.isLoading) {
+                            console.log('loadPaginationData')
+                            loadMoreBeneficiary();
+                        }
+                    }}
                     onEndReachedThreshold={0.5}
-                    ListFooterComponent={isLoading && hasNext() ? <ActivityIndicator size="small" color="#007BFF" /> : null}
+                    refreshControl={<RefreshControl refreshing={beneficiaryState.isLoading} onRefresh={onRefresh} />}
                 />
             )}
-
-
         </SafeAreaView>
     );
 };

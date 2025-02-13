@@ -16,7 +16,6 @@ export const useMyBankTransfer = () => {
     const { selectedAuthorizationMode, authorizationList } = useAppSelector((state) => state.myBankTransfer);
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { loadMoreBeneficiary, nextPageUrl } = useBeneficiary();
 
     const changeAuthorizationMode = (value?: string) => {
         if (value) {
@@ -24,11 +23,8 @@ export const useMyBankTransfer = () => {
         }
     };
 
-    const loadPaginationData = async () => {
-        await loadMoreBeneficiary();
-    };
 
-    const hasNext = () => nextPageUrl !== "" && nextPageUrl !== "null";
+
 
     const handleToggleLimitShow = () => {
         dispatch(toggleLimitShow());
@@ -85,8 +81,6 @@ export const useMyBankTransfer = () => {
 
     return {
         changeAuthorizationMode,
-        loadPaginationData,
-        hasNext,
         handleToggleLimitShow,
         transferMoney,
     };

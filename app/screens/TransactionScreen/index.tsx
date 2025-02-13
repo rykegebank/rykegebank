@@ -179,7 +179,7 @@ const TransactionScreen = () => {
                     onEndReached={handleLoadMore}
                     onEndReachedThreshold={0.5}
                     refreshControl={
-                        <RefreshControl refreshing={state.transactionList.length == 0} onRefresh={onRefresh} />
+                        <RefreshControl refreshing={state.isLoading} onRefresh={onRefresh} />
                     }
                 />
             )}
