@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { WireTransferResponseModel, FormModel } from '../../types/wireTransfer';
+import { DocumentPickerResponse } from 'react-native-document-picker';
 
 interface WireTransferState {
     isLoading: boolean;
@@ -103,9 +104,10 @@ const wireTransferSlice = createSlice({
             }
             state.formList[listIndex].cbSelected = selectedValue;
         },
-        changeSelectedFile: (state, action: PayloadAction<{ index: number; file: File }>) => {
-            state.formList[action.payload.index].file = action.payload.file;
+        changeSelectedFile: (state, action: PayloadAction<{ index: number; fileName: string }>) => {
+            state.formList[action.payload.index].selectedValue = action.payload.fileName;
         },
+
     },
 });
 
