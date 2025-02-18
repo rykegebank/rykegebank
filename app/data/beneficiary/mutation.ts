@@ -96,7 +96,6 @@ export const useBeneficiary = () => {
     });
 
     const loadMoreBeneficiary = async () => {
-        console.log('wtf')
         dispatch(setLoading(true));
         await mutateAsync({ page });
     };

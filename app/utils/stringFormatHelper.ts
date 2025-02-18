@@ -9,3 +9,10 @@ export const formatNumber = (value: string, precision: number = 2): string => {
         return value;
     }
 };
+
+export const showPercent = (curSymbol: string, s?: string): string => {
+    const value = parseFloat(s || "0"); 
+    return value > 0 ? ` + ${curSymbol}${value}` : "";
+};
+
+

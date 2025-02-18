@@ -1,6 +1,7 @@
 import { ColorValue } from 'react-native';
 
 const Colors = {
+    lScreenBgColor1:'#f5f6fa',
     primaryColor: '#14233c',
     green: '#2ECC06',
     secondaryColor: '#FFFFFF',

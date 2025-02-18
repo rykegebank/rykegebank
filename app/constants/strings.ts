@@ -37,6 +37,25 @@ const Strings = {
   requestFailed: "Request Failed",
   invalidAmount: "Invalid Amount",
   selectAuthModeMsg: "Please select an authorization mode",
+  charge: "Charge",
+  transferLimit: "Transfer Limit",
+  perTransaction: "Per Transaction",
+  dailyMaximum: "Daily Maximum",
+  dailyMax: "Daily Maximum",
+  monthlyMaximum: "Monthly Maximum",
+  monthlyMax: "Monthly Maximum",
+  dailyAvailable: "Daily Available",
+  availableBalance: "Available Balance",
+  dailyMaxTrx: "Daily Maximum TRX",
+  monthlyMinTrx: "Monthly Maximum TRX",
+
+  amount: "Amount",
+  enterAmount: "Enter Amount",
+  authorizationMethod: "Authorization Method",
+  chooseFile: "Choose File",
+  submit: "Submit",
+
+
 };
 
 export const languages: LanguageModel[] = [

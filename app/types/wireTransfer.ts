@@ -6,8 +6,8 @@ export interface WireTransferResponseModel {
 }
 
 export interface Message {
-    success?: string[]; 
-    error?: string[];    
+    success?: string[];
+    error?: string[];
 }
 
 export interface Data {
@@ -18,38 +18,70 @@ export interface Data {
 export interface Form {
     id?: number;
     act?: string;
-    formData?: FormData;
-    createdAt?: string;
-    updatedAt?: string;
+    form_data?: FormData;
+    created_at?: string;
+    updated_at?: string;
 }
 
 export interface FormData {
-    list?: FormModel[];
+    account_name?: FormModel;
+    account_number?: FormModel;
+    list?: FormModel[];  // Added list field
 }
 
 export interface FormModel {
     name?: string;
     label?: string;
-    isRequired?: string;
-    extensions?: string;
+    is_required?: string;
+    extensions?: string | null;
     options?: string[];
     type?: string;
-    selectedValue?: any;
-    file?: File | string; // Ensure file can be File or string
-    cbSelected?: string[];
+    selected_value?: any;
+    file?: File | string;
+    cb_selected?: string[];
 }
 
 export interface Setting {
     id?: number;
-    minimumLimit?: string;
-    maximumLimit?: string;
-    dailyMaximumLimit?: string;
-    monthlyMaximumLimit?: string;
-    dailyTotalTransaction?: string;
-    monthlyTotalTransaction?: string;
-    fixedCharge?: string;
-    percentCharge?: string;
-    instruction?: string;
-    createdAt?: string;
-    updatedAt?: string;
+    minimum_limit?: string;
+    maximum_limit?: string;
+    daily_maximum_limit?: string;
+    monthly_maximum_limit?: string;
+    daily_total_transaction?: string;
+    monthly_total_transaction?: string;
+    fixed_charge?: string;
+    percent_charge?: string;
+    instruction?: string | null;
+    created_at?: string;
+    updated_at?: string;
 }
+
+// Function to parse response data and populate `list` like Flutter
+export function parseFormData(formData: any): FormData {
+    const parsedFormData: FormData = { list: [] };
+
+    if (formData) {
+        // If formData is an object (not an array)
+        if (typeof formData === 'object') {
+            Object.keys(formData).forEach((key) => {
+                const e = formData[key];  // Access each field in the form_data
+
+                const formModel: FormModel = {
+                    name: e.name,
+                    label: e.label,
+                    is_required: e.is_required,
+                    extensions: e.extensions,
+                    options: e.options || [],
+                    type: e.type,
+                    selected_value: e.selected_value,
+                    cb_selected: e.cb_selected,
+                };
+
+                parsedFormData.list?.push(formModel);
+            });
+        }
+    }
+
+    return parsedFormData;
+}
+
