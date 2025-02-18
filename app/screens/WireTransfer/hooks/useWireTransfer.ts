@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import DocumentPicker from 'expo-document-picker';
+import DocumentPicker,{ DocumentPickerResponse } from 'react-native-document-picker';
 
 import { AuthorizationResponseModel } from '../../../types/authorization';
 import {
@@ -55,16 +55,22 @@ export const useWireTransfer = () => {
 
     const pickFile = async (index: number) => {
         try {
-            const result = await DocumentPicker.getDocumentAsync({
-                type: ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            const result: DocumentPickerResponse = await DocumentPicker.pickSingle({
+                type: [DocumentPicker.types.images, DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx],
             });
-            if (result.type === 'success') {
-                dispatch(changeSelectedFile({ index, file: result.file }));
+    
+            if (result) {
+                dispatch(changeSelectedFile({ index, fileName: result.name }));
             }
         } catch (error) {
-            // showErrorSnackbar(['File selection failed']);
+            if (DocumentPicker.isCancel(error)) {
+                console.log("User canceled file picker");
+            } else {
+                console.error("File selection failed", error);
+            }
         }
     };
+    
 
     const changeSelectedValueHandler = (index: number, value: string) => {
         dispatch(changeSelectedValue({ index, value }));
@@ -78,7 +84,7 @@ export const useWireTransfer = () => {
         dispatch(changeSelectedCheckBoxValue({ listIndex, value }));
     };
 
-    const changeSelectedFileHandler = (index: number, file: File) => {
+    const changeSelectedFileHandler = (index: number, file: DocumentPickerResponse) => {
         dispatch(changeSelectedFile({ index, file }));
     };
 
