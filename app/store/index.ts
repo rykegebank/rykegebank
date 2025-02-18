@@ -7,6 +7,7 @@ import languageSlice from "./slices/languageSlice";
 import beneficiarySlice from "./slices/beneficiarySlice";
 import myBankTransferSlice from "./slices/myBankTransferSlice";
 import otpSlice from "./slices/otpSlice";
+import wireTransferSlice from "./slices/wireTransferSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,7 +17,8 @@ export const store = configureStore({
     language: languageSlice,
     beneficiary: beneficiarySlice,
     myBankTransfer: myBankTransferSlice,
-    otp: otpSlice
+    otp: otpSlice,
+    wireTransfer:wireTransferSlice,
   },
 });
 

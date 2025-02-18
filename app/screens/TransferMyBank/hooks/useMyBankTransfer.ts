@@ -1,11 +1,9 @@
 import { useDispatch } from "react-redux";
-import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useMutation } from '@tanstack/react-query';
 
 import { useAppSelector } from "../../../store";
 import { setSelectedAuthorization, toggleLimitShow, setLoading } from "../../../store/slices/myBankTransferSlice";
-import { useBeneficiary } from "../../../data/beneficiary/mutation";
 import { manageApiException } from '../../../utils/errorHandler';
 import { Strings, Routes } from '../../../constants'
 import { AuthorizationResponseModel } from '../../../types/authorization';
