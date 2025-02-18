@@ -28,6 +28,7 @@ type RoutesType = {
   wireTransfer: string
   transferHistory: string
   otp: string
+  tranferOtherBank: string
 };
 
 const Routes: RoutesType = {
@@ -60,6 +61,7 @@ const Routes: RoutesType = {
   transferMyBank: 'transferMyBank',
   wireTransfer: 'wireTransfer',
   otp: 'otp',
+  tranferOtherBank: 'transferOtherBank'
 };
 
 export default Routes;

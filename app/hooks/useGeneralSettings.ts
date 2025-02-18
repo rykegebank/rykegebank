@@ -45,7 +45,7 @@ export const useGeneralSettings = () => {
 
     // Generate Authorization List from API data
     // Assuming you modify getAuthorizationList to be async if needed
-    const getAuthorizationList = async (): Promise<string[]> => {
+    const getAuthorizationList = (): string[] => {
         if (!generalSetting) return [];
 
         const modules = generalSetting.modules || {};

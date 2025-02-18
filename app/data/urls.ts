@@ -26,7 +26,9 @@ type URLSType = {
   myBankBeneficiaryUrl: string
   submitOtpUrl: string
   resendOtpUrl: string
-  myBankTransferUrl: string
+  myBankTransferUrl: string,
+  otherBeneficiaryUrl: string,
+  otherBankTransfer: string
 };
 
 export const URLS: URLSType = {
@@ -57,5 +59,7 @@ export const URLS: URLSType = {
   myBankBeneficiaryUrl: '/beneficiary/own',
   submitOtpUrl: 'check/otp/',
   resendOtpUrl: 'resend/otp/',
-  myBankTransferUrl: 'own/transfer/request/'
+  myBankTransferUrl: 'own/transfer/request/',
+  otherBeneficiaryUrl: '/beneficiary/other',
+  otherBankTransfer: '/other/transfer/request/',
 };

@@ -33,6 +33,7 @@ import TransferMyBank from "../screens/TransferMyBank";
 import TransferHistory from "../screens/TransferHistory";
 import WireTransfer from "../screens/WireTransfer";
 import OtpScreen from "../screens/OtpScreen";
+import TranferOtherBank from "../screens/TransferOtherBank";
 
 const Stack = createNativeStackNavigator();
 
@@ -116,8 +117,15 @@ const RootStack = () => {
         />
         <Stack.Screen name={Routes.transferMyBank} component={TransferMyBank} />
         <Stack.Screen name={Routes.wireTransfer} component={WireTransfer} />
-        <Stack.Screen name={Routes.transferHistory} component={TransferHistory} />
+        <Stack.Screen
+          name={Routes.transferHistory}
+          component={TransferHistory}
+        />
         <Stack.Screen name={Routes.otp} component={OtpScreen} />
+        <Stack.Screen
+          name={Routes.tranferOtherBank}
+          component={TranferOtherBank}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

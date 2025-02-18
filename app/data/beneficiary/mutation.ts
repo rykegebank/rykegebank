@@ -63,8 +63,9 @@ export const useBeneficiary = () => {
             const tempBeneficiaryList = beneficiaries?.data || [];
 
             // Update Pagination & Data
-
-            const authList = await getAuthorizationList();
+            dispatch(setNextPageUrl(beneficiaries?.next_page_url || ""));
+            dispatch(setBeneficiaryData(data));
+            const authList =  getAuthorizationList();
             console.log('onSuccess')
 
 
@@ -111,3 +112,4 @@ export const useBeneficiary = () => {
 
     return { hasNext,loadMoreBeneficiary, beneficiaryList, nextPageUrl, beneficiaryData, reloadBeneficiary };
 };
+
