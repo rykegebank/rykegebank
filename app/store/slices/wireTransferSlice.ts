@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { WireTransferResponseModel, FormModel } from '../../types/wireTransfer';
-import { DocumentPickerResponse } from 'react-native-document-picker';
+import { WireTransferResponseModel, FormModel, Setting } from '../../types/wireTransfer';
 
 interface WireTransferState {
     isLoading: boolean;
@@ -10,6 +9,7 @@ interface WireTransferState {
     currency: string;
     currencySymbol: string;
     errors: string[];
+    setting?: Setting
 }
 
 const initialState: WireTransferState = {
@@ -20,6 +20,7 @@ const initialState: WireTransferState = {
     currency: '',
     currencySymbol: '',
     errors: [],
+    setting: undefined
 };
 
 const wireTransferSlice = createSlice({
@@ -41,8 +42,15 @@ const wireTransferSlice = createSlice({
         },
         loadData: (state, action: PayloadAction<WireTransferResponseModel>) => {
             const model = action.payload;
-            state.formList = model.data?.form?.formData?.list?.map((element) => {
-                if (element.type == 'select' && element.options && element.options.length > 0) {
+            console.log('Data Model:',  model);
+
+            // Ensure formList is populated correctly
+            const formList = model.data?.form?.form_data?.list || [];
+            console.log('Extracted formList:', formList);
+
+            // Handle formList mapping if it's not empty
+            state.formList = formList.map((element) => {
+                if (element.type === 'select' && element.options && element.options.length > 0) {
                     return {
                         ...element,
                         options: ['Select One', ...element.options],
@@ -50,11 +58,14 @@ const wireTransferSlice = createSlice({
                     };
                 }
                 return element;
-            }) || [];
+            });
+
+            console.log('Updated formList:', state.formList);
         },
+
         hasError: (state) => {
             const errors = state.formList.reduce<string[]>((errors, element) => {
-                if (element.isRequired == 'required' && (!element.selectedValue || element.selectedValue == 'Select One')) {
+                if (element.is_required == 'required' && (!element.selected_value || element.selected_value == 'Select One')) {
                     errors.push(`${element.name} is required`);
                 }
                 return errors;
@@ -67,7 +78,7 @@ const wireTransferSlice = createSlice({
                 throw new Error('Invalid amount');
             }
             const errors = state.formList.reduce<string[]>((errors, element) => {
-                if (element.isRequired === 'required' && (!element.selectedValue || element.selectedValue === 'Select One')) {
+                if (element.is_required === 'required' && (!element.selected_value || element.selected_value === 'Select One')) {
                     errors.push(`${element.name} is required`);
                 }
                 return errors;
@@ -82,30 +93,39 @@ const wireTransferSlice = createSlice({
         },
         // New actions for updating form state
         changeSelectedValue: (state, action: PayloadAction<{ index: number; value: string }>) => {
-            state.formList[action.payload.index].selectedValue = action.payload.value;
+            state.formList[action.payload.index].selected_value = action.payload.value;
         },
         changeSelectedRadioBtnValue: (state, action: PayloadAction<{ listIndex: number; selectedIndex: number }>) => {
             const selectedValue = state.formList[action.payload.listIndex].options?.[action.payload.selectedIndex];
-            state.formList[action.payload.listIndex].selectedValue = selectedValue || '';
+            state.formList[action.payload.listIndex].selected_value = selectedValue || '';
         },
-        changeSelectedCheckBoxValue: (state, action: PayloadAction<{ listIndex: number; value: string }>) => {
+        changeSelectedCheckBoxValue: (
+            state,
+            action: PayloadAction<{ listIndex: number; value: string }>
+        ) => {
             const { listIndex, value } = action.payload;
-            const [index, status] = value.split('_');
-            const selectedValue = state.formList[listIndex].cbSelected || [];
-            const selectedOption = state.formList[listIndex].options?.[parseInt(index)];
+            const [indexStr, statusStr] = value.split("_");
+            const index = parseInt(indexStr, 10);
+            const status = statusStr === "true";
 
-            if (status === 'true' && !selectedValue.includes(selectedOption)) {
-                selectedValue.push(selectedOption || '');
-            } else if (status === 'false') {
-                const valueIndex = selectedValue.indexOf(selectedOption || '');
-                if (valueIndex !== -1) {
-                    selectedValue.splice(valueIndex, 1);
+            let selectedValue = state.formList[listIndex].cb_selected || [];
+            const optionValue = state.formList[listIndex].options?.[index] || "";
+
+            if (status) {
+                if (!selectedValue.includes(optionValue)) {
+                    selectedValue = [...selectedValue, optionValue];
+                    state.formList[listIndex].cb_selected = selectedValue;
+                }
+            } else {
+                if (selectedValue.includes(optionValue)) {
+                    selectedValue = selectedValue.filter((item) => item !== optionValue);
+                    state.formList[listIndex].cb_selected = selectedValue;
                 }
             }
-            state.formList[listIndex].cbSelected = selectedValue;
         },
+
         changeSelectedFile: (state, action: PayloadAction<{ index: number; fileName: string }>) => {
-            state.formList[action.payload.index].selectedValue = action.payload.fileName;
+            state.formList[action.payload.index].selected_value = action.payload.fileName;
         },
 
     },

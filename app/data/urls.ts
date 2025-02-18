@@ -29,6 +29,8 @@ type URLSType = {
   myBankTransferUrl: string,
   otherBeneficiaryUrl: string,
   otherBankTransfer: string
+  wireTransferFormUrl:string
+  wireTransferRequestUrl:string
 };
 
 export const URLS: URLSType = {
@@ -62,4 +64,6 @@ export const URLS: URLSType = {
   myBankTransferUrl: 'own/transfer/request/',
   otherBeneficiaryUrl: '/beneficiary/other',
   otherBankTransfer: '/other/transfer/request/',
+  wireTransferFormUrl:'wire-transfer',
+  wireTransferRequestUrl:'wire-transfer/request',
 };
