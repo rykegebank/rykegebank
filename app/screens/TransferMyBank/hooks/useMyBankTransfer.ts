@@ -22,8 +22,6 @@ export const useMyBankTransfer = () => {
     };
 
 
-
-
     const handleToggleLimitShow = () => {
         dispatch(toggleLimitShow());
     };

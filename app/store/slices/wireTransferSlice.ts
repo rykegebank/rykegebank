@@ -42,11 +42,9 @@ const wireTransferSlice = createSlice({
         },
         loadData: (state, action: PayloadAction<WireTransferResponseModel>) => {
             const model = action.payload;
-            console.log('Data Model:',  model);
-
+            state.setting = model.data?.setting;
             // Ensure formList is populated correctly
             const formList = model.data?.form?.form_data?.list || [];
-            console.log('Extracted formList:', formList);
 
             // Handle formList mapping if it's not empty
             state.formList = formList.map((element) => {
@@ -60,7 +58,6 @@ const wireTransferSlice = createSlice({
                 return element;
             });
 
-            console.log('Updated formList:', state.formList);
         },
 
         hasError: (state) => {
@@ -71,22 +68,6 @@ const wireTransferSlice = createSlice({
                 return errors;
             }, []);
             state.errors = errors; // Set the errors in the state
-        },
-        submitWireTransferRequest: (state, action: PayloadAction<{ amount: string; twoFactorCode: string }>) => {
-            const { amount, twoFactorCode } = action.payload;
-            if (!amount) {
-                throw new Error('Invalid amount');
-            }
-            const errors = state.formList.reduce<string[]>((errors, element) => {
-                if (element.is_required === 'required' && (!element.selected_value || element.selected_value === 'Select One')) {
-                    errors.push(`${element.name} is required`);
-                }
-                return errors;
-            }, []);
-            if (errors.length > 0) {
-                throw new Error(errors.join(', '));
-            }
-            state.isLoading = true;
         },
         setLimits: (state, action: PayloadAction<Partial<WireTransferState>>) => {
             Object.assign(state, action.payload); // Merge the new state values into the existing state
@@ -138,7 +119,6 @@ export const {
     setCurrency,
     loadData,
     hasError,
-    submitWireTransferRequest,
     setLimits,
     changeSelectedValue,
     changeSelectedRadioBtnValue,
