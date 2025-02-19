@@ -60,7 +60,8 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
         <View style={styles.container}>
             {needLabel && (
                 <Text style={styles.label}>
-                    {labelText} {isRequired && "*"}
+                    {labelText}{" "}
+                    {isRequired && <Text style={[styles.label, { color: Colors.redCancelTextColor }]}>*</Text>}
                 </Text>
             )}
             <View style={[styles.inputContainer, needOutlineBorder && styles.outlineBorder]}>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     },
     outlineBorder: {
         borderWidth: 1,
-        borderRadius: Dimensions.space25,
+        borderRadius: Dimensions.space10,
     },
     prefixText: {
         marginRight: 10,

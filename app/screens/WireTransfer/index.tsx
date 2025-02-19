@@ -7,27 +7,34 @@ import LoadingIndicator from "../../components/LoadingIndicators/loadingIndicato
 import NoInternet from "../../components/NoDataFound/noInternet";
 import WireTransferForm from "./components/wireTransferForm";
 import { useWireTransfer } from './hooks/useWireTransfer';
+import { setOffline } from '../../store/slices/internetSlice';
+import { RootState, AppDispatch } from "../../store"
 
 const WireTransferScreen = () => {
-    const { isLoading, noInternet } = useSelector((state: any) => state.wireTransfer);
+    const { isLoading } = useSelector((state: any) => state.wireTransfer);
+    const { isOffline } = useSelector((state: any) => state.internet);
     const { initializeData } = useWireTransfer();
-    
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
         initializeData();
     }, []);
 
 
-    const handleRetry = () => {
-        // dispatch(setNoInternetStatus(false));
-    };
 
     return (
         <SafeAreaView style={styles.container}>
+
             <AppBar title={Strings.wireTransfer} />
-            {isLoading ? (
-                <LoadingIndicator isLoading={isLoading} />
-            ) : noInternet ? (
-                <NoInternet isNoInternet={true} press={handleRetry} />
+            {isOffline ? (
+                <NoInternet
+                    isNoInternet={true}
+                    press={(value) => {
+                        if (value) {
+                            dispatch(setOffline(false));
+                        }
+                    }}
+                />
             ) : (
                 <ScrollView contentContainerStyle={styles.scrollView}>
                     <View style={styles.body}>
@@ -35,6 +42,8 @@ const WireTransferScreen = () => {
                     </View>
                 </ScrollView>
             )}
+            <LoadingIndicator isLoading={isLoading} />
+
         </SafeAreaView>
     );
 };
@@ -48,6 +57,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: Dimensions.space17,
     },
     body: {
+        marginTop: Dimensions.space17,
         padding: Dimensions.space17,
         backgroundColor: Colors.colorWhite,
         borderRadius: 3,

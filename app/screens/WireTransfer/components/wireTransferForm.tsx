@@ -20,9 +20,15 @@ const WireTransferForm: React.FC = () => {
         changeSelectedValue,
         changeSelectedRadioBtnValue,
         changeSelectedCheckBoxValue,
+        changeAuthorizationMode
     } = useWireTransfer();
 
     const [isModalVisible, setModalVisible] = useState(false);
+    const [amountValue, setAmountValue] = useState('0');
+
+    const handleAmountChange = (text: string) => {
+        setAmountValue(text);
+    };
 
     return (
         <ScrollView style={{ padding: 16 }}>
@@ -33,7 +39,7 @@ const WireTransferForm: React.FC = () => {
                 isRequired
                 needOutlineBorder
                 needLabel
-            // onChange={(value) => changeSelectedValue(0, value)} 
+                onChange={handleAmountChange}
             />
 
             <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -47,7 +53,7 @@ const WireTransferForm: React.FC = () => {
                     <DropDownButtonWithTextField
                         list={state.authorizationList}
                         selectedValue={state.selectedAuthorizationMode}
-                    // onValueChange={(value) => changeSelectedValue(1, value)}
+                        onChanged={(value) => changeAuthorizationMode(value)}
                     />
                 </>
             )}
@@ -133,7 +139,7 @@ const WireTransferForm: React.FC = () => {
                     <RoundedLoadingBtn width={0.5} />
                 ) : (
                     <GenericButton
-                        onPress={() => submitMutation.mutate({ amount: "100", twoFactorCode: "1234" })}
+                        onPress={() => submitMutation.mutate({ amount: amountValue, twoFactorCode: '' })}
                         title={Strings.submit}
                     />
                 )}
