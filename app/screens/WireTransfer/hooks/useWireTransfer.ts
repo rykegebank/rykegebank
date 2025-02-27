@@ -14,6 +14,7 @@ import {
     setCurrency,
     loadData,
     hasError,
+    clearErrors,
     setLimits,
     changeSelectedValue,
     changeSelectedRadioBtnValue,
@@ -148,7 +149,7 @@ export const useWireTransfer = () => {
                         type: value.type,
                     } as any);
                 });
-
+                console.log('formData', formData)
                 const { data } = await api.post<AuthorizationResponseModel>(`${URLS.wireTransferRequestUrl}`, formData, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
@@ -171,13 +172,17 @@ export const useWireTransfer = () => {
                     navigation.navigate(Routes.transferHistory);
                 }
             } else {
+                dispatch(clearErrors());
                 manageApiException(data.message?.error ?? Strings.requestFailed, "top");
             }
         },
         onError: (error: any) => {
+            console.log('error',error)
             dispatch(setLoading(false));
+            dispatch(clearErrors());
             manageApiException(error?.message ?? Strings.requestFailed, "top");
         },
+        retry: 0,
     });
 
 
