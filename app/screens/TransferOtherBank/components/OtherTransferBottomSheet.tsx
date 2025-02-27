@@ -173,7 +173,7 @@ const OtherTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                     Authorization Method <Text style={{ color: "red" }}>*</Text>
                   </Text>
                   <Dropdown
-                    label="Select"
+                    label="Authorization Method"
                     options={authorizationList}
                     selectedValue={selectedAuthorizationMode}
                     onSelect={(newValue: string) => {

@@ -69,6 +69,9 @@ const wireTransferSlice = createSlice({
             }, []);
             state.errors = errors; // Set the errors in the state
         },
+        clearErrors: (state) => {
+            state.errors = [];
+        },
         setLimits: (state, action: PayloadAction<Partial<WireTransferState>>) => {
             Object.assign(state, action.payload); // Merge the new state values into the existing state
         },
@@ -119,6 +122,7 @@ export const {
     setCurrency,
     loadData,
     hasError,
+    clearErrors,
     setLimits,
     changeSelectedValue,
     changeSelectedRadioBtnValue,

@@ -37,7 +37,7 @@ const Dropdown = ({
   return (
     <View style={[styles.container, style]}>
       <GenericInput
-        label="Select a country"
+        label={label}
         mode="outlined"
         onPress={() => {
           actionSheetRef.current?.show();
