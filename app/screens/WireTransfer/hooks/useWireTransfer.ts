@@ -177,7 +177,7 @@ export const useWireTransfer = () => {
             }
         },
         onError: (error: any) => {
-            console.log('error',error)
+            console.log('error', error)
             dispatch(setLoading(false));
             dispatch(clearErrors());
             manageApiException(error?.message ?? Strings.requestFailed, "top");

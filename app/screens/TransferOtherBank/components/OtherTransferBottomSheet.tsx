@@ -182,11 +182,6 @@ const OtherTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                     style={{ marginBottom: 16 }}
                     error={""}
                   />
-                  {/* <CustomDropDownTextField
-                    selectedValue={selectedAuthorizationMode}
-                    list={authorizationList}
-                    onChanged={(value) => onSelectAuthMode(value)}
-                  /> */}
                 </View>
               )}
 

@@ -12,6 +12,7 @@ import ExpandedSection from '../../../components/Animated/expandedSection';
 import BottomSheetContainer from '../../../components/CustomContainer/bottomSheetContainer';
 import BottomSheetTopRow from '../../../components/RowItem/bottomSheetTopRow';
 import { Colors, Dimensions } from '../../../constants';
+import Dropdown from "../../../components/GenericInput/genericDropdown";
 
 const SCREEN_HEIGHT = Dimensions.windowHeight;
 const SHEET_HEIGHT = SCREEN_HEIGHT / 2.1;
@@ -139,19 +140,24 @@ const MyBankTransferBottomSheet: React.FC<MyBankTransferBottomSheetProps> = ({
                             {authorizationList.length > 1 && (
                                 <View style={styles.authorizationContainer}>
                                     <Text style={styles.authorizationLabel}>
-                                        Authorization Method <Text style={{ color: 'red' }}>*</Text>
+                                        Authorization Method <Text style={{ color: "red" }}>*</Text>
                                     </Text>
-                                    <CustomDropDownTextField
+                                    <Dropdown
+                                        label="Authorization Method"
+                                        options={authorizationList}
                                         selectedValue={selectedAuthorizationMode}
-                                        list={authorizationList}
-                                        onChanged={(value) => onSelectAuthMode(value)}
+                                        onSelect={(newValue: string) => {
+                                            onSelectAuthMode(newValue);
+                                        }}
+                                        style={{ marginBottom: 16 }}
+                                        error={""}
                                     />
                                 </View>
                             )}
 
                             <View style={styles.buttonContainer}>
                                 {submitLoading ? (
-                                    <RoundedLoadingBtn width={.5}/>
+                                    <RoundedLoadingBtn width={.5} />
                                 ) : (
                                     <RoundedButton onPress={() => {
                                         console.log('Amount on button click:', amountValue);
