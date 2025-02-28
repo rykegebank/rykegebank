@@ -11,6 +11,7 @@ import RoundedLoadingBtn from "../../../components/GenericButton/roundedLoadingB
 import FormRow from "../../../components/RowItem/formRow";
 import { Strings, Colors } from "../../../constants";
 import WireTransferLimitModal from "../components/wireTransferLimit";
+import Dropdown from "../../../components/GenericInput/genericDropdown";
 
 const WireTransferForm: React.FC = () => {
     const {
@@ -50,10 +51,15 @@ const WireTransferForm: React.FC = () => {
             {state.authorizationList.length > 1 && (
                 <>
                     <FormRow label={Strings.authorizationMethod} isRequired={true} />
-                    <DropDownButtonWithTextField
-                        list={state.authorizationList}
+                    <Dropdown
+                        label="Authorization Method"
+                        options={state.authorizationList}
                         selectedValue={state.selectedAuthorizationMode}
-                        onChanged={(value) => changeAuthorizationMode(value)}
+                        onSelect={(newValue: string) => {
+                            changeAuthorizationMode(newValue)
+                        }}
+                        style={{ marginBottom: 16 }}
+                        error={""}
                     />
                 </>
             )}
