@@ -37,7 +37,6 @@ const Dropdown = ({
   return (
     <View style={[styles.container, style]}>
       <GenericInput
-        label="Select a country"
         mode="outlined"
         onPress={() => {
           actionSheetRef.current?.show();
@@ -60,7 +59,7 @@ const Dropdown = ({
         containerStyle={styles.actionSheetContainer}
       >
         <View style={styles.sheetContainer}>
-          <Text style={styles.sheetTitle}>Select a Country</Text>
+          <Text style={styles.sheetTitle}>Select option</Text>
           <FlatList
             data={options}
             keyExtractor={(item) => item.country_code}
