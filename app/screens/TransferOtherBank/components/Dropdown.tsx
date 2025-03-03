@@ -59,7 +59,7 @@ const Dropdown = ({
         containerStyle={styles.actionSheetContainer}
       >
         <View style={styles.sheetContainer}>
-          <Text style={styles.sheetTitle}>Select option</Text>
+          <Text style={styles.sheetTitle}>Select one</Text>
           <FlatList
             data={options}
             keyExtractor={(item) => item.country_code}
